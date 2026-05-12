@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="88" fill="#0B1F3A"/>
+  <path d="M 128 384 L 128 256 L 256 152 L 384 256 L 384 384 Z" fill="none" stroke="#10B981" stroke-width="20" stroke-linejoin="round"/>
+  <rect x="216" y="288" width="80" height="96" fill="#10B981"/>
+  <text x="256" y="464" font-family="system-ui,sans-serif" font-size="48" font-weight="800" fill="#FFFFFF" text-anchor="middle">SRP</text>
+</svg>
