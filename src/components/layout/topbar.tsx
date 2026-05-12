@@ -63,6 +63,26 @@ export function Topbar({ email, primaryRole, orgName, locale }: TopbarProps) {
 
       <div className="flex items-center gap-2">
       <LanguagePicker current={locale} />
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => void signOut()}
+        className="hidden gap-1.5 sm:inline-flex"
+        title={t("actions.sign_out")}
+      >
+        <LogOut className="h-4 w-4" />
+        <span className="text-xs font-medium">{t("actions.sign_out")}</span>
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => void signOut()}
+        className="sm:hidden"
+        title={t("actions.sign_out")}
+        aria-label={t("actions.sign_out")}
+      >
+        <LogOut className="h-4 w-4" />
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-10 gap-2 pl-2 pr-3">

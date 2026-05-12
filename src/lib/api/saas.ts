@@ -41,6 +41,99 @@ export async function listPlans(): Promise<SubscriptionPlanRow[]> {
   return (data ?? []) as unknown as SubscriptionPlanRow[];
 }
 
+export async function getPlan(id: string): Promise<SubscriptionPlanRow | null> {
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("subscription_plans").select("*").eq("id", id).maybeSingle();
+  if (error) throw new Error(error.message);
+  return (data ?? null) as unknown as SubscriptionPlanRow | null;
+}
+
+export interface PlanInput {
+  code: string;
+  name: string;
+  tier: "starter" | "professional" | "enterprise" | "custom";
+  description?: string | null;
+  monthly_price: number;
+  annual_price: number;
+  currency: string;
+  max_compounds?: number | null;
+  max_units?: number | null;
+  max_residents?: number | null;
+  max_admin_users?: number | null;
+  max_storage_mb?: number | null;
+  max_api_calls_per_month?: number | null;
+  is_active: boolean;
+  display_order: number;
+}
+
+export async function createPlan(input: PlanInput): Promise<string> {
+  await requireRole(["super_admin"]);
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("subscription_plans")
+    .insert({
+      code: input.code,
+      name: input.name,
+      tier: input.tier,
+      description: input.description ?? null,
+      monthly_price: input.monthly_price,
+      annual_price: input.annual_price,
+      currency: input.currency,
+      max_compounds: input.max_compounds ?? null,
+      max_units: input.max_units ?? null,
+      max_residents: input.max_residents ?? null,
+      max_admin_users: input.max_admin_users ?? null,
+      max_storage_mb: input.max_storage_mb ?? null,
+      max_api_calls_per_month: input.max_api_calls_per_month ?? null,
+      is_active: input.is_active,
+      display_order: input.display_order,
+    })
+    .select("id")
+    .single();
+  if (error || !data) throw new Error(error?.message ?? "Failed to create plan");
+  revalidatePath("/saas-console/plans");
+  return data.id;
+}
+
+export async function updatePlan(id: string, input: PlanInput): Promise<void> {
+  await requireRole(["super_admin"]);
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("subscription_plans")
+    .update({
+      code: input.code,
+      name: input.name,
+      tier: input.tier,
+      description: input.description ?? null,
+      monthly_price: input.monthly_price,
+      annual_price: input.annual_price,
+      currency: input.currency,
+      max_compounds: input.max_compounds ?? null,
+      max_units: input.max_units ?? null,
+      max_residents: input.max_residents ?? null,
+      max_admin_users: input.max_admin_users ?? null,
+      max_storage_mb: input.max_storage_mb ?? null,
+      max_api_calls_per_month: input.max_api_calls_per_month ?? null,
+      is_active: input.is_active,
+      display_order: input.display_order,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/saas-console/plans");
+  revalidatePath(`/saas-console/plans/${id}`);
+}
+
+export async function deletePlan(id: string): Promise<void> {
+  await requireRole(["super_admin"]);
+  const supabase = await createClient();
+  const { error } = await supabase.from("subscription_plans").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/saas-console/plans");
+}
+
 export interface FeatureRow {
   key: string;
   name: string;
