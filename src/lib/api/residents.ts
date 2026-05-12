@@ -17,7 +17,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 import { residentSchema } from "@/lib/validations/resident";
-import type { Resident } from "@/types";
+import type { Resident, Unit } from "@/types";
 
 export async function listResidents(opts: {
   compoundId?: string;
@@ -64,7 +64,7 @@ export async function createResident(input: z.infer<typeof createInputSchema>): 
     .from("units")
     .select("*")
     .eq("id", parsed.unit_id)
-    .single();
+    .single<Unit>();
   if (unitError || !unit) throw new Error("Unit not found");
 
   const { data, error } = await supabase

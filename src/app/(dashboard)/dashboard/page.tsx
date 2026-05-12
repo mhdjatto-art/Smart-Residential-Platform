@@ -7,6 +7,7 @@ import { requireUser } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { ROLE_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import type { Resident } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -26,11 +27,13 @@ export default async function DashboardPage() {
     supabase.from("residents").select("id", { count: "exact", head: true }).eq("status", "active"),
   ]);
 
-  const { data: recentResidents } = await supabase
+  const { data: recentResidentsRaw } = await supabase
     .from("residents")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(5);
+    .limit(5)
+    .returns<Resident[]>();
+  const recentResidents: Resident[] = recentResidentsRaw ?? [];
 
   const primaryRole = user.roles[0]?.role;
 
@@ -59,7 +62,7 @@ export default async function DashboardPage() {
             <CardDescription>The five most recently added residents in your scope.</CardDescription>
           </CardHeader>
           <CardContent>
-            {recentResidents && recentResidents.length > 0 ? (
+            {recentResidents.length > 0 ? (
               <ul className="divide-y">
                 {recentResidents.map((r) => (
                   <li key={r.id} className="flex items-center justify-between py-3">
