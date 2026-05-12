@@ -12,8 +12,8 @@ export const dynamic = "force-dynamic";
 interface ResidentProfileRow {
   full_name: string | null;
   email: string | null;
-  mobile: string | null;
-  resident_status: string | null;
+  phone: string | null;
+  status: string | null;
   unit_label?: string | null;
 }
 
@@ -26,17 +26,18 @@ export default async function MobileProfilePage() {
   if (ctx.resident_id) {
     const { data } = await supabase
       .from("residents")
-      .select("full_name,email,mobile,resident_status,unit:units(unit_number)")
+      .select("first_name,last_name,email,phone,status,unit:units(unit_number)")
       .eq("id", ctx.resident_id)
       .maybeSingle();
     if (data) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const row = data as any;
+      const composedName = [row.first_name, row.last_name].filter(Boolean).join(" ") || null;
       profile = {
-        full_name: row.full_name ?? null,
+        full_name: composedName,
         email: row.email ?? null,
-        mobile: row.mobile ?? null,
-        resident_status: row.resident_status ?? null,
+        phone: row.phone ?? null,
+        status: row.status ?? null,
         unit_label: row.unit?.unit_number ?? null,
       };
     }
@@ -57,10 +58,10 @@ export default async function MobileProfilePage() {
             </div>
           </div>
           <ul className="mt-4 space-y-2 text-sm">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {profile?.mobile ?? "—"}</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground" /> {profile?.phone ?? "—"}</li>
             <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-muted-foreground" /> {profile?.email ?? "—"}</li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-muted-foreground" /> Unit {profile?.unit_label ?? "—"}</li>
-            <li className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> Status: {profile?.resident_status ?? "—"}</li>
+            <li className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> Status: {profile?.status ?? "—"}</li>
           </ul>
         </div>
 

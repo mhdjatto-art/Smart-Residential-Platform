@@ -26,10 +26,13 @@ async function loadResidentContext(): Promise<ResidentContext> {
   const supabase = await createClient();
   const { data: r } = await supabase
     .from("residents")
-    .select("id,full_name,organization_id,compound_id,unit_id")
+    .select("id,first_name,last_name,organization_id,compound_id,unit_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  const residentRow = r as { id: string; full_name: string | null; organization_id: string; compound_id: string | null; unit_id: string | null } | null;
+  const residentRow = r as { id: string; first_name: string | null; last_name: string | null; organization_id: string; compound_id: string | null; unit_id: string | null } | null;
+  const fullName = residentRow
+    ? [residentRow.first_name, residentRow.last_name].filter(Boolean).join(" ") || null
+    : null;
   let currency = "USD";
   if (residentRow?.organization_id) {
     const { data: org } = await supabase.from("organizations").select("currency").eq("id", residentRow.organization_id).maybeSingle();
@@ -38,7 +41,7 @@ async function loadResidentContext(): Promise<ResidentContext> {
   return {
     user_id: user.id,
     resident_id: residentRow?.id ?? null,
-    full_name: residentRow?.full_name ?? user.email ?? null,
+    full_name: fullName ?? user.email ?? null,
     organization_id: residentRow?.organization_id ?? null,
     compound_id: residentRow?.compound_id ?? null,
     unit_id: residentRow?.unit_id ?? null,
@@ -94,9 +97,9 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
       .neq("status", "paid"),
     supabase
       .from("utility_bills")
-      .select("total_amount,paid_amount,bill_status")
+      .select("total_amount,paid_amount,status")
       .eq("resident_id", ctx.resident_id)
-      .neq("bill_status", "paid"),
+      .neq("status", "paid"),
     supabase
       .from("tickets")
       .select("id", { count: "exact", head: true })
@@ -120,7 +123,7 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
   ]);
 
   type InstallmentRow = { total_due: number; penalty_amount: number; paid_amount: number; due_date: string; status: string };
-  type UtilityBillRow = { total_amount: number; paid_amount: number; bill_status: string };
+  type UtilityBillRow = { total_amount: number; paid_amount: number; status: string };
 
   const installmentRows = (installments.data ?? []) as unknown as InstallmentRow[];
   const utilRows        = (utilityBills.data ?? []) as UtilityBillRow[];

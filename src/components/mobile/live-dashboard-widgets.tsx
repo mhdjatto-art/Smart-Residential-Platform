@@ -76,12 +76,12 @@ export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
   });
 
   // Utility bills — track count and aggregate outstanding
-  useRealtimeChannel<{ id: string; bill_status: string; total_amount: number; paid_amount: number }>({
+  useRealtimeChannel<{ id: string; status: string; total_amount: number; paid_amount: number }>({
     enabled: !!residentFilter,
     table: "utility_bills",
     filter: residentFilter,
     onInsert: (row) => {
-      if (row.bill_status !== "paid") {
+      if (row.status !== "paid") {
         const remaining = Math.max(0, Number(row.total_amount) - Number(row.paid_amount));
         setUtility((u) => ({ count: u.count + 1, amount: u.amount + remaining }));
       }
@@ -89,8 +89,8 @@ export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
     onUpdate: (row, old) => {
       const oldRemaining = Math.max(0, Number(old.total_amount) - Number(old.paid_amount));
       const newRemaining = Math.max(0, Number(row.total_amount) - Number(row.paid_amount));
-      const wasPaid = old.bill_status === "paid";
-      const isPaid  = row.bill_status === "paid";
+      const wasPaid = old.status === "paid";
+      const isPaid  = row.status === "paid";
       setUtility((u) => ({
         count:  u.count + (wasPaid && !isPaid ? 1 : 0) + (!wasPaid && isPaid ? -1 : 0),
         amount: Math.max(0, u.amount - (wasPaid ? 0 : oldRemaining) + (isPaid ? 0 : newRemaining)),

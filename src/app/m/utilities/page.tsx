@@ -21,7 +21,7 @@ interface UtilityBillRow {
   utility_type: string;
   total_amount: number;
   paid_amount: number;
-  bill_status: string;
+  status: string;
   currency: string;
   due_date: string | null;
 }
@@ -40,7 +40,7 @@ export default async function MobileUtilitiesPage() {
         .eq("resident_id", ctx.resident_id)
         .order("subscription_type"),
       supabase.from("utility_bills")
-        .select("id,bill_number,utility_type,total_amount,paid_amount,bill_status,currency,due_date")
+        .select("id,bill_number,utility_type,total_amount,paid_amount,status,currency,due_date")
         .eq("resident_id", ctx.resident_id)
         .order("created_at", { ascending: false })
         .limit(20),
@@ -86,7 +86,7 @@ export default async function MobileUtilitiesPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold">{formatCurrency(b.total_amount, { currency: b.currency })}</p>
-                    <p className="mt-0.5"><StatusBadge status={b.bill_status} /></p>
+                    <p className="mt-0.5"><StatusBadge status={b.status} /></p>
                   </div>
                 </li>
               ))}

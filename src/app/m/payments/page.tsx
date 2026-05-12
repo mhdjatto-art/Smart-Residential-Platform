@@ -24,7 +24,7 @@ interface UtilityBillRow {
   total_amount: number;
   paid_amount: number;
   due_date: string | null;
-  bill_status: string;
+  status: string;
   currency: string;
 }
 
@@ -45,9 +45,9 @@ export default async function MobilePaymentsPage() {
         .order("due_date")
         .limit(20),
       supabase.from("utility_bills")
-        .select("id,bill_number,utility_type,total_amount,paid_amount,due_date,bill_status,currency")
+        .select("id,bill_number,utility_type,total_amount,paid_amount,due_date,status,currency")
         .eq("resident_id", ctx.resident_id)
-        .neq("bill_status", "paid")
+        .neq("status", "paid")
         .order("due_date", { ascending: true, nullsFirst: false })
         .limit(20),
     ]);
@@ -114,7 +114,7 @@ export default async function MobilePaymentsPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold tabular-nums">{formatCurrency(remainingBill, { currency: r.currency })}</p>
-                      <p className="text-[11px] uppercase text-muted-foreground">{r.bill_status}</p>
+                      <p className="text-[11px] uppercase text-muted-foreground">{r.status}</p>
                     </div>
                   </li>
                 );
