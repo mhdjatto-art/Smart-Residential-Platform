@@ -25,7 +25,7 @@ declare
     array['Erbil Electricity Directorate',      'مديرية كهرباء أربيل',       'electricity','metered','tiered','ERB-ELEC',   'modbus',   'modbus://10.1.0.1:502',                      'Erbil city'],
     array['Sulaymaniyah Electricity Directorate','مديرية كهرباء السليمانية',  'electricity','metered','tiered','SUL-ELEC',   'modbus',   'modbus://10.1.0.2:502',                      'Sulaymaniyah city'],
     array['Duhok Electricity Directorate',      'مديرية كهرباء دهوك',        'electricity','metered','tiered','DOH-ELEC',   'modbus',   'modbus://10.1.0.3:502',                      'Duhok city'],
-    array['Private Generator (Mahalla)',        'مولّدة المحلة الأهلية',     'generator',  'metered','flat',  'GEN-LOCAL',  'mqtt',     'mqtt://broker.local:1883',                   'Local neighborhood generator — MQTT IoT meter'],
+    array['Private Generator (Mahalla)',        'مولّدة المحلة الأهلية',     'generator',  'metered','fixed', 'GEN-LOCAL',  'mqtt',     'mqtt://broker.local:1883',                   'Local neighborhood generator — MQTT IoT meter'],
 
     -- ── Water ──────────────────────────────────────────────────────────────
     array['Baghdad Water Authority',            'مديرية ماء بغداد',          'water',      'metered','tiered','BAG-WATER',  'modbus',   'modbus://10.0.1.1:502',                      'Baghdad municipal water'],
