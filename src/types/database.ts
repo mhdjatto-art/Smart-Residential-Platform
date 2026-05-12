@@ -185,6 +185,70 @@ export type Database = {
           },
         ]
       }
+      commissions: {
+        Row: {
+          amount: number
+          commission_kind: Database["public"]["Enums"]["commission_kind"]
+          commission_value: number
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          order_id: string
+          organization_id: string
+          payee: Database["public"]["Enums"]["commission_payee"]
+          provider_id: string
+        }
+        Insert: {
+          amount: number
+          commission_kind: Database["public"]["Enums"]["commission_kind"]
+          commission_value: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          order_id: string
+          organization_id: string
+          payee?: Database["public"]["Enums"]["commission_payee"]
+          provider_id: string
+        }
+        Update: {
+          amount?: number
+          commission_kind?: Database["public"]["Enums"]["commission_kind"]
+          commission_value?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          order_id?: string
+          organization_id?: string
+          payee?: Database["public"]["Enums"]["commission_payee"]
+          provider_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compounds: {
         Row: {
           address_line1: string | null
@@ -1454,6 +1518,215 @@ export type Database = {
           },
         ]
       }
+      marketplace_order_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_name: string
+          line_total: number | null
+          notes: string | null
+          order_id: string
+          organization_id: string
+          quantity: number
+          service_item_id: string | null
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_name: string
+          line_total?: number | null
+          notes?: string | null
+          order_id: string
+          organization_id: string
+          quantity?: number
+          service_item_id?: string | null
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_name?: string
+          line_total?: number | null
+          notes?: string | null
+          order_id?: string
+          organization_id?: string
+          quantity?: number
+          service_item_id?: string | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_order_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_order_items_service_item_id_fkey"
+            columns: ["service_item_id"]
+            isOneToOne: false
+            referencedRelation: "service_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_orders: {
+        Row: {
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          commission_amount: number
+          completed_at: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          delivered_at: string | null
+          delivery_address: string | null
+          delivery_fee: number
+          delivery_notes: string | null
+          id: string
+          metadata: Json
+          notes: string | null
+          order_number: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          organization_id: string
+          paid_amount: number
+          payment_id: string | null
+          payment_status: Database["public"]["Enums"]["order_payment_status"]
+          provider_id: string
+          provider_net: number
+          resident_id: string
+          scheduled_for: string | null
+          service_fee: number
+          subtotal: number
+          tax_amount: number
+          total_amount: number
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          commission_amount?: number
+          completed_at?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          delivered_at?: string | null
+          delivery_address?: string | null
+          delivery_fee?: number
+          delivery_notes?: string | null
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          order_number: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          organization_id: string
+          paid_amount?: number
+          payment_id?: string | null
+          payment_status?: Database["public"]["Enums"]["order_payment_status"]
+          provider_id: string
+          provider_net?: number
+          resident_id: string
+          scheduled_for?: string | null
+          service_fee?: number
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          commission_amount?: number
+          completed_at?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          delivered_at?: string | null
+          delivery_address?: string | null
+          delivery_fee?: number
+          delivery_notes?: string | null
+          id?: string
+          metadata?: Json
+          notes?: string | null
+          order_number?: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          organization_id?: string
+          paid_amount?: number
+          payment_id?: string | null
+          payment_status?: Database["public"]["Enums"]["order_payment_status"]
+          provider_id?: string
+          provider_net?: number
+          resident_id?: string
+          scheduled_for?: string | null
+          service_fee?: number
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_orders_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meter_readings: {
         Row: {
           consumption: number | null
@@ -1941,6 +2214,155 @@ export type Database = {
           },
         ]
       }
+      provider_payouts: {
+        Row: {
+          commission_amount: number
+          created_at: string
+          currency: string
+          gross_amount: number
+          id: string
+          net_amount: number
+          notes: string | null
+          organization_id: string
+          paid_at: string | null
+          paid_by: string | null
+          period_end: string
+          period_start: string
+          provider_id: string
+          status: Database["public"]["Enums"]["payout_status"]
+          total_orders: number
+          updated_at: string
+        }
+        Insert: {
+          commission_amount?: number
+          created_at?: string
+          currency?: string
+          gross_amount?: number
+          id?: string
+          net_amount?: number
+          notes?: string | null
+          organization_id: string
+          paid_at?: string | null
+          paid_by?: string | null
+          period_end: string
+          period_start: string
+          provider_id: string
+          status?: Database["public"]["Enums"]["payout_status"]
+          total_orders?: number
+          updated_at?: string
+        }
+        Update: {
+          commission_amount?: number
+          created_at?: string
+          currency?: string
+          gross_amount?: number
+          id?: string
+          net_amount?: number
+          notes?: string | null
+          organization_id?: string
+          paid_at?: string | null
+          paid_by?: string | null
+          period_end?: string
+          period_start?: string
+          provider_id?: string
+          status?: Database["public"]["Enums"]["payout_status"]
+          total_orders?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_payouts_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          helpful_count: number
+          id: string
+          is_hidden: boolean
+          is_moderated: boolean
+          order_id: string | null
+          organization_id: string
+          provider_id: string
+          rating: number
+          resident_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_hidden?: boolean
+          is_moderated?: boolean
+          order_id?: string | null
+          organization_id: string
+          provider_id: string
+          rating: number
+          resident_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          is_hidden?: boolean
+          is_moderated?: boolean
+          order_id?: string | null
+          organization_id?: string
+          provider_id?: string
+          rating?: number
+          resident_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_reviews_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       receipts: {
         Row: {
           id: string
@@ -2140,6 +2562,250 @@ export type Database = {
             columns: ["visitor_id"]
             isOneToOne: false
             referencedRelation: "visitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          parent_id: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          parent_id?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          parent_id?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_categories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_items: {
+        Row: {
+          availability_rules: Json
+          category_id: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          image_path: string | null
+          is_active: boolean
+          metadata: Json
+          name: string
+          organization_id: string
+          price: number
+          provider_id: string
+          service_kind: Database["public"]["Enums"]["service_kind"]
+          slug: string
+          unit: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          availability_rules?: Json
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          image_path?: string | null
+          is_active?: boolean
+          metadata?: Json
+          name: string
+          organization_id: string
+          price: number
+          provider_id: string
+          service_kind?: Database["public"]["Enums"]["service_kind"]
+          slug: string
+          unit?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          availability_rules?: Json
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          image_path?: string | null
+          is_active?: boolean
+          metadata?: Json
+          name?: string
+          organization_id?: string
+          price?: number
+          provider_id?: string
+          service_kind?: Database["public"]["Enums"]["service_kind"]
+          slug?: string
+          unit?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_items_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_providers: {
+        Row: {
+          address: string | null
+          availability_status: Database["public"]["Enums"]["provider_availability"]
+          compound_id: string | null
+          created_at: string
+          created_by: string | null
+          default_commission_kind: Database["public"]["Enums"]["commission_kind"]
+          default_commission_value: number
+          description: string | null
+          email: string | null
+          id: string
+          is_active: boolean
+          logo_path: string | null
+          metadata: Json
+          mobile: string | null
+          operating_hours: Json
+          organization_id: string
+          provider_kind: Database["public"]["Enums"]["provider_kind"]
+          provider_name: string
+          rating_avg: number
+          rating_count: number
+          slug: string
+          updated_at: string
+          updated_by: string | null
+          verification_status: Database["public"]["Enums"]["provider_verification"]
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          availability_status?: Database["public"]["Enums"]["provider_availability"]
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_commission_kind?: Database["public"]["Enums"]["commission_kind"]
+          default_commission_value?: number
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          logo_path?: string | null
+          metadata?: Json
+          mobile?: string | null
+          operating_hours?: Json
+          organization_id: string
+          provider_kind: Database["public"]["Enums"]["provider_kind"]
+          provider_name: string
+          rating_avg?: number
+          rating_count?: number
+          slug: string
+          updated_at?: string
+          updated_by?: string | null
+          verification_status?: Database["public"]["Enums"]["provider_verification"]
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          availability_status?: Database["public"]["Enums"]["provider_availability"]
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_commission_kind?: Database["public"]["Enums"]["commission_kind"]
+          default_commission_value?: number
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          logo_path?: string | null
+          metadata?: Json
+          mobile?: string | null
+          operating_hours?: Json
+          organization_id?: string
+          provider_kind?: Database["public"]["Enums"]["provider_kind"]
+          provider_name?: string
+          rating_avg?: number
+          rating_count?: number
+          slug?: string
+          updated_at?: string
+          updated_by?: string | null
+          verification_status?: Database["public"]["Enums"]["provider_verification"]
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_providers_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_providers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -3268,6 +3934,18 @@ export type Database = {
         Returns: string
       }
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
+      cancel_marketplace_order: {
+        Args: { p_order_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      compute_provider_payout: {
+        Args: {
+          p_period_end: string
+          p_period_start: string
+          p_provider_id: string
+        }
+        Returns: string
+      }
       contract_currency: { Args: { p_contract_id: string }; Returns: string }
       dismiss_reminder: { Args: { p_reminder_id: string }; Returns: undefined }
       generate_electricity_bill_for_reading: {
@@ -3287,6 +3965,25 @@ export type Database = {
         Returns: number
       }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
+      mark_order_completed: { Args: { p_order_id: string }; Returns: undefined }
+      place_order: {
+        Args: {
+          p_compound_id?: string
+          p_currency?: string
+          p_delivery_address?: string
+          p_delivery_fee?: number
+          p_delivery_notes?: string
+          p_items: Json
+          p_notes?: string
+          p_provider_id: string
+          p_resident_id: string
+          p_scheduled_for?: string
+          p_service_fee?: number
+          p_tax_amount?: number
+          p_unit_id?: string
+        }
+        Returns: string
+      }
       recompute_building_counts: {
         Args: { p_building_id: string }
         Returns: undefined
@@ -3373,6 +4070,8 @@ export type Database = {
         | "rejected"
         | "cancelled"
         | "completed"
+      commission_kind: "percentage" | "fixed"
+      commission_payee: "platform" | "compound" | "organization"
       compound_status: "active" | "inactive" | "archived"
       contract_status:
         | "draft"
@@ -3449,6 +4148,15 @@ export type Database = {
         | "payment_due"
         | "penalty"
         | "generic"
+      order_payment_status: "unpaid" | "partial" | "paid" | "refunded"
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "assigned"
+        | "in_progress"
+        | "completed"
+        | "cancelled"
+        | "refunded"
       organization_status: "active" | "suspended" | "archived"
       ownership_status:
         | "owned"
@@ -3463,14 +4171,34 @@ export type Database = {
         | "wallet"
         | "cheque"
       payment_status: "pending" | "confirmed" | "reversed" | "refunded"
+      payout_status: "pending" | "processing" | "paid" | "cancelled"
       penalty_status: "pending" | "applied" | "waived" | "paid"
       penalty_type: "fixed" | "percentage" | "daily" | "monthly"
+      provider_availability: "open" | "busy" | "closed"
+      provider_kind:
+        | "maintenance"
+        | "cleaning"
+        | "plumbing"
+        | "electrician"
+        | "ac_technician"
+        | "grocery"
+        | "pharmacy"
+        | "restaurant"
+        | "laundry"
+        | "moving"
+        | "car_wash"
+        | "delivery"
+        | "security"
+        | "internet_services"
+        | "other"
       provider_status: "active" | "inactive" | "suspended"
+      provider_verification: "unverified" | "pending" | "verified" | "rejected"
       reading_source: "manual" | "photo" | "smart_meter" | "imported"
       reminder_channel: "in_app" | "email" | "sms"
       reminder_kind: "upcoming" | "overdue" | "penalty" | "payment_received"
       reminder_status: "pending" | "sent" | "failed" | "dismissed"
       resident_status: "active" | "pending" | "former"
+      service_kind: "product" | "on_demand_service" | "subscription" | "package"
       subscription_status:
         | "pending"
         | "active"
@@ -3703,6 +4431,8 @@ export const Constants = {
         "cancelled",
         "completed",
       ],
+      commission_kind: ["percentage", "fixed"],
+      commission_payee: ["platform", "compound", "organization"],
       compound_status: ["active", "inactive", "archived"],
       contract_status: [
         "draft",
@@ -3787,6 +4517,16 @@ export const Constants = {
         "penalty",
         "generic",
       ],
+      order_payment_status: ["unpaid", "partial", "paid", "refunded"],
+      order_status: [
+        "pending",
+        "confirmed",
+        "assigned",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "refunded",
+      ],
       organization_status: ["active", "suspended", "archived"],
       ownership_status: ["owned", "for_sale", "for_rent", "leased", "reserved"],
       payment_method: [
@@ -3797,14 +4537,35 @@ export const Constants = {
         "cheque",
       ],
       payment_status: ["pending", "confirmed", "reversed", "refunded"],
+      payout_status: ["pending", "processing", "paid", "cancelled"],
       penalty_status: ["pending", "applied", "waived", "paid"],
       penalty_type: ["fixed", "percentage", "daily", "monthly"],
+      provider_availability: ["open", "busy", "closed"],
+      provider_kind: [
+        "maintenance",
+        "cleaning",
+        "plumbing",
+        "electrician",
+        "ac_technician",
+        "grocery",
+        "pharmacy",
+        "restaurant",
+        "laundry",
+        "moving",
+        "car_wash",
+        "delivery",
+        "security",
+        "internet_services",
+        "other",
+      ],
       provider_status: ["active", "inactive", "suspended"],
+      provider_verification: ["unverified", "pending", "verified", "rejected"],
       reading_source: ["manual", "photo", "smart_meter", "imported"],
       reminder_channel: ["in_app", "email", "sms"],
       reminder_kind: ["upcoming", "overdue", "penalty", "payment_received"],
       reminder_status: ["pending", "sent", "failed", "dismissed"],
       resident_status: ["active", "pending", "former"],
+      service_kind: ["product", "on_demand_service", "subscription", "package"],
       subscription_status: [
         "pending",
         "active",

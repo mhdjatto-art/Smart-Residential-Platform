@@ -22,6 +22,9 @@ import {
   Gauge,
   Wifi,
   Receipt,
+  ShoppingBag,
+  Store,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -84,6 +87,15 @@ export const navigation: NavSection[] = [
       { title: "Meters",          href: "/meters",            icon: Gauge,   requiredCapability: "utility:read" },
       { title: "Internet plans",  href: "/internet-packages", icon: Wifi,    requiredCapability: "utility:read" },
       { title: "Utility bills",   href: "/utility-bills",     icon: Receipt, requiredCapability: "utility:read" },
+    ],
+  },
+  {
+    title: "Marketplace",
+    items: [
+      { title: "Marketplace",        href: "/marketplace",        icon: ShoppingBag, requiredCapability: "marketplace:read" },
+      { title: "Service providers",  href: "/service-providers",  icon: Store,       requiredCapability: "marketplace:read" },
+      { title: "Orders",             href: "/orders",             icon: ShoppingBag, requiredCapability: "marketplace:read" },
+      { title: "Reviews",            href: "/reviews",            icon: Star,        requiredCapability: "marketplace:read" },
     ],
   },
   {
