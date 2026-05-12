@@ -5,6 +5,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ interface MyOrderRow {
 export default async function MyOrdersPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
   let orders: MyOrderRow[] = [];
   if (ctx.resident_id) {
     const { data } = await supabase
@@ -43,13 +45,13 @@ export default async function MyOrdersPage() {
 
   return (
     <div>
-      <MobileTopbar title="My orders" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("mobile.my_orders")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4 space-y-2">
         {orders.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
             <ShoppingBag className="mx-auto h-8 w-8 opacity-50" />
-            <p className="mt-2">No orders yet.</p>
-            <Link href="/m/marketplace" className="mt-3 inline-block text-emerald-600 hover:underline">Browse the marketplace</Link>
+            <p className="mt-2">{t("mobile.no_orders")}</p>
+            <Link href="/m/marketplace" className="mt-3 inline-block text-emerald-600 hover:underline">{t("mobile.browse_marketplace")}</Link>
           </div>
         ) : orders.map((o) => (
           <div key={o.id} className="rounded-xl border bg-card p-3">

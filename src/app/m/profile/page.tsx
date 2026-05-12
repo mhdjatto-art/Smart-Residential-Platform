@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { ChevronRight, LogOut, Mail, MapPin, Phone, Shield, User } from "lucide-react";
+import { ChevronRight, Languages, LogOut, Mail, MapPin, Phone, Shield, User } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { MobileLogoutButton } from "@/components/mobile/logout-button";
+import { LanguagePicker } from "@/components/i18n/language-picker";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveLocale, getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,9 @@ interface ResidentProfileRow {
 
 export default async function MobileProfilePage() {
   const ctx = await getResidentContext();
+  const locale = await getActiveLocale();
   const supabase = await createClient();
+  const { t } = await getT();
   let profile: ResidentProfileRow | null = null;
   if (ctx.resident_id) {
     const { data } = await supabase
@@ -40,7 +44,7 @@ export default async function MobileProfilePage() {
 
   return (
     <div>
-      <MobileTopbar title="Profile" userId={ctx.user_id} unread={0} />
+      <MobileTopbar title={t("headers.profile_title")} userId={ctx.user_id} unread={0} />
       <div className="p-4 space-y-4">
         <div className="rounded-2xl border bg-card p-4">
           <div className="flex items-center gap-3">
@@ -58,6 +62,14 @@ export default async function MobileProfilePage() {
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-muted-foreground" /> Unit {profile?.unit_label ?? "—"}</li>
             <li className="flex items-center gap-2"><Shield className="h-4 w-4 text-muted-foreground" /> Status: {profile?.resident_status ?? "—"}</li>
           </ul>
+        </div>
+
+        <div className="rounded-2xl border bg-card p-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Languages className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">{t("common.language")}</span>
+          </div>
+          <LanguagePicker current={locale} />
         </div>
 
         <div className="rounded-2xl border bg-card divide-y">

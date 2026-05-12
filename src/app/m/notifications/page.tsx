@@ -3,6 +3,7 @@ import { Bell, CheckCheck } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { listMyNotifications, markAllRead } from "@/lib/api/notifications";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function MobileNotificationsPage() {
   const ctx = await getResidentContext();
   const items = await listMyNotifications();
   const unread = items.filter((n) => !n.read_at).length;
+  const { t } = await getT();
 
   async function doMarkAll() {
     "use server";
@@ -18,12 +20,12 @@ export default async function MobileNotificationsPage() {
 
   return (
     <div>
-      <MobileTopbar title="Notifications" userId={ctx.user_id} unread={unread} showBack />
+      <MobileTopbar title={t("headers.notifications_title")} userId={ctx.user_id} unread={unread} showBack />
       <div className="p-4">
         {unread > 0 && (
           <form action={doMarkAll}>
             <button type="submit" className="mb-3 flex items-center gap-1 text-xs text-emerald-600 hover:underline">
-              <CheckCheck className="h-3.5 w-3.5" /> Mark all read
+              <CheckCheck className="h-3.5 w-3.5" /> {t("mobile.mark_all_read")}
             </button>
           </form>
         )}
@@ -31,7 +33,7 @@ export default async function MobileNotificationsPage() {
         {items.length === 0 ? (
           <div className="py-12 text-center text-sm text-muted-foreground">
             <Bell className="mx-auto h-8 w-8 opacity-50" />
-            <p className="mt-2">No notifications yet.</p>
+            <p className="mt-2">{t("mobile.no_notifications")}</p>
           </div>
         ) : (
           <ul className="space-y-2">

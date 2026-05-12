@@ -4,6 +4,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ interface TicketRow {
 export default async function MobileComplaintsPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
   let tickets: TicketRow[] = [];
   if (ctx.resident_id) {
     const { data } = await supabase.from("tickets")
@@ -31,13 +33,13 @@ export default async function MobileComplaintsPage() {
 
   return (
     <div>
-      <MobileTopbar title="Complaints" userId={ctx.user_id} unread={0} />
+      <MobileTopbar title={t("headers.complaints_title")} userId={ctx.user_id} unread={0} />
       <div className="p-4 space-y-3">
         <Link href="/m/complaints/new" className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow">
-          <Plus className="h-4 w-4" /> Submit a new complaint
+          <Plus className="h-4 w-4" /> {t("mobile.submit_new_complaint")}
         </Link>
         {tickets.length === 0 ? (
-          <p className="px-1 py-6 text-center text-sm text-muted-foreground">No complaints yet.</p>
+          <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("mobile.no_complaints")}</p>
         ) : (
           <ul className="space-y-2">
             {tickets.map((t) => (

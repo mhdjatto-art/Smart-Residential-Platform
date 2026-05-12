@@ -3,6 +3,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ interface UtilityBillRow {
 export default async function MobileUtilitiesPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
 
   let subs: SubscriptionRow[] = [];
   let bills: UtilityBillRow[] = [];
@@ -49,12 +51,12 @@ export default async function MobileUtilitiesPage() {
 
   return (
     <div>
-      <MobileTopbar title="Utilities" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("headers.utilities_title")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4 space-y-4">
         <section>
-          <h2 className="px-1 text-sm font-semibold text-muted-foreground">My subscriptions</h2>
+          <h2 className="px-1 text-sm font-semibold text-muted-foreground">{t("mobile.subscriptions")}</h2>
           {subs.length === 0 ? (
-            <p className="px-1 py-4 text-sm text-muted-foreground">No active subscriptions.</p>
+            <p className="px-1 py-4 text-sm text-muted-foreground">{t("mobile.no_subscriptions")}</p>
           ) : (
             <ul className="mt-2 space-y-2">
               {subs.map((s) => (
@@ -71,9 +73,9 @@ export default async function MobileUtilitiesPage() {
         </section>
 
         <section>
-          <h2 className="px-1 text-sm font-semibold text-muted-foreground">Recent bills</h2>
+          <h2 className="px-1 text-sm font-semibold text-muted-foreground">{t("mobile.recent_bills")}</h2>
           {bills.length === 0 ? (
-            <p className="px-1 py-4 text-sm text-muted-foreground">No bills yet.</p>
+            <p className="px-1 py-4 text-sm text-muted-foreground">{t("mobile.no_bills")}</p>
           ) : (
             <ul className="mt-2 space-y-2">
               {bills.map((b) => (

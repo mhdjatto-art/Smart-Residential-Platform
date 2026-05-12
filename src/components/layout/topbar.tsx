@@ -14,20 +14,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { LanguagePicker } from "@/components/i18n/language-picker";
 import { createClient } from "@/lib/supabase/client";
 import { ROLE_LABELS } from "@/lib/constants";
 import { initials } from "@/lib/utils";
+import { useT } from "@/lib/i18n/client";
+import type { LocaleCode } from "@/lib/i18n";
 import type { AppRole } from "@/types";
 
 interface TopbarProps {
   email: string | null;
   primaryRole: AppRole | null;
   orgName: string | null;
+  locale: LocaleCode;
 }
 
-export function Topbar({ email, primaryRole, orgName }: TopbarProps) {
+export function Topbar({ email, primaryRole, orgName, locale }: TopbarProps) {
   const router = useRouter();
   const supabase = createClient();
+  const { t } = useT();
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
@@ -56,6 +61,8 @@ export function Topbar({ email, primaryRole, orgName }: TopbarProps) {
         )}
       </div>
 
+      <div className="flex items-center gap-2">
+      <LanguagePicker current={locale} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-10 gap-2 pl-2 pr-3">
@@ -70,7 +77,7 @@ export function Topbar({ email, primaryRole, orgName }: TopbarProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem className="cursor-pointer">
             <UserIcon className="mr-2 h-4 w-4" />
-            Profile
+            {t("common.profile")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -81,10 +88,11 @@ export function Topbar({ email, primaryRole, orgName }: TopbarProps) {
             }}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Sign out
+            {t("actions.sign_out")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      </div>
     </header>
   );
 }

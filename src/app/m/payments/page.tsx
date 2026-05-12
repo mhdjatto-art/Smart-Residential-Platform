@@ -3,6 +3,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,7 @@ interface UtilityBillRow {
 export default async function MobilePaymentsPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
 
   let installments: InstallmentRow[] = [];
   let utilityBills: UtilityBillRow[] = [];
@@ -60,26 +62,28 @@ export default async function MobilePaymentsPage() {
 
   return (
     <div>
-      <MobileTopbar title="Payments" userId={ctx.user_id} unread={0} />
+      <MobileTopbar title={t("headers.payments_title")} userId={ctx.user_id} unread={0} />
 
       <div className="p-4 space-y-4">
         <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 p-5 text-white">
-          <p className="text-xs uppercase tracking-wider opacity-90">Total due</p>
+          <p className="text-xs uppercase tracking-wider opacity-90">{t("mobile.total_due")}</p>
           <p className="mt-1 text-3xl font-bold">{formatCurrency(totalDue, { currency: ctx.currency })}</p>
-          <p className="mt-1 text-xs opacity-80">{installments.length} installments · {utilityBills.length} utility bills</p>
+          <p className="mt-1 text-xs opacity-80">
+            {t("mobile.installments_count", { count: installments.length })} · {t("mobile.utility_bills_count", { count: utilityBills.length })}
+          </p>
         </div>
 
         <section>
-          <h2 className="px-1 text-sm font-semibold text-muted-foreground">Installments</h2>
+          <h2 className="px-1 text-sm font-semibold text-muted-foreground">{t("mobile.installments_section")}</h2>
           {installments.length === 0 ? (
-            <p className="px-1 py-4 text-sm text-muted-foreground">No outstanding installments.</p>
+            <p className="px-1 py-4 text-sm text-muted-foreground">{t("mobile.no_installments")}</p>
           ) : (
             <ul className="mt-2 space-y-2">
               {installments.map((r) => (
                 <li key={r.id} className="rounded-xl border bg-card p-3 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">Installment #{r.installment_number}</p>
-                    <p className="text-xs text-muted-foreground">Due {new Date(r.due_date).toLocaleDateString()}</p>
+                    <p className="text-sm font-medium">{t("mobile.installment_n", { n: r.installment_number })}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(r.due_date).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold tabular-nums">{formatCurrency(remaining(r), { currency: ctx.currency })}</p>
@@ -92,9 +96,9 @@ export default async function MobilePaymentsPage() {
         </section>
 
         <section>
-          <h2 className="px-1 text-sm font-semibold text-muted-foreground">Utility bills</h2>
+          <h2 className="px-1 text-sm font-semibold text-muted-foreground">{t("mobile.utility_bills_section")}</h2>
           {utilityBills.length === 0 ? (
-            <p className="px-1 py-4 text-sm text-muted-foreground">No outstanding utility bills.</p>
+            <p className="px-1 py-4 text-sm text-muted-foreground">{t("mobile.no_utility_bills")}</p>
           ) : (
             <ul className="mt-2 space-y-2">
               {utilityBills.map((r) => {

@@ -3,6 +3,7 @@ import { Star, Store } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { listServiceProviders } from "@/lib/api/marketplace";
 import { getResidentContext } from "@/lib/api/resident-mobile";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,14 @@ const KIND_GROUPS: { title: string; kinds: string[] }[] = [
 export default async function MobileMarketplacePage() {
   const ctx = await getResidentContext();
   const providers = (await listServiceProviders()).filter((p) => p.is_active);
+  const { t } = await getT();
 
   return (
     <div>
-      <MobileTopbar title="Marketplace" userId={ctx.user_id} unread={0} />
+      <MobileTopbar title={t("headers.marketplace_title")} userId={ctx.user_id} unread={0} />
       <div className="p-4 space-y-5">
         <Link href="/m/marketplace/orders" className="block rounded-xl border bg-emerald-500/10 p-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-          My orders →
+          {t("mobile.my_orders")} →
         </Link>
 
         {providers.length === 0 ? (

@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveLocale } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export const dynamic = "force-dynamic";
  */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
+  const locale = await getActiveLocale();
 
   const primaryRole = user.roles[0]?.role ?? null;
   const primaryOrgId =
@@ -43,11 +45,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <MobileNav roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
           </div>
           <div className="flex-1">
-            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} />
+            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} />
           </div>
         </div>
         <div className="hidden lg:block">
-          <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} />
+          <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} />
         </div>
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>

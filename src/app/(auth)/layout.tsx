@@ -1,22 +1,31 @@
 import Link from "next/link";
 import { Home } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { LanguagePicker } from "@/components/i18n/language-picker";
+import { getActiveLocale } from "@/lib/i18n/server";
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export const dynamic = "force-dynamic";
+
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  let locale: "en" | "ar" | "ku" | "fr" | "es" = "en";
+  try { locale = await getActiveLocale(); } catch { /* swallowed */ }
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col justify-between p-8 lg:p-12">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Home className="h-5 w-5" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold">{siteConfig.name}</span>
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              {siteConfig.fullName}
-            </span>
-          </div>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Home className="h-5 w-5" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-bold">{siteConfig.name}</span>
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {siteConfig.fullName}
+              </span>
+            </div>
+          </Link>
+          <LanguagePicker current={locale} />
+        </div>
 
         <div className="mx-auto w-full max-w-sm">{children}</div>
 

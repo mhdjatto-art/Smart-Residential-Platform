@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { ticketSchema, TICKET_CATEGORIES } from "@/lib/validations/operations";
 import { createTicket } from "@/lib/api/tickets";
+import { useT } from "@/lib/i18n/client";
 
 interface NewComplaintFormProps {
   compoundId: string;
@@ -21,6 +22,7 @@ interface NewComplaintFormProps {
 export function NewComplaintForm({ compoundId, residentId, unitId }: NewComplaintFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { t } = useT();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -62,7 +64,7 @@ export function NewComplaintForm({ compoundId, residentId, unitId }: NewComplain
       <Card>
         <CardContent className="grid gap-4 p-4">
           <div className="space-y-1.5">
-            <Label className="text-xs">Category</Label>
+            <Label className="text-xs">{t("mobile.category")}</Label>
             <Select name="category" defaultValue="maintenance">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -71,30 +73,30 @@ export function NewComplaintForm({ compoundId, residentId, unitId }: NewComplain
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Subject</Label>
-            <Input name="subject" required placeholder="e.g. Leaking pipe in kitchen" />
+            <Label className="text-xs">{t("mobile.subject")}</Label>
+            <Input name="subject" required />
             {errors.subject && <p className="text-xs text-destructive">{errors.subject}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Describe the problem</Label>
-            <Textarea name="description" rows={5} required placeholder="What's wrong? When did it start? Any photos help your technician." />
+            <Label className="text-xs">{t("mobile.describe_problem")}</Label>
+            <Textarea name="description" rows={5} required />
             {errors.description && <p className="text-xs text-destructive">{errors.description}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Priority</Label>
+            <Label className="text-xs">{t("mobile.priority")}</Label>
             <Select name="priority" defaultValue="medium">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
+                <SelectItem value="low">{t("mobile.low")}</SelectItem>
+                <SelectItem value="medium">{t("mobile.medium")}</SelectItem>
+                <SelectItem value="high">{t("mobile.high")}</SelectItem>
+                <SelectItem value="urgent">{t("mobile.urgent")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </CardContent>
       </Card>
-      <Button type="submit" className="mt-4 w-full" disabled={pending}>{pending ? "Submitting…" : "Submit complaint"}</Button>
+      <Button type="submit" className="mt-4 w-full" disabled={pending}>{pending ? t("mobile.submitting") : t("mobile.submit_complaint")}</Button>
     </form>
   );
 }

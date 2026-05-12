@@ -39,6 +39,8 @@ import type { Capability } from "@/lib/auth/permissions";
 
 export interface NavItem {
   title: string;
+  /** Optional i18n key under `nav.*` — falls back to `title` if not translated. */
+  i18nKey?: string;
   href: string;
   icon: LucideIcon;
   requiredCapability: Capability;
@@ -46,6 +48,8 @@ export interface NavItem {
 
 export interface NavSection {
   title: string;
+  /** Optional i18n key for the section heading. */
+  i18nKey?: string;
   items: NavItem[];
 }
 

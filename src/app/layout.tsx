@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SwRegister } from "@/components/pwa/sw-register";
 import { siteConfig } from "@/config/site";
+import { getActiveLocale } from "@/lib/i18n/server";
+import { htmlDir } from "@/lib/i18n";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,9 +44,20 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // i18n resolution is best-effort — never crash the root layout if cookies
+  // or headers are unavailable (e.g. during static prerender). Default to
+  // English LTR in that case.
+  let locale: "en" | "ar" | "ku" | "fr" | "es" = "en";
+  let dir: "rtl" | "ltr" = "ltr";
+  try {
+    locale = await getActiveLocale();
+    dir = htmlDir(locale);
+  } catch {
+    /* swallowed */
+  }
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
         {children}
         <Toaster />

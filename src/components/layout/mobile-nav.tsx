@@ -9,7 +9,26 @@ import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { hasCapability } from "@/lib/auth/permissions";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n";
 import type { AppRole } from "@/types";
+
+const NAV_KEYS: Record<string, string> = {
+  "/dashboard":"nav.dashboard","/operations":"nav.operations","/residents":"nav.residents",
+  "/units":"nav.units","/buildings":"nav.buildings","/announcements":"nav.announcements",
+  "/tickets":"nav.tickets","/maintenance":"nav.maintenance","/technicians":"nav.technicians",
+  "/visitors":"nav.visitors","/facilities":"nav.facilities","/bookings":"nav.bookings",
+  "/finance":"nav.finance","/contracts":"nav.contracts","/payments":"nav.payments",
+  "/reminders":"nav.reminders","/utilities":"nav.utilities","/providers":"nav.providers",
+  "/subscriptions":"nav.subscriptions","/meters":"nav.meters","/internet-packages":"nav.internet",
+  "/utility-bills":"nav.utility_bills","/marketplace":"nav.marketplace",
+  "/service-providers":"nav.service_providers","/orders":"nav.orders","/reviews":"nav.reviews",
+  "/control-center":"nav.control_center","/analytics/risk":"nav.risk","/automation":"nav.automation",
+  "/alerts":"nav.alerts","/audit-log":"nav.audit_log","/compounds":"nav.compounds",
+  "/organizations":"nav.organizations","/settings/branding":"nav.branding",
+  "/settings/domains":"nav.domains","/settings/billing":"nav.billing","/settings":"nav.settings",
+  "/saas-console":"nav.saas_console","/saas-console/plans":"nav.plans","/saas-console/features":"nav.features",
+};
 
 interface MobileNavProps {
   roles: AppRole[];
@@ -23,6 +42,8 @@ interface MobileNavProps {
 export function MobileNav({ roles, isSuperAdmin }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useT();
+  const tr = (k: string | undefined, fb: string) => k ? (t(k as TranslationKey, {}) || fb) : fb;
 
   const can = (cap: Parameters<typeof hasCapability>[1]) =>
     isSuperAdmin || hasCapability(roles, cap);
@@ -65,7 +86,7 @@ export function MobileNav({ roles, isSuperAdmin }: MobileNavProps) {
                 return (
                   <div key={section.title}>
                     <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      {section.title}
+                      {tr(`sections.${section.title.toLowerCase()}`, section.title)}
                     </div>
                     <ul className="space-y-1">
                       {visible.map((item) => {
@@ -84,7 +105,7 @@ export function MobileNav({ roles, isSuperAdmin }: MobileNavProps) {
                               )}
                             >
                               <Icon className="h-4 w-4" />
-                              {item.title}
+                              {tr(NAV_KEYS[item.href] ?? item.i18nKey, item.title)}
                             </Link>
                           </li>
                         );

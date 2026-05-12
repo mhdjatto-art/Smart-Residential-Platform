@@ -6,31 +6,37 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { LiveDashboardWidgets } from "@/components/mobile/live-dashboard-widgets";
 import { getMobileDashboard } from "@/lib/api/resident-mobile";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function MobileHome() {
   const dash = await getMobileDashboard();
   const { ctx } = dash;
+  const { t } = await getT();
+  const firstName = ctx.full_name?.split(" ")[0] ?? "";
 
   return (
     <div>
-      <MobileTopbar title={`Hi, ${ctx.full_name?.split(" ")[0] ?? "there"}`} userId={ctx.user_id} unread={dash.unread_notifications} />
+      <MobileTopbar title={t("mobile.hi", { name: firstName })} userId={ctx.user_id} unread={dash.unread_notifications} />
 
       <div className="p-4 space-y-4">
         {/* Hero balance card */}
         <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 p-5 text-white shadow-lg">
-          <p className="text-xs uppercase tracking-wider opacity-90">Outstanding balance</p>
+          <p className="text-xs uppercase tracking-wider opacity-90">{t("mobile.outstanding_balance")}</p>
           <p className="mt-1 text-3xl font-bold">{formatCurrency(dash.outstanding_balance, { currency: ctx.currency })}</p>
           {dash.upcoming_installment_due_date && (
             <p className="mt-2 text-sm opacity-90 flex items-center gap-1">
               <CalendarClock className="h-4 w-4" />
-              Next: {formatCurrency(dash.upcoming_installment_amount, { currency: ctx.currency })} due {new Date(dash.upcoming_installment_due_date).toLocaleDateString()}
+              {t("mobile.next_due", {
+                amount: formatCurrency(dash.upcoming_installment_amount, { currency: ctx.currency }),
+                date: new Date(dash.upcoming_installment_due_date).toLocaleDateString(),
+              })}
             </p>
           )}
           <div className="mt-4 flex gap-2">
-            <Link href="/m/payments" className="rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur hover:bg-white/30">Pay now</Link>
-            <Link href="/m/payments/history" className="rounded-full border border-white/30 px-4 py-1.5 text-sm">History</Link>
+            <Link href="/m/payments" className="rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur hover:bg-white/30">{t("actions.pay_now")}</Link>
+            <Link href="/m/payments/history" className="rounded-full border border-white/30 px-4 py-1.5 text-sm">{t("actions.history")}</Link>
           </div>
         </div>
 

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { visitorSchema } from "@/lib/validations/operations";
 import { createVisitor } from "@/lib/api/visitors";
+import { useT } from "@/lib/i18n/client";
 
 interface NewVisitorFormProps {
   residentId: string;
@@ -20,6 +21,7 @@ interface NewVisitorFormProps {
 export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { t } = useT();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -64,23 +66,23 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
       <Card>
         <CardContent className="grid gap-4 p-4">
           <div className="space-y-1.5">
-            <Label className="text-xs">Visitor name</Label>
-            <Input name="full_name" required placeholder="Full name" />
+            <Label className="text-xs">{t("mobile.visitor_name")}</Label>
+            <Input name="full_name" required />
             {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs">Date</Label>
+              <Label className="text-xs">{t("mobile.date_field")}</Label>
               <Input name="scheduled_date" type="date" required />
               {errors.scheduled_date && <p className="text-xs text-destructive">{errors.scheduled_date}</p>}
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Time</Label>
+              <Label className="text-xs">{t("mobile.time")}</Label>
               <Input name="scheduled_time" type="time" />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Type</Label>
+            <Label className="text-xs">{t("mobile.type")}</Label>
             <Select name="visitor_type" defaultValue="guest">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -92,26 +94,26 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Mobile</Label>
+            <Label className="text-xs">{t("mobile.mobile_field")}</Label>
             <Input name="mobile" type="tel" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs">ID number</Label>
+              <Label className="text-xs">{t("mobile.id_number")}</Label>
               <Input name="id_number" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Vehicle plate</Label>
+              <Label className="text-xs">{t("mobile.vehicle_plate")}</Label>
               <Input name="vehicle_plate" />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Purpose</Label>
+            <Label className="text-xs">{t("mobile.purpose")}</Label>
             <Textarea name="visit_purpose" rows={2} />
           </div>
         </CardContent>
       </Card>
-      <Button type="submit" className="mt-4 w-full" disabled={pending}>{pending ? "Saving…" : "Pre-register"}</Button>
+      <Button type="submit" className="mt-4 w-full" disabled={pending}>{pending ? t("mobile.saving") : t("mobile.pre_register")}</Button>
     </form>
   );
 }

@@ -4,6 +4,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ interface VisitorRow {
 export default async function MobileVisitorsPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
   let visitors: VisitorRow[] = [];
   if (ctx.resident_id) {
     const { data } = await supabase.from("visitors")
@@ -31,15 +33,15 @@ export default async function MobileVisitorsPage() {
 
   return (
     <div>
-      <MobileTopbar title="Visitors" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("headers.visitors_title")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4 space-y-3">
         <Link href="/m/visitors/new" className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow">
-          <Plus className="h-4 w-4" /> Pre-register a visitor
+          <Plus className="h-4 w-4" /> {t("mobile.pre_register_visitor")}
         </Link>
         {visitors.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
             <UserPlus className="mx-auto h-8 w-8 opacity-50" />
-            <p className="mt-2">No visitors yet.</p>
+            <p className="mt-2">{t("mobile.no_visitors")}</p>
           </div>
         ) : (
           <ul className="space-y-2">

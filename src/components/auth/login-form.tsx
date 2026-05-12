@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema } from "@/lib/validations/auth";
+import { useT } from "@/lib/i18n/client";
 
 /**
  * Email + password login.
@@ -23,6 +24,7 @@ export function LoginForm() {
   const router = useRouter();
   const search = useSearchParams();
   const supabase = createClient();
+  const { t } = useT();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Partial<Record<"email" | "password" | "form", string>>>({});
@@ -64,14 +66,12 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6" noValidate>
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
-        <p className="text-sm text-muted-foreground">
-          Enter your work email and password to access SRP.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("auth.sign_in_title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("auth.sign_in_subtitle")}</p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("auth.email")}</Label>
         <Input
           id="email"
           type="email"
@@ -88,7 +88,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("auth.password")}</Label>
         <Input
           id="password"
           type="password"
@@ -110,12 +110,8 @@ export function LoginForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Signing in…" : "Sign in"}
+        {pending ? `${t("actions.sign_in")}…` : t("actions.sign_in")}
       </Button>
-
-      <p className="text-center text-xs text-muted-foreground">
-        No account? Ask your administrator to invite you.
-      </p>
     </form>
   );
 }

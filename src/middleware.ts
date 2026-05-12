@@ -5,10 +5,10 @@
  *   1. Refresh the Supabase auth session cookie (delegated to `updateSession`).
  *   2. Redirect unauthenticated users away from protected routes.
  *   3. Redirect authenticated users away from /login back to the dashboard.
- *   4. Resolve the request `Host` to a tenant organization (if a custom
- *      domain is configured) and stamp `x-srp-host` + `x-srp-tenant-id`
- *      headers on the downstream request so Server Components can read them
- *      without an extra DB hop. This is the Phase 9 white-label routing layer.
+ *   4. Stamp the request `Host` onto the response as `x-srp-host` so Server
+ *      Components can read it. Tenant lookup itself is deferred to the
+ *      Server Component layer (via getResolvedTenantId helpers), so the
+ *      middleware never blocks on a DB call.
  *
  * Role-based authorization is NOT enforced here — there's no role data on the
  * edge without an extra round-trip. Pages call `requireRole(...)` themselves,
@@ -17,8 +17,6 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
-import { createServerClient } from "@supabase/ssr";
-import { publicEnv } from "@/lib/env";
 
 const PUBLIC_PATHS = [
   "/login",
@@ -29,40 +27,6 @@ const PUBLIC_PATHS = [
 function isPublic(pathname: string): boolean {
   if (pathname === "/") return true;
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
-}
-
-// Hosts that are always treated as the platform's "control plane" and not a
-// tenant — we never look these up in organization_domains.
-const PLATFORM_HOSTS = new Set([
-  "localhost",
-  "127.0.0.1",
-  "smart-residential-platform.vercel.app",
-  "srp.app",
-  "www.srp.app",
-]);
-
-async function resolveTenantByHost(host: string): Promise<string | null> {
-  const normalized = host.split(":")[0]!.toLowerCase();
-  if (PLATFORM_HOSTS.has(normalized)) return null;
-
-  try {
-    // Anonymous client — `organization_domains` SELECT policy allows anon
-    // reads precisely to support this middleware lookup.
-    const supabase = createServerClient(
-      publicEnv.NEXT_PUBLIC_SUPABASE_URL,
-      publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      { cookies: { getAll: () => [], setAll: () => {} } },
-    );
-    const { data } = await supabase
-      .from("organization_domains")
-      .select("organization_id")
-      .eq("host", normalized)
-      .maybeSingle();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (data as any)?.organization_id ?? null;
-  } catch {
-    return null;
-  }
 }
 
 export async function middleware(request: NextRequest) {
@@ -85,14 +49,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Tenant resolution by host. Only run for non-API, non-static routes to
-  // avoid blowing up the request budget.
+  // Stamp the host on the response for Server Components that want to read
+  // it via `getRequestHost()`. We deliberately do NOT do a Supabase lookup
+  // here — that's deferred to server actions / pages where it's cheap.
   const host = request.headers.get("host");
-  if (host && !pathname.startsWith("/api/") && !pathname.startsWith("/_next/")) {
-    const tenantId = await resolveTenantByHost(host);
-    response.headers.set("x-srp-host", host);
-    if (tenantId) response.headers.set("x-srp-tenant-id", tenantId);
-  }
+  if (host) response.headers.set("x-srp-host", host);
 
   return response;
 }

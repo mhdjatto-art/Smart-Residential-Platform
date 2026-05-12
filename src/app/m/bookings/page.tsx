@@ -4,6 +4,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ interface BookingRow {
 export default async function MobileBookingsPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
+  const { t } = await getT();
   let bookings: BookingRow[] = [];
   if (ctx.resident_id) {
     const { data } = await supabase.from("facility_bookings")
@@ -41,12 +43,12 @@ export default async function MobileBookingsPage() {
 
   return (
     <div>
-      <MobileTopbar title="Facility bookings" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("headers.bookings_title")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4 space-y-3">
         {bookings.length === 0 ? (
           <div className="py-8 text-center text-sm text-muted-foreground">
             <CalendarDays className="mx-auto h-8 w-8 opacity-50" />
-            <p className="mt-2">No bookings yet.</p>
+            <p className="mt-2">{t("mobile.no_bookings")}</p>
           </div>
         ) : (
           <ul className="space-y-2">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AlertOctagon, ClipboardList, ShoppingBag, UserPlus, Zap } from "lucide-react";
 import { useRealtimeChannel } from "@/hooks/use-realtime-channel";
 import { formatCurrency } from "@/lib/utils";
+import { useT } from "@/lib/i18n/client";
 import type { MobileDashboard } from "@/lib/api/resident-mobile";
 
 interface LiveDashboardWidgetsProps {
@@ -18,6 +19,7 @@ interface LiveDashboardWidgetsProps {
  */
 export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
   const { ctx } = initial;
+  const { t } = useT();
   const [tickets, setTickets] = useState(initial.active_tickets);
   const [visitors, setVisitors] = useState(initial.pending_visitors);
   const [orders, setOrders] = useState(initial.active_orders);
@@ -98,15 +100,15 @@ export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <Widget href="/m/utilities"  icon={Zap}            label="Utility bills" primary={String(utility.count)} secondary={formatCurrency(utility.amount, { currency: ctx.currency })} tone="amber" />
-      <Widget href="/m/complaints" icon={ClipboardList}  label="Active complaints" primary={String(tickets)} secondary={tickets ? "View all" : "All clear"} tone="sky" />
-      <Widget href="/m/visitors"   icon={UserPlus}       label="Visitors pending" primary={String(visitors)} secondary={visitors ? "Review" : "None"} tone="violet" />
-      <Widget href="/m/marketplace/orders" icon={ShoppingBag} label="Active orders" primary={String(orders)} secondary={orders ? "Track" : "Browse"} tone="emerald" />
+      <Widget href="/m/utilities"  icon={Zap}            label={t("nav.utility_bills")}      primary={String(utility.count)} secondary={formatCurrency(utility.amount, { currency: ctx.currency })} tone="amber" />
+      <Widget href="/m/complaints" icon={ClipboardList}  label={t("mobile.active_complaints")} primary={String(tickets)}      secondary={tickets ? t("actions.view_all") : t("common.all_clear")}  tone="sky" />
+      <Widget href="/m/visitors"   icon={UserPlus}       label={t("mobile.visitors_pending")}  primary={String(visitors)}     secondary={visitors ? t("actions.view_all") : t("common.no")}        tone="violet" />
+      <Widget href="/m/marketplace/orders" icon={ShoppingBag} label={t("mobile.active_orders")} primary={String(orders)}       secondary={orders ? t("actions.view_all") : t("mobile.browse_marketplace")} tone="emerald" />
       {initial.unread_notifications > 0 && (
         <Link href="/m/notifications" className="col-span-2 flex items-center gap-3 rounded-xl border bg-rose-50 p-3 text-sm dark:bg-rose-950/40">
           <AlertOctagon className="h-5 w-5 text-rose-500" />
-          <span className="flex-1 font-medium">{initial.unread_notifications} new notifications</span>
-          <span className="text-xs text-muted-foreground">Tap to view</span>
+          <span className="flex-1 font-medium">{t("mobile.new_notifications", { n: initial.unread_notifications })}</span>
+          <span className="text-xs text-muted-foreground">{t("mobile.tap_to_view")}</span>
         </Link>
       )}
     </div>
