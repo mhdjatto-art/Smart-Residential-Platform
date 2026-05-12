@@ -29,6 +29,10 @@ import {
   AlertOctagon,
   Workflow,
   History,
+  Palette,
+  Globe,
+  CreditCard,
+  Crown,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -117,7 +121,18 @@ export const navigation: NavSection[] = [
     items: [
       { title: "Compounds",     href: "/compounds",     icon: Warehouse, requiredCapability: "compound:write" },
       { title: "Organizations", href: "/organizations", icon: Boxes,     requiredCapability: "organization:write" },
+      { title: "Branding",      href: "/settings/branding", icon: Palette,    requiredCapability: "branding:write" },
+      { title: "Domains",       href: "/settings/domains",  icon: Globe,      requiredCapability: "domains:write" },
+      { title: "Billing",       href: "/settings/billing",  icon: CreditCard, requiredCapability: "billing:read" },
       { title: "Settings",      href: "/settings",      icon: Settings,  requiredCapability: "compound:read" },
+    ],
+  },
+  {
+    title: "Platform",
+    items: [
+      { title: "SaaS console",  href: "/saas-console",          icon: Crown,    requiredCapability: "saas:admin" },
+      { title: "Plans",         href: "/saas-console/plans",    icon: Crown,    requiredCapability: "saas:admin" },
+      { title: "Features",      href: "/saas-console/features", icon: Sparkles, requiredCapability: "saas:admin" },
     ],
   },
 ];

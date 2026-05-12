@@ -1,0 +1,58 @@
+{
+  "app": {
+    "name": "منصة سمارت السكنية",
+    "tagline": "نظام تشغيل سكني في الوقت الحقيقي."
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "operations": "العمليات",
+    "residents": "السكان",
+    "units": "الوحدات",
+    "buildings": "المباني",
+    "announcements": "الإعلانات",
+    "tickets": "التذاكر",
+    "maintenance": "الصيانة",
+    "technicians": "الفنيون",
+    "visitors": "الزوار",
+    "facilities": "المرافق",
+    "bookings": "الحجوزات",
+    "finance": "المالية",
+    "contracts": "العقود",
+    "payments": "المدفوعات",
+    "reminders": "التذكيرات",
+    "utilities": "الخدمات",
+    "providers": "المزودون",
+    "subscriptions": "الاشتراكات",
+    "meters": "العدادات",
+    "internet": "باقات الإنترنت",
+    "utility_bills": "فواتير الخدمات",
+    "marketplace": "السوق",
+    "service_providers": "مقدمو الخدمات",
+    "orders": "الطلبات",
+    "reviews": "التقييمات",
+    "control_center": "مركز التحكم",
+    "risk": "تقييم المخاطر",
+    "automation": "الأتمتة",
+    "alerts": "التنبيهات",
+    "audit_log": "سجل التدقيق",
+    "compounds": "المجمعات",
+    "organizations": "المؤسسات",
+    "settings": "الإعدادات",
+    "saas_console": "وحدة تحكم SaaS"
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "back": "رجوع",
+    "refresh": "تحديث",
+    "search": "بحث"
+  },
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "empty": "لا يوجد شيء هنا بعد.",
+    "error": "حدث خطأ ما"
+  }
+}

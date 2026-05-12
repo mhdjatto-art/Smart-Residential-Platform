@@ -1149,6 +1149,36 @@ export type Database = {
           },
         ]
       }
+      feature_catalog: {
+        Row: {
+          category: string
+          created_at: string
+          default_enabled: boolean
+          description: string | null
+          is_premium: boolean
+          key: string
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          default_enabled?: boolean
+          description?: string | null
+          is_premium?: boolean
+          key: string
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          default_enabled?: boolean
+          description?: string | null
+          is_premium?: boolean
+          key?: string
+          name?: string
+        }
+        Relationships: []
+      }
       financial_transactions: {
         Row: {
           action_type: Database["public"]["Enums"]["financial_action"]
@@ -2200,6 +2230,273 @@ export type Database = {
           },
         ]
       }
+      organization_branding: {
+        Row: {
+          accent_color: string
+          background_color: string | null
+          custom_css: string | null
+          email_footer: string | null
+          email_from_name: string | null
+          favicon_path: string | null
+          font_family: string
+          logo_dark_path: string | null
+          logo_path: string | null
+          metadata: Json
+          organization_id: string
+          primary_color: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          background_color?: string | null
+          custom_css?: string | null
+          email_footer?: string | null
+          email_from_name?: string | null
+          favicon_path?: string | null
+          font_family?: string
+          logo_dark_path?: string | null
+          logo_path?: string | null
+          metadata?: Json
+          organization_id: string
+          primary_color?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          background_color?: string | null
+          custom_css?: string | null
+          email_footer?: string | null
+          email_from_name?: string | null
+          favicon_path?: string | null
+          font_family?: string
+          logo_dark_path?: string | null
+          logo_path?: string | null
+          metadata?: Json
+          organization_id?: string
+          primary_color?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_branding_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_domains: {
+        Row: {
+          created_at: string
+          host: string
+          id: string
+          is_primary: boolean
+          organization_id: string
+          ssl_status: string
+          updated_at: string
+          verification_token: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          host: string
+          id?: string
+          is_primary?: boolean
+          organization_id: string
+          ssl_status?: string
+          updated_at?: string
+          verification_token?: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          host?: string
+          id?: string
+          is_primary?: boolean
+          organization_id?: string
+          ssl_status?: string
+          updated_at?: string
+          verification_token?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_domains_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_feature_overrides: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          feature: string
+          is_enabled: boolean
+          limit_val: number | null
+          organization_id: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          feature: string
+          is_enabled: boolean
+          limit_val?: number | null
+          organization_id: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          feature?: string
+          is_enabled?: boolean
+          limit_val?: number | null
+          organization_id?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_feature_overrides_feature_fkey"
+            columns: ["feature"]
+            isOneToOne: false
+            referencedRelation: "feature_catalog"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "organization_feature_overrides_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_settings: {
+        Row: {
+          date_format: string
+          default_locale: string
+          feature_flags: Json
+          notifications_config: Json
+          number_format: string
+          organization_id: string
+          rtl_enabled: boolean
+          supported_locales: string[]
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          date_format?: string
+          default_locale?: string
+          feature_flags?: Json
+          notifications_config?: Json
+          number_format?: string
+          organization_id: string
+          rtl_enabled?: boolean
+          supported_locales?: string[]
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          date_format?: string
+          default_locale?: string
+          feature_flags?: Json
+          notifications_config?: Json
+          number_format?: string
+          organization_id?: string
+          rtl_enabled?: boolean
+          supported_locales?: string[]
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_subscriptions: {
+        Row: {
+          billing_cycle: Database["public"]["Enums"]["saas_billing_cycle"]
+          cancel_at_period_end: boolean
+          cancelled_at: string | null
+          created_at: string
+          currency: string
+          current_period_end: string
+          current_period_start: string
+          external_provider: string | null
+          external_subscription_id: string | null
+          id: string
+          metadata: Json
+          organization_id: string
+          plan_id: string
+          status: Database["public"]["Enums"]["saas_subscription_status"]
+          trial_ends_at: string | null
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: Database["public"]["Enums"]["saas_billing_cycle"]
+          cancel_at_period_end?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string
+          current_period_start?: string
+          external_provider?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          metadata?: Json
+          organization_id: string
+          plan_id: string
+          status?: Database["public"]["Enums"]["saas_subscription_status"]
+          trial_ends_at?: string | null
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: Database["public"]["Enums"]["saas_billing_cycle"]
+          cancel_at_period_end?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string
+          current_period_start?: string
+          external_provider?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          plan_id?: string
+          status?: Database["public"]["Enums"]["saas_subscription_status"]
+          trial_ends_at?: string | null
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_subscriptions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           contact_email: string | null
@@ -2561,6 +2858,42 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plan_features: {
+        Row: {
+          feature: string
+          is_enabled: boolean
+          limit_val: number | null
+          plan_id: string
+        }
+        Insert: {
+          feature: string
+          is_enabled?: boolean
+          limit_val?: number | null
+          plan_id: string
+        }
+        Update: {
+          feature?: string
+          is_enabled?: boolean
+          limit_val?: number | null
+          plan_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_features_feature_fkey"
+            columns: ["feature"]
+            isOneToOne: false
+            referencedRelation: "feature_catalog"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "plan_features_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
             referencedColumns: ["id"]
           },
         ]
@@ -2981,6 +3314,87 @@ export type Database = {
           },
         ]
       }
+      saas_invoices: {
+        Row: {
+          created_at: string
+          currency: string
+          due_date: string
+          external_invoice_id: string | null
+          id: string
+          invoice_number: string
+          line_items: Json
+          notes: string | null
+          organization_id: string
+          paid_amount: number
+          paid_at: string | null
+          period_end: string
+          period_start: string
+          status: Database["public"]["Enums"]["saas_invoice_status"]
+          subscription_id: string | null
+          subtotal: number
+          tax_amount: number
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          due_date: string
+          external_invoice_id?: string | null
+          id?: string
+          invoice_number: string
+          line_items?: Json
+          notes?: string | null
+          organization_id: string
+          paid_amount?: number
+          paid_at?: string | null
+          period_end: string
+          period_start: string
+          status?: Database["public"]["Enums"]["saas_invoice_status"]
+          subscription_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          due_date?: string
+          external_invoice_id?: string | null
+          id?: string
+          invoice_number?: string
+          line_items?: Json
+          notes?: string | null
+          organization_id?: string
+          paid_amount?: number
+          paid_at?: string | null
+          period_end?: string
+          period_start?: string
+          status?: Database["public"]["Enums"]["saas_invoice_status"]
+          subscription_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saas_invoices_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saas_invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "organization_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       security_logs: {
         Row: {
           action: string
@@ -3369,6 +3783,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_plans: {
+        Row: {
+          annual_price: number
+          code: string
+          created_at: string
+          currency: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          max_admin_users: number | null
+          max_api_calls_per_month: number | null
+          max_compounds: number | null
+          max_residents: number | null
+          max_storage_mb: number | null
+          max_units: number | null
+          metadata: Json
+          monthly_price: number
+          name: string
+          tier: Database["public"]["Enums"]["plan_tier"]
+          updated_at: string
+        }
+        Insert: {
+          annual_price?: number
+          code: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          max_admin_users?: number | null
+          max_api_calls_per_month?: number | null
+          max_compounds?: number | null
+          max_residents?: number | null
+          max_storage_mb?: number | null
+          max_units?: number | null
+          metadata?: Json
+          monthly_price?: number
+          name: string
+          tier: Database["public"]["Enums"]["plan_tier"]
+          updated_at?: string
+        }
+        Update: {
+          annual_price?: number
+          code?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          max_admin_users?: number | null
+          max_api_calls_per_month?: number | null
+          max_compounds?: number | null
+          max_residents?: number | null
+          max_storage_mb?: number | null
+          max_units?: number | null
+          metadata?: Json
+          monthly_price?: number
+          name?: string
+          tier?: Database["public"]["Enums"]["plan_tier"]
+          updated_at?: string
+        }
+        Relationships: []
       }
       system_alerts: {
         Row: {
@@ -3842,6 +4322,79 @@ export type Database = {
           },
           {
             foreignKeyName: "units_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_aggregates: {
+        Row: {
+          computed_at: string
+          event_count: number
+          id: string
+          metric: Database["public"]["Enums"]["usage_metric"]
+          organization_id: string
+          period_date: string
+          total_amount: number
+        }
+        Insert: {
+          computed_at?: string
+          event_count?: number
+          id?: string
+          metric: Database["public"]["Enums"]["usage_metric"]
+          organization_id: string
+          period_date: string
+          total_amount?: number
+        }
+        Update: {
+          computed_at?: string
+          event_count?: number
+          id?: string
+          metric?: Database["public"]["Enums"]["usage_metric"]
+          organization_id?: string
+          period_date?: string
+          total_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_aggregates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_events: {
+        Row: {
+          amount: number
+          context: Json
+          id: number
+          metric: Database["public"]["Enums"]["usage_metric"]
+          occurred_at: string
+          organization_id: string
+        }
+        Insert: {
+          amount?: number
+          context?: Json
+          id?: number
+          metric: Database["public"]["Enums"]["usage_metric"]
+          occurred_at?: string
+          organization_id: string
+        }
+        Update: {
+          amount?: number
+          context?: Json
+          id?: number
+          metric?: Database["public"]["Enums"]["usage_metric"]
+          occurred_at?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_events_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -4522,6 +5075,10 @@ export type Database = {
         Args: { p_billing_date?: string }
         Returns: number
       }
+      has_feature: {
+        Args: { p_feature: string; p_org_id: string }
+        Returns: boolean
+      }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
       mark_order_completed: { Args: { p_order_id: string }; Returns: undefined }
       place_order: {
@@ -4539,6 +5096,18 @@ export type Database = {
           p_service_fee?: number
           p_tax_amount?: number
           p_unit_id?: string
+        }
+        Returns: string
+      }
+      provision_organization: {
+        Args: {
+          p_contact_email?: string
+          p_country_code?: string
+          p_default_locale?: string
+          p_name: string
+          p_plan_code?: string
+          p_slug: string
+          p_timezone?: string
         }
         Returns: string
       }
@@ -4579,6 +5148,15 @@ export type Database = {
         }
         Returns: string
       }
+      record_usage: {
+        Args: {
+          p_amount?: number
+          p_context?: Json
+          p_metric: Database["public"]["Enums"]["usage_metric"]
+          p_org_id: string
+        }
+        Returns: undefined
+      }
       refresh_all_daily_kpi: { Args: { p_kpi_date?: string }; Returns: number }
       refresh_daily_kpi: {
         Args: { p_kpi_date?: string; p_org_id: string }
@@ -4587,6 +5165,10 @@ export type Database = {
       release_suspension: {
         Args: { p_subscription_id: string }
         Returns: undefined
+      }
+      resolve_organization_by_host: {
+        Args: { p_host: string }
+        Returns: string
       }
       reverse_payment: {
         Args: { p_payment_id: string; p_reason: string }
@@ -4771,6 +5353,7 @@ export type Database = {
       payout_status: "pending" | "processing" | "paid" | "cancelled"
       penalty_status: "pending" | "applied" | "waived" | "paid"
       penalty_type: "fixed" | "percentage" | "daily" | "monthly"
+      plan_tier: "starter" | "professional" | "enterprise" | "custom"
       prediction_kind:
         | "overdue_risk"
         | "churn_risk"
@@ -4810,6 +5393,14 @@ export type Database = {
         | "marketplace"
         | "custom"
       resident_status: "active" | "pending" | "former"
+      saas_billing_cycle: "monthly" | "quarterly" | "annual" | "custom"
+      saas_invoice_status: "draft" | "open" | "paid" | "void" | "uncollectible"
+      saas_subscription_status:
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "suspended"
+        | "cancelled"
       service_kind: "product" | "on_demand_service" | "subscription" | "package"
       subscription_status:
         | "pending"
@@ -4858,6 +5449,16 @@ export type Database = {
         | "other"
         | "office"
         | "commercial"
+      usage_metric:
+        | "active_units"
+        | "active_residents"
+        | "transactions"
+        | "storage_mb"
+        | "api_calls"
+        | "utility_bills"
+        | "marketplace_orders"
+        | "sms_sent"
+        | "email_sent"
       utility_bill_status:
         | "draft"
         | "issued"
@@ -5174,6 +5775,7 @@ export const Constants = {
       payout_status: ["pending", "processing", "paid", "cancelled"],
       penalty_status: ["pending", "applied", "waived", "paid"],
       penalty_type: ["fixed", "percentage", "daily", "monthly"],
+      plan_tier: ["starter", "professional", "enterprise", "custom"],
       prediction_kind: [
         "overdue_risk",
         "churn_risk",
@@ -5216,6 +5818,15 @@ export const Constants = {
         "custom",
       ],
       resident_status: ["active", "pending", "former"],
+      saas_billing_cycle: ["monthly", "quarterly", "annual", "custom"],
+      saas_invoice_status: ["draft", "open", "paid", "void", "uncollectible"],
+      saas_subscription_status: [
+        "trialing",
+        "active",
+        "past_due",
+        "suspended",
+        "cancelled",
+      ],
       service_kind: ["product", "on_demand_service", "subscription", "package"],
       subscription_status: [
         "pending",
@@ -5268,6 +5879,17 @@ export const Constants = {
         "other",
         "office",
         "commercial",
+      ],
+      usage_metric: [
+        "active_units",
+        "active_residents",
+        "transactions",
+        "storage_mb",
+        "api_calls",
+        "utility_bills",
+        "marketplace_orders",
+        "sms_sent",
+        "email_sent",
       ],
       utility_bill_status: [
         "draft",

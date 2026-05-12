@@ -1,0 +1,58 @@
+{
+  "app": {
+    "name": "Smart Residential Platform",
+    "tagline": "Real-time residential operating system."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "operations": "Operations",
+    "residents": "Residents",
+    "units": "Units",
+    "buildings": "Buildings",
+    "announcements": "Announcements",
+    "tickets": "Tickets",
+    "maintenance": "Maintenance",
+    "technicians": "Technicians",
+    "visitors": "Visitors",
+    "facilities": "Facilities",
+    "bookings": "Bookings",
+    "finance": "Finance",
+    "contracts": "Contracts",
+    "payments": "Payments",
+    "reminders": "Reminders",
+    "utilities": "Utilities",
+    "providers": "Providers",
+    "subscriptions": "Subscriptions",
+    "meters": "Meters",
+    "internet": "Internet plans",
+    "utility_bills": "Utility bills",
+    "marketplace": "Marketplace",
+    "service_providers": "Service providers",
+    "orders": "Orders",
+    "reviews": "Reviews",
+    "control_center": "Control center",
+    "risk": "Risk scoring",
+    "automation": "Automation",
+    "alerts": "Alerts",
+    "audit_log": "Audit log",
+    "compounds": "Compounds",
+    "organizations": "Organizations",
+    "settings": "Settings",
+    "saas_console": "SaaS console"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "refresh": "Refresh",
+    "search": "Search"
+  },
+  "common": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet.",
+    "error": "Something went wrong"
+  }
+}
