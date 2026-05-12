@@ -28,7 +28,7 @@ export default async function DashboardPage() {
 
   const { data: recentResidents } = await supabase
     .from("residents")
-    .select("id, first_name, last_name, status, created_at, email")
+    .select("*")
     .order("created_at", { ascending: false })
     .limit(5);
 

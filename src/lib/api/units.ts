@@ -24,7 +24,7 @@ export async function createUnit(input: UnitInput): Promise<Unit> {
 
   const { data: building, error: bErr } = await supabase
     .from("buildings")
-    .select("organization_id, compound_id")
+    .select("*")
     .eq("id", parsed.building_id)
     .single();
   if (bErr || !building) throw new Error("Building not found");

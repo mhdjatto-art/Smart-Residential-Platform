@@ -62,7 +62,7 @@ export async function createResident(input: z.infer<typeof createInputSchema>): 
   // Resolve org + compound from the chosen unit so the caller can't lie.
   const { data: unit, error: unitError } = await supabase
     .from("units")
-    .select("organization_id, compound_id")
+    .select("*")
     .eq("id", parsed.unit_id)
     .single();
   if (unitError || !unit) throw new Error("Unit not found");

@@ -23,7 +23,7 @@ export async function createBuilding(input: BuildingInput): Promise<Building> {
 
   const { data: compound, error: cErr } = await supabase
     .from("compounds")
-    .select("organization_id")
+    .select("*")
     .eq("id", parsed.compound_id)
     .single();
   if (cErr || !compound) throw new Error("Compound not found");

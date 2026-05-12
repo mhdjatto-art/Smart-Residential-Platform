@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const supabase = await createClient();
     const { data } = await supabase
       .from("organizations")
-      .select("name")
+      .select("*")
       .eq("id", primaryOrgId)
       .maybeSingle();
     orgName = data?.name ?? null;

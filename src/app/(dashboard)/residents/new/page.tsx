@@ -5,6 +5,12 @@ import { requireRole } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
+interface UnitRow {
+  id: string;
+  unit_number: string;
+  buildings: { name: string } | { name: string }[] | null;
+}
+
 export default async function NewResidentPage() {
   await requireRole(["developer_admin", "compound_manager"]);
   const supabase = await createClient();
@@ -14,15 +20,17 @@ export default async function NewResidentPage() {
   const { data, error } = await supabase
     .from("units")
     .select("id, unit_number, buildings(name)")
-    .order("unit_number");
+    .order("unit_number")
+    .returns<UnitRow[]>();
 
   if (error) throw new Error(error.message);
 
   const units = (data ?? []).map((u) => ({
     id: u.id,
     unit_number: u.unit_number,
-    building_name:
-      Array.isArray(u.buildings) ? u.buildings[0]?.name ?? "Unknown" : (u.buildings as { name?: string } | null)?.name ?? "Unknown",
+    building_name: Array.isArray(u.buildings)
+      ? u.buildings[0]?.name ?? "Unknown"
+      : u.buildings?.name ?? "Unknown",
   }));
 
   return (
