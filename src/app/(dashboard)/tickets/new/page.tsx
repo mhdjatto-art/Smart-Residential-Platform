@@ -1,0 +1,30 @@
+import { redirect } from "next/navigation";
+import { PageHeader } from "@/components/layout/page-header";
+import { TicketForm } from "@/components/tickets/ticket-form";
+import { requireUser } from "@/lib/auth/guards";
+import { listCompoundOptions } from "@/lib/api/compounds";
+import { listResidentOptions } from "@/lib/api/residents";
+import { listUnitsPaged } from "@/lib/api/units";
+
+export const dynamic = "force-dynamic";
+
+export default async function NewTicketPage() {
+  await requireUser();
+  const [compounds, residents, units] = await Promise.all([
+    listCompoundOptions(),
+    listResidentOptions(),
+    listUnitsPaged({ pageSize: 500 }),
+  ]);
+  if (compounds.length === 0) redirect("/compounds/new");
+
+  return (
+    <div>
+      <PageHeader title="New ticket" description="Open a complaint or maintenance request." />
+      <TicketForm
+        compounds={compounds}
+        residents={residents}
+        units={units.data.map((u) => ({ id: u.id, unit_number: u.unit_number }))}
+      />
+    </div>
+  );
+}

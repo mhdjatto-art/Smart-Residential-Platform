@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          attachments: Json
+          body: string
+          compound_id: string | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_pinned: boolean
+          kind: Database["public"]["Enums"]["announcement_kind"]
+          organization_id: string
+          published_at: string
+          target_audience: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attachments?: Json
+          body: string
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_pinned?: boolean
+          kind?: Database["public"]["Enums"]["announcement_kind"]
+          organization_id: string
+          published_at?: string
+          target_audience?: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attachments?: Json
+          body?: string
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_pinned?: boolean
+          kind?: Database["public"]["Enums"]["announcement_kind"]
+          organization_id?: string
+          published_at?: string
+          target_audience?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcements_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "announcements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -327,6 +396,186 @@ export type Database = {
             columns: ["resident_id"]
             isOneToOne: false
             referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      facilities: {
+        Row: {
+          booking_fee: number
+          capacity: number | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          facility_type: Database["public"]["Enums"]["facility_type"]
+          fee_currency: string | null
+          id: string
+          is_active: boolean
+          max_duration_minutes: number
+          metadata: Json
+          min_duration_minutes: number
+          name: string
+          organization_id: string
+          requires_approval: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          booking_fee?: number
+          capacity?: number | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          facility_type: Database["public"]["Enums"]["facility_type"]
+          fee_currency?: string | null
+          id?: string
+          is_active?: boolean
+          max_duration_minutes?: number
+          metadata?: Json
+          min_duration_minutes?: number
+          name: string
+          organization_id: string
+          requires_approval?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          booking_fee?: number
+          capacity?: number | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          facility_type?: Database["public"]["Enums"]["facility_type"]
+          fee_currency?: string | null
+          id?: string
+          is_active?: boolean
+          max_duration_minutes?: number
+          metadata?: Json
+          min_duration_minutes?: number
+          name?: string
+          organization_id?: string
+          requires_approval?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facilities_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facilities_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      facility_bookings: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          end_time: string
+          facility_id: string
+          fee_amount: number
+          fee_paid: boolean
+          id: string
+          notes: string | null
+          organization_id: string
+          rejected_reason: string | null
+          resident_id: string
+          start_time: string
+          status: Database["public"]["Enums"]["booking_status"]
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          end_time: string
+          facility_id: string
+          fee_amount?: number
+          fee_paid?: boolean
+          id?: string
+          notes?: string | null
+          organization_id: string
+          rejected_reason?: string | null
+          resident_id: string
+          start_time: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          end_time?: string
+          facility_id?: string
+          fee_amount?: number
+          fee_paid?: boolean
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          rejected_reason?: string | null
+          resident_id?: string
+          start_time?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facility_bookings_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_bookings_facility_id_fkey"
+            columns: ["facility_id"]
+            isOneToOne: false
+            referencedRelation: "facilities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_bookings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_bookings_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facility_bookings_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -709,6 +958,183 @@ export type Database = {
           },
           {
             foreignKeyName: "installment_schedules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      maintenance_jobs: {
+        Row: {
+          assigned_technician_id: string | null
+          building_id: string | null
+          completed_at: string | null
+          completion_notes: string | null
+          completion_proof_path: string | null
+          compound_id: string
+          cost: number | null
+          cost_currency: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_recurring: boolean
+          job_number: string
+          job_type: Database["public"]["Enums"]["maintenance_type"]
+          organization_id: string
+          recurrence_interval_days: number | null
+          scheduled_for: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["maintenance_status"]
+          ticket_id: string | null
+          title: string
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          assigned_technician_id?: string | null
+          building_id?: string | null
+          completed_at?: string | null
+          completion_notes?: string | null
+          completion_proof_path?: string | null
+          compound_id: string
+          cost?: number | null
+          cost_currency?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          job_number: string
+          job_type: Database["public"]["Enums"]["maintenance_type"]
+          organization_id: string
+          recurrence_interval_days?: number | null
+          scheduled_for?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["maintenance_status"]
+          ticket_id?: string | null
+          title: string
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          assigned_technician_id?: string | null
+          building_id?: string | null
+          completed_at?: string | null
+          completion_notes?: string | null
+          completion_proof_path?: string | null
+          compound_id?: string
+          cost?: number | null
+          cost_currency?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          job_number?: string
+          job_type?: Database["public"]["Enums"]["maintenance_type"]
+          organization_id?: string
+          recurrence_interval_days?: number | null
+          scheduled_for?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["maintenance_status"]
+          ticket_id?: string | null
+          title?: string
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_jobs_assigned_technician_id_fkey"
+            columns: ["assigned_technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_jobs_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_jobs_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_jobs_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_jobs_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          href: string | null
+          id: string
+          kind: Database["public"]["Enums"]["notification_kind"]
+          organization_id: string
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          href?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["notification_kind"]
+          organization_id: string
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          href?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["notification_kind"]
+          organization_id?: string
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1148,7 +1574,7 @@ export type Database = {
           profile_photo_path: string | null
           status: Database["public"]["Enums"]["resident_status"]
           tenancy_type: Database["public"]["Enums"]["tenancy_type"]
-          unit_id: string
+          unit_id: string | null
           updated_at: string
           updated_by: string | null
           user_id: string | null
@@ -1174,7 +1600,7 @@ export type Database = {
           profile_photo_path?: string | null
           status?: Database["public"]["Enums"]["resident_status"]
           tenancy_type?: Database["public"]["Enums"]["tenancy_type"]
-          unit_id: string
+          unit_id?: string | null
           updated_at?: string
           updated_by?: string | null
           user_id?: string | null
@@ -1200,7 +1626,7 @@ export type Database = {
           profile_photo_path?: string | null
           status?: Database["public"]["Enums"]["resident_status"]
           tenancy_type?: Database["public"]["Enums"]["tenancy_type"]
-          unit_id?: string
+          unit_id?: string | null
           updated_at?: string
           updated_by?: string | null
           user_id?: string | null
@@ -1222,6 +1648,275 @@ export type Database = {
           },
           {
             foreignKeyName: "residents_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_logs: {
+        Row: {
+          action: string
+          compound_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          officer_id: string | null
+          organization_id: string
+          visitor_id: string | null
+        }
+        Insert: {
+          action: string
+          compound_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          officer_id?: string | null
+          organization_id: string
+          visitor_id?: string | null
+        }
+        Update: {
+          action?: string
+          compound_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          officer_id?: string | null
+          organization_id?: string
+          visitor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_logs_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_logs_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "visitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      technicians: {
+        Row: {
+          availability_status: Database["public"]["Enums"]["technician_availability"]
+          created_at: string
+          created_by: string | null
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          mobile: string | null
+          notes: string | null
+          organization_id: string
+          specialization: string[]
+          updated_at: string
+          updated_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          availability_status?: Database["public"]["Enums"]["technician_availability"]
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          mobile?: string | null
+          notes?: string | null
+          organization_id: string
+          specialization?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          availability_status?: Database["public"]["Enums"]["technician_availability"]
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          mobile?: string | null
+          notes?: string | null
+          organization_id?: string
+          specialization?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "technicians_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_comments: {
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          id: string
+          is_internal: boolean
+          organization_id: string
+          ticket_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          organization_id: string
+          ticket_id: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          organization_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_comments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ticket_comments_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tickets: {
+        Row: {
+          assigned_at: string | null
+          assigned_to: string | null
+          category: Database["public"]["Enums"]["ticket_category"]
+          closed_at: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          metadata: Json
+          opened_at: string
+          organization_id: string
+          priority: Database["public"]["Enums"]["ticket_priority"]
+          resident_id: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          satisfaction_rating: number | null
+          sla_due_date: string | null
+          status: Database["public"]["Enums"]["ticket_status"]
+          subject: string
+          ticket_number: string
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_to?: string | null
+          category: Database["public"]["Enums"]["ticket_category"]
+          closed_at?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          description: string
+          id?: string
+          metadata?: Json
+          opened_at?: string
+          organization_id: string
+          priority?: Database["public"]["Enums"]["ticket_priority"]
+          resident_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          satisfaction_rating?: number | null
+          sla_due_date?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"]
+          subject: string
+          ticket_number: string
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_to?: string | null
+          category?: Database["public"]["Enums"]["ticket_category"]
+          closed_at?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          metadata?: Json
+          opened_at?: string
+          organization_id?: string
+          priority?: Database["public"]["Enums"]["ticket_priority"]
+          resident_id?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          satisfaction_rating?: number | null
+          sla_due_date?: string | null
+          status?: Database["public"]["Enums"]["ticket_status"]
+          subject?: string
+          ticket_number?: string
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_unit_id_fkey"
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
@@ -1552,6 +2247,119 @@ export type Database = {
           },
         ]
       }
+      visitors: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          checked_in_at: string | null
+          checked_out_at: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          full_name: string
+          id: string
+          id_number: string | null
+          mobile: string | null
+          notes: string | null
+          organization_id: string
+          pass_code: string
+          resident_id: string
+          scheduled_date: string
+          scheduled_time: string | null
+          status: Database["public"]["Enums"]["visitor_status"]
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+          vehicle_plate: string | null
+          visit_purpose: string | null
+          visitor_type: Database["public"]["Enums"]["visitor_type"]
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          checked_in_at?: string | null
+          checked_out_at?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          full_name: string
+          id?: string
+          id_number?: string | null
+          mobile?: string | null
+          notes?: string | null
+          organization_id: string
+          pass_code: string
+          resident_id: string
+          scheduled_date: string
+          scheduled_time?: string | null
+          status?: Database["public"]["Enums"]["visitor_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vehicle_plate?: string | null
+          visit_purpose?: string | null
+          visitor_type?: Database["public"]["Enums"]["visitor_type"]
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          checked_in_at?: string | null
+          checked_out_at?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          full_name?: string
+          id?: string
+          id_number?: string | null
+          mobile?: string | null
+          notes?: string | null
+          organization_id?: string
+          pass_code?: string
+          resident_id?: string
+          scheduled_date?: string
+          scheduled_time?: string | null
+          status?: Database["public"]["Enums"]["visitor_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vehicle_plate?: string | null
+          visit_purpose?: string | null
+          visitor_type?: Database["public"]["Enums"]["visitor_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitors_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitors_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visitors_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1569,8 +2377,13 @@ export type Database = {
       }
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
       contract_currency: { Args: { p_contract_id: string }; Returns: string }
+      dismiss_reminder: { Args: { p_reminder_id: string }; Returns: undefined }
       generate_installment_schedule: {
         Args: { p_contract_id: string }
+        Returns: number
+      }
+      generate_payment_reminders: {
+        Args: { p_upcoming_days?: number }
         Returns: number
       }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
@@ -1612,6 +2425,13 @@ export type Database = {
       user_organization_ids: { Args: { p_user?: string }; Returns: string[] }
     }
     Enums: {
+      announcement_kind:
+        | "general"
+        | "urgent"
+        | "maintenance"
+        | "billing"
+        | "security"
+        | "event"
       app_role:
         | "super_admin"
         | "developer_admin"
@@ -1622,6 +2442,12 @@ export type Database = {
         | "resident"
       assignment_status: "active" | "ended" | "cancelled"
       assignment_type: "owner" | "tenant"
+      booking_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "cancelled"
+        | "completed"
       compound_status: "active" | "inactive" | "archived"
       contract_status:
         | "draft"
@@ -1641,6 +2467,17 @@ export type Database = {
         | "building_photo"
         | "unit_photo"
         | "utility_bill"
+        | "other"
+      facility_type:
+        | "gym"
+        | "pool"
+        | "meeting_room"
+        | "event_hall"
+        | "football_field"
+        | "basketball_court"
+        | "tennis_court"
+        | "bbq_area"
+        | "playground"
         | "other"
       financial_action:
         | "contract_created"
@@ -1663,6 +2500,23 @@ export type Database = {
         | "paid"
         | "overdue"
         | "cancelled"
+      maintenance_status:
+        | "scheduled"
+        | "in_progress"
+        | "on_hold"
+        | "completed"
+        | "cancelled"
+      maintenance_type: "preventive" | "corrective" | "emergency"
+      notification_kind:
+        | "ticket_update"
+        | "maintenance_assigned"
+        | "booking_status"
+        | "visitor_status"
+        | "announcement"
+        | "payment_received"
+        | "payment_due"
+        | "penalty"
+        | "generic"
       organization_status: "active" | "suspended" | "archived"
       ownership_status:
         | "owned"
@@ -1683,7 +2537,28 @@ export type Database = {
       reminder_kind: "upcoming" | "overdue" | "penalty" | "payment_received"
       reminder_status: "pending" | "sent" | "failed" | "dismissed"
       resident_status: "active" | "pending" | "former"
+      technician_availability: "available" | "busy" | "off_duty" | "vacation"
       tenancy_type: "owner" | "tenant" | "family_member" | "guest"
+      ticket_category:
+        | "electricity"
+        | "water"
+        | "internet"
+        | "gas"
+        | "maintenance"
+        | "cleaning"
+        | "parking"
+        | "security"
+        | "elevator"
+        | "noise"
+        | "other"
+      ticket_priority: "low" | "medium" | "high" | "urgent"
+      ticket_status:
+        | "open"
+        | "assigned"
+        | "in_progress"
+        | "pending"
+        | "resolved"
+        | "closed"
       unit_status: "vacant" | "occupied" | "reserved" | "maintenance"
       unit_type:
         | "apartment"
@@ -1695,6 +2570,14 @@ export type Database = {
         | "other"
         | "office"
         | "commercial"
+      visitor_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "expired"
+        | "checked_in"
+        | "checked_out"
+      visitor_type: "guest" | "delivery" | "maintenance" | "contractor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1822,6 +2705,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      announcement_kind: [
+        "general",
+        "urgent",
+        "maintenance",
+        "billing",
+        "security",
+        "event",
+      ],
       app_role: [
         "super_admin",
         "developer_admin",
@@ -1833,6 +2724,13 @@ export const Constants = {
       ],
       assignment_status: ["active", "ended", "cancelled"],
       assignment_type: ["owner", "tenant"],
+      booking_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled",
+        "completed",
+      ],
       compound_status: ["active", "inactive", "archived"],
       contract_status: [
         "draft",
@@ -1853,6 +2751,18 @@ export const Constants = {
         "building_photo",
         "unit_photo",
         "utility_bill",
+        "other",
+      ],
+      facility_type: [
+        "gym",
+        "pool",
+        "meeting_room",
+        "event_hall",
+        "football_field",
+        "basketball_court",
+        "tennis_court",
+        "bbq_area",
+        "playground",
         "other",
       ],
       financial_action: [
@@ -1878,6 +2788,25 @@ export const Constants = {
         "overdue",
         "cancelled",
       ],
+      maintenance_status: [
+        "scheduled",
+        "in_progress",
+        "on_hold",
+        "completed",
+        "cancelled",
+      ],
+      maintenance_type: ["preventive", "corrective", "emergency"],
+      notification_kind: [
+        "ticket_update",
+        "maintenance_assigned",
+        "booking_status",
+        "visitor_status",
+        "announcement",
+        "payment_received",
+        "payment_due",
+        "penalty",
+        "generic",
+      ],
       organization_status: ["active", "suspended", "archived"],
       ownership_status: ["owned", "for_sale", "for_rent", "leased", "reserved"],
       payment_method: [
@@ -1894,7 +2823,30 @@ export const Constants = {
       reminder_kind: ["upcoming", "overdue", "penalty", "payment_received"],
       reminder_status: ["pending", "sent", "failed", "dismissed"],
       resident_status: ["active", "pending", "former"],
+      technician_availability: ["available", "busy", "off_duty", "vacation"],
       tenancy_type: ["owner", "tenant", "family_member", "guest"],
+      ticket_category: [
+        "electricity",
+        "water",
+        "internet",
+        "gas",
+        "maintenance",
+        "cleaning",
+        "parking",
+        "security",
+        "elevator",
+        "noise",
+        "other",
+      ],
+      ticket_priority: ["low", "medium", "high", "urgent"],
+      ticket_status: [
+        "open",
+        "assigned",
+        "in_progress",
+        "pending",
+        "resolved",
+        "closed",
+      ],
       unit_status: ["vacant", "occupied", "reserved", "maintenance"],
       unit_type: [
         "apartment",
@@ -1907,6 +2859,15 @@ export const Constants = {
         "office",
         "commercial",
       ],
+      visitor_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "expired",
+        "checked_in",
+        "checked_out",
+      ],
+      visitor_type: ["guest", "delivery", "maintenance", "contractor"],
     },
   },
 } as const

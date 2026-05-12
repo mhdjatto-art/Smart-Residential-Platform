@@ -10,6 +10,13 @@ import {
   DollarSign,
   Wallet,
   Bell,
+  ClipboardList,
+  Tag,
+  Wrench,
+  UserPlus,
+  CalendarDays,
+  Megaphone,
+  Activity,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -30,20 +37,28 @@ export const navigation: NavSection[] = [
   {
     title: "Overview",
     items: [
-      {
-        title: "Dashboard",
-        href: "/dashboard",
-        icon: LayoutDashboard,
-        requiredCapability: "compound:read",
-      },
+      { title: "Dashboard",  href: "/dashboard",  icon: LayoutDashboard, requiredCapability: "compound:read" },
+      { title: "Operations", href: "/operations", icon: Activity,        requiredCapability: "ticket:read" },
     ],
   },
   {
     title: "Community",
     items: [
-      { title: "Residents", href: "/residents", icon: Users,      requiredCapability: "resident:read" },
-      { title: "Units",     href: "/units",     icon: Home,       requiredCapability: "unit:read" },
-      { title: "Buildings", href: "/buildings", icon: Building2,  requiredCapability: "building:read" },
+      { title: "Residents",     href: "/residents",     icon: Users,       requiredCapability: "resident:read" },
+      { title: "Units",         href: "/units",         icon: Home,        requiredCapability: "unit:read" },
+      { title: "Buildings",     href: "/buildings",     icon: Building2,   requiredCapability: "building:read" },
+      { title: "Announcements", href: "/announcements", icon: Megaphone,   requiredCapability: "compound:read" },
+    ],
+  },
+  {
+    title: "Operations",
+    items: [
+      { title: "Tickets",     href: "/tickets",     icon: Tag,        requiredCapability: "ticket:read" },
+      { title: "Maintenance", href: "/maintenance", icon: ClipboardList, requiredCapability: "ticket:read" },
+      { title: "Technicians", href: "/technicians", icon: Wrench,     requiredCapability: "ticket:write" },
+      { title: "Visitors",    href: "/visitors",    icon: UserPlus,   requiredCapability: "visitor:read" },
+      { title: "Facilities",  href: "/facilities",  icon: Building2,  requiredCapability: "facility:read" },
+      { title: "Bookings",    href: "/bookings",    icon: CalendarDays, requiredCapability: "booking:read" },
     ],
   },
   {
