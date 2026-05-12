@@ -50,16 +50,20 @@ const VARIANTS: Record<string, BadgeProps["variant"]> = {
 };
 
 interface StatusBadgeProps {
-  status: string;
+  status: string | null | undefined;
   className?: string;
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
   const { t } = useT();
-  const variant = VARIANTS[status] ?? "outline";
-  // Try `status.<value>` from the dict; fall back to humanized status.
-  const translated = t(`status.${status}` as TranslationKey, {});
-  const label = translated && translated !== `status.${status}` ? translated : status.replace(/_/g, " ");
+  // Defensive: avoid crashing if status is null/undefined (e.g. missing column).
+  const safe = (status ?? "").toString();
+  if (!safe) {
+    return <Badge variant="outline" className={className}>—</Badge>;
+  }
+  const variant = VARIANTS[safe] ?? "outline";
+  const translated = t(`status.${safe}` as TranslationKey, {});
+  const label = translated && translated !== `status.${safe}` ? translated : safe.replace(/_/g, " ");
   return (
     <Badge variant={variant} className={cn("capitalize", className)}>
       {label}
