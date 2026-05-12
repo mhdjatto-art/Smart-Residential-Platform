@@ -37,6 +37,8 @@
     "meters": "Meters",
     "internet": "Internet plans",
     "utility_bills": "Utility bills",
+    "pricing_rules": "Pricing rules",
+    "integrations": "Integrations",
     "marketplace": "Marketplace",
     "service_providers": "Service providers",
     "orders": "Orders",
@@ -208,7 +210,11 @@
     "orders_title": "Marketplace orders",
     "orders_desc": "Orders placed by residents through the marketplace.",
     "risk_title": "Overdue risk scoring",
-    "risk_desc": "Heuristic predictor. Higher scores = greater delinquency risk."
+    "risk_desc": "Heuristic predictor. Higher scores = greater delinquency risk.",
+    "pricing_rules_title": "Pricing rules",
+    "pricing_rules_desc": "Dynamic service fees — by apartment size, consumption tiers, time-of-use, or formulas.",
+    "integrations_title": "Provider integrations",
+    "integrations_desc": "Adapter configurations for utility providers — Mikrotik, UniFi, Modbus, RADIUS, REST APIs."
   },
   "stats": {
     "outstanding": "Outstanding",

@@ -37,6 +37,8 @@
     "meters": "العدادات",
     "internet": "باقات الإنترنت",
     "utility_bills": "فواتير الخدمات",
+    "pricing_rules": "قواعد التسعير",
+    "integrations": "التكاملات",
     "marketplace": "السوق",
     "service_providers": "مقدمو الخدمات",
     "orders": "الطلبات",
@@ -208,7 +210,11 @@
     "orders_title": "طلبات السوق",
     "orders_desc": "طلبات أرسلها السكان عبر السوق.",
     "risk_title": "تقييم مخاطر التأخر",
-    "risk_desc": "متنبئ تقريبي. الدرجات الأعلى = خطر تأخر أكبر."
+    "risk_desc": "متنبئ تقريبي. الدرجات الأعلى = خطر تأخر أكبر.",
+    "pricing_rules_title": "قواعد التسعير",
+    "pricing_rules_desc": "رسوم خدمات ديناميكية — حسب مساحة الشقة، شرائح الاستهلاك، وقت الاستخدام، أو معادلات.",
+    "integrations_title": "تكاملات المزودين",
+    "integrations_desc": "إعدادات محوّلات مزودي الخدمة — Mikrotik و UniFi و Modbus و RADIUS و REST APIs."
   },
   "stats": {
     "outstanding": "المستحق",

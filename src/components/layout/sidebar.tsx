@@ -35,6 +35,8 @@ const NAV_KEYS: Record<string, string> = {
   "/meters": "nav.meters",
   "/internet-packages": "nav.internet",
   "/utility-bills": "nav.utility_bills",
+  "/pricing-rules": "nav.pricing_rules",
+  "/integrations": "nav.integrations",
   "/marketplace": "nav.marketplace",
   "/service-providers": "nav.service_providers",
   "/orders": "nav.orders",

@@ -692,6 +692,82 @@ export type Database = {
           },
         ]
       }
+      dynamic_tariffs: {
+        Row: {
+          compound_id: string | null
+          created_at: string
+          currency: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          is_active: boolean
+          method: Database["public"]["Enums"]["pricing_method"]
+          name: string
+          organization_id: string
+          provider_id: string | null
+          schedule: Json
+          service_kind: string
+          tiers: Json
+          updated_at: string
+        }
+        Insert: {
+          compound_id?: string | null
+          created_at?: string
+          currency?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          method?: Database["public"]["Enums"]["pricing_method"]
+          name: string
+          organization_id: string
+          provider_id?: string | null
+          schedule?: Json
+          service_kind: string
+          tiers?: Json
+          updated_at?: string
+        }
+        Update: {
+          compound_id?: string | null
+          created_at?: string
+          currency?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          method?: Database["public"]["Enums"]["pricing_method"]
+          name?: string
+          organization_id?: string
+          provider_id?: string | null
+          schedule?: Json
+          service_kind?: string
+          tiers?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dynamic_tariffs_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_tariffs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dynamic_tariffs_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       electricity_meters: {
         Row: {
           adapter_config: Json
@@ -1621,6 +1697,63 @@ export type Database = {
           },
           {
             foreignKeyName: "installment_schedules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integration_logs: {
+        Row: {
+          action: string
+          duration_ms: number | null
+          error_message: string | null
+          id: number
+          integration_id: string | null
+          occurred_at: string
+          organization_id: string | null
+          outcome: Database["public"]["Enums"]["integration_call_outcome"]
+          request_payload: Json | null
+          response_payload: Json | null
+          status_code: number | null
+        }
+        Insert: {
+          action: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: number
+          integration_id?: string | null
+          occurred_at?: string
+          organization_id?: string | null
+          outcome: Database["public"]["Enums"]["integration_call_outcome"]
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status_code?: number | null
+        }
+        Update: {
+          action?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: number
+          integration_id?: string | null
+          occurred_at?: string
+          organization_id?: string | null
+          outcome?: Database["public"]["Enums"]["integration_call_outcome"]
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "provider_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integration_logs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -2898,6 +3031,78 @@ export type Database = {
           },
         ]
       }
+      provider_integrations: {
+        Row: {
+          adapter_kind: string
+          config: Json
+          created_at: string
+          credentials_ref: string | null
+          endpoint_url: string | null
+          health_check_url: string | null
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_synced_at: string | null
+          name: string
+          organization_id: string
+          provider_id: string | null
+          status: Database["public"]["Enums"]["integration_status"]
+          updated_at: string
+          webhook_secret: string | null
+        }
+        Insert: {
+          adapter_kind: string
+          config?: Json
+          created_at?: string
+          credentials_ref?: string | null
+          endpoint_url?: string | null
+          health_check_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_synced_at?: string | null
+          name: string
+          organization_id: string
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["integration_status"]
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Update: {
+          adapter_kind?: string
+          config?: Json
+          created_at?: string
+          credentials_ref?: string | null
+          endpoint_url?: string | null
+          health_check_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_synced_at?: string | null
+          name?: string
+          organization_id?: string
+          provider_id?: string | null
+          status?: Database["public"]["Enums"]["integration_status"]
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_integrations_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       provider_payouts: {
         Row: {
           commission_amount: number
@@ -3591,6 +3796,99 @@ export type Database = {
             columns: ["provider_id"]
             isOneToOne: false
             referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_pricing_rules: {
+        Row: {
+          base_amount: number
+          compound_id: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          effective_from: string
+          effective_to: string | null
+          formula: string | null
+          id: string
+          is_active: boolean
+          max_amount: number | null
+          method: Database["public"]["Enums"]["pricing_method"]
+          min_amount: number | null
+          name: string
+          notes: string | null
+          organization_id: string
+          priority: number
+          schedule: Json
+          service_kind: string
+          tiers: Json
+          unit_amount: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          base_amount?: number
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          effective_from?: string
+          effective_to?: string | null
+          formula?: string | null
+          id?: string
+          is_active?: boolean
+          max_amount?: number | null
+          method: Database["public"]["Enums"]["pricing_method"]
+          min_amount?: number | null
+          name: string
+          notes?: string | null
+          organization_id: string
+          priority?: number
+          schedule?: Json
+          service_kind: string
+          tiers?: Json
+          unit_amount?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          base_amount?: number
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          effective_from?: string
+          effective_to?: string | null
+          formula?: string | null
+          id?: string
+          is_active?: boolean
+          max_amount?: number | null
+          method?: Database["public"]["Enums"]["pricing_method"]
+          min_amount?: number | null
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          priority?: number
+          schedule?: Json
+          service_kind?: string
+          tiers?: Json
+          unit_amount?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_pricing_rules_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_pricing_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -5033,6 +5331,17 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string }
         Returns: undefined
       }
+      compute_dynamic_fee: {
+        Args: {
+          p_consumption?: number
+          p_org_id: string
+          p_residents?: number
+          p_service_kind: string
+          p_unit_id?: string
+          p_when_at?: string
+        }
+        Returns: number
+      }
       compute_overdue_risk_for_org: {
         Args: { p_org_id: string }
         Returns: number
@@ -5058,6 +5367,16 @@ export type Database = {
         }
         Returns: string
       }
+      evaluate_pricing_rule: {
+        Args: {
+          p_consumption?: number
+          p_residents?: number
+          p_rule_id: string
+          p_unit_id?: string
+          p_when_at?: string
+        }
+        Returns: number
+      }
       execute_due_automation_rules: { Args: never; Returns: number }
       generate_electricity_bill_for_reading: {
         Args: { p_reading_id: string }
@@ -5080,6 +5399,20 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
+      log_integration_call: {
+        Args: {
+          p_action: string
+          p_duration_ms?: number
+          p_error?: string
+          p_integration_id: string
+          p_org_id: string
+          p_outcome: Database["public"]["Enums"]["integration_call_outcome"]
+          p_request?: Json
+          p_response?: Json
+          p_status_code?: number
+        }
+        Returns: number
+      }
       mark_order_completed: { Args: { p_order_id: string }; Returns: undefined }
       place_order: {
         Args: {
@@ -5308,6 +5641,13 @@ export type Database = {
         | "paid"
         | "overdue"
         | "cancelled"
+      integration_call_outcome: "success" | "failure" | "timeout" | "retry"
+      integration_status:
+        | "disconnected"
+        | "configured"
+        | "connected"
+        | "degraded"
+        | "error"
       job_status: "queued" | "processing" | "succeeded" | "failed" | "dead"
       maintenance_status:
         | "scheduled"
@@ -5361,6 +5701,14 @@ export type Database = {
         | "maintenance_risk"
         | "cashflow_forecast"
         | "satisfaction_score"
+      pricing_method:
+        | "flat"
+        | "per_sqm"
+        | "per_resident"
+        | "tiered"
+        | "formula"
+        | "time_of_use"
+        | "seasonal"
       provider_availability: "open" | "busy" | "closed"
       provider_kind:
         | "maintenance"
@@ -5731,6 +6079,14 @@ export const Constants = {
         "overdue",
         "cancelled",
       ],
+      integration_call_outcome: ["success", "failure", "timeout", "retry"],
+      integration_status: [
+        "disconnected",
+        "configured",
+        "connected",
+        "degraded",
+        "error",
+      ],
       job_status: ["queued", "processing", "succeeded", "failed", "dead"],
       maintenance_status: [
         "scheduled",
@@ -5783,6 +6139,15 @@ export const Constants = {
         "maintenance_risk",
         "cashflow_forecast",
         "satisfaction_score",
+      ],
+      pricing_method: [
+        "flat",
+        "per_sqm",
+        "per_resident",
+        "tiered",
+        "formula",
+        "time_of_use",
+        "seasonal",
       ],
       provider_availability: ["open", "busy", "closed"],
       provider_kind: [

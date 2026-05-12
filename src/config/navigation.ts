@@ -33,6 +33,8 @@ import {
   Globe,
   CreditCard,
   Crown,
+  Calculator,
+  Cable,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -98,7 +100,9 @@ export const navigation: NavSection[] = [
       { title: "Subscriptions",   href: "/subscriptions",     icon: Repeat,  requiredCapability: "utility:read" },
       { title: "Meters",          href: "/meters",            icon: Gauge,   requiredCapability: "utility:read" },
       { title: "Internet plans",  href: "/internet-packages", icon: Wifi,    requiredCapability: "utility:read" },
-      { title: "Utility bills",   href: "/utility-bills",     icon: Receipt, requiredCapability: "utility:read" },
+      { title: "Utility bills",   href: "/utility-bills",     icon: Receipt,     requiredCapability: "utility:read" },
+      { title: "Pricing rules",   href: "/pricing-rules",     icon: Calculator,  requiredCapability: "pricing:read" },
+      { title: "Integrations",    href: "/integrations",      icon: Cable,       requiredCapability: "integrations:read" },
     ],
   },
   {
