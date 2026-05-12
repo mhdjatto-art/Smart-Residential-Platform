@@ -175,6 +175,70 @@ export type Database = {
           },
         ]
       }
+      account_mappings: {
+        Row: {
+          compound_id: string | null
+          created_at: string
+          currency: string | null
+          gl_account_external_id: string
+          id: string
+          integration_id: string
+          mapping_kind: Database["public"]["Enums"]["mapping_kind"]
+          notes: string | null
+          organization_id: string
+          payment_method: string | null
+          updated_at: string
+        }
+        Insert: {
+          compound_id?: string | null
+          created_at?: string
+          currency?: string | null
+          gl_account_external_id: string
+          id?: string
+          integration_id: string
+          mapping_kind: Database["public"]["Enums"]["mapping_kind"]
+          notes?: string | null
+          organization_id: string
+          payment_method?: string | null
+          updated_at?: string
+        }
+        Update: {
+          compound_id?: string | null
+          created_at?: string
+          currency?: string | null
+          gl_account_external_id?: string
+          id?: string
+          integration_id?: string
+          mapping_kind?: Database["public"]["Enums"]["mapping_kind"]
+          notes?: string | null
+          organization_id?: string
+          payment_method?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_mappings_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_mappings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_mappings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_predictions: {
         Row: {
           band: string | null
@@ -1377,6 +1441,153 @@ export type Database = {
           },
         ]
       }
+      erp_integrations: {
+        Row: {
+          auto_push: boolean
+          base_url: string | null
+          company_external_id: string | null
+          config: Json
+          created_at: string
+          created_by: string | null
+          credentials_ref: string | null
+          csv_export_path: string | null
+          database_name: string | null
+          default_currency: string
+          id: string
+          is_active: boolean
+          kind: Database["public"]["Enums"]["erp_kind"]
+          last_error: string | null
+          last_synced_at: string | null
+          name: string
+          organization_id: string
+          status: Database["public"]["Enums"]["erp_status"]
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          auto_push?: boolean
+          base_url?: string | null
+          company_external_id?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          credentials_ref?: string | null
+          csv_export_path?: string | null
+          database_name?: string | null
+          default_currency?: string
+          id?: string
+          is_active?: boolean
+          kind: Database["public"]["Enums"]["erp_kind"]
+          last_error?: string | null
+          last_synced_at?: string | null
+          name: string
+          organization_id: string
+          status?: Database["public"]["Enums"]["erp_status"]
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          auto_push?: boolean
+          base_url?: string | null
+          company_external_id?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          credentials_ref?: string | null
+          csv_export_path?: string | null
+          database_name?: string | null
+          default_currency?: string
+          id?: string
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["erp_kind"]
+          last_error?: string | null
+          last_synced_at?: string | null
+          name?: string
+          organization_id?: string
+          status?: Database["public"]["Enums"]["erp_status"]
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_sync_log: {
+        Row: {
+          action: string
+          duration_ms: number | null
+          entry_id: string | null
+          error_message: string | null
+          external_id_returned: string | null
+          http_status: number | null
+          id: number
+          integration_id: string | null
+          occurred_at: string
+          organization_id: string | null
+          outcome: Database["public"]["Enums"]["sync_outcome"]
+          request_payload: Json | null
+          response_payload: Json | null
+        }
+        Insert: {
+          action: string
+          duration_ms?: number | null
+          entry_id?: string | null
+          error_message?: string | null
+          external_id_returned?: string | null
+          http_status?: number | null
+          id?: number
+          integration_id?: string | null
+          occurred_at?: string
+          organization_id?: string | null
+          outcome: Database["public"]["Enums"]["sync_outcome"]
+          request_payload?: Json | null
+          response_payload?: Json | null
+        }
+        Update: {
+          action?: string
+          duration_ms?: number | null
+          entry_id?: string | null
+          error_message?: string | null
+          external_id_returned?: string | null
+          http_status?: number | null
+          id?: number
+          integration_id?: string | null
+          occurred_at?: string
+          organization_id?: string | null
+          outcome?: Database["public"]["Enums"]["sync_outcome"]
+          request_payload?: Json | null
+          response_payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_sync_log_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sync_log_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sync_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       facilities: {
         Row: {
           booking_fee: number
@@ -1898,6 +2109,63 @@ export type Database = {
           },
         ]
       }
+      gl_accounts: {
+        Row: {
+          account_code: string
+          account_name: string
+          account_type: string | null
+          currency: string | null
+          external_id: string
+          id: string
+          integration_id: string | null
+          is_active: boolean
+          metadata: Json
+          organization_id: string
+          synced_at: string
+        }
+        Insert: {
+          account_code: string
+          account_name: string
+          account_type?: string | null
+          currency?: string | null
+          external_id: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          metadata?: Json
+          organization_id: string
+          synced_at?: string
+        }
+        Update: {
+          account_code?: string
+          account_name?: string
+          account_type?: string | null
+          currency?: string | null
+          external_id?: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          metadata?: Json
+          organization_id?: string
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gl_accounts_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gl_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       installment_contracts: {
         Row: {
           annual_interest_rate: number
@@ -2293,6 +2561,147 @@ export type Database = {
             columns: ["source_rule_id"]
             isOneToOne: false
             referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entries: {
+        Row: {
+          created_at: string
+          currency: string
+          description: string | null
+          entry_date: string
+          entry_number: string
+          external_journal_id: string | null
+          failed_at: string | null
+          id: string
+          integration_id: string | null
+          metadata: Json
+          organization_id: string
+          posted_at: string | null
+          reference: string | null
+          retry_count: number
+          source_id: string | null
+          source_table: string | null
+          status: Database["public"]["Enums"]["journal_status"]
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          entry_date?: string
+          entry_number: string
+          external_journal_id?: string | null
+          failed_at?: string | null
+          id?: string
+          integration_id?: string | null
+          metadata?: Json
+          organization_id: string
+          posted_at?: string | null
+          reference?: string | null
+          retry_count?: number
+          source_id?: string | null
+          source_table?: string | null
+          status?: Database["public"]["Enums"]["journal_status"]
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          entry_date?: string
+          entry_number?: string
+          external_journal_id?: string | null
+          failed_at?: string | null
+          id?: string
+          integration_id?: string | null
+          metadata?: Json
+          organization_id?: string
+          posted_at?: string | null
+          reference?: string | null
+          retry_count?: number
+          source_id?: string | null
+          source_table?: string | null
+          status?: Database["public"]["Enums"]["journal_status"]
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_lines: {
+        Row: {
+          account_code: string | null
+          account_external_id: string
+          account_name: string | null
+          credit: number
+          debit: number
+          description: string | null
+          entry_id: string
+          id: string
+          line_number: number
+          metadata: Json
+          organization_id: string
+          partner_external_id: string | null
+        }
+        Insert: {
+          account_code?: string | null
+          account_external_id: string
+          account_name?: string | null
+          credit?: number
+          debit?: number
+          description?: string | null
+          entry_id: string
+          id?: string
+          line_number: number
+          metadata?: Json
+          organization_id: string
+          partner_external_id?: string | null
+        }
+        Update: {
+          account_code?: string | null
+          account_external_id?: string
+          account_name?: string | null
+          credit?: number
+          debit?: number
+          description?: string | null
+          entry_id?: string
+          id?: string
+          line_number?: number
+          metadata?: Json
+          organization_id?: string
+          partner_external_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_lines_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_lines_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -5949,6 +6358,14 @@ export type Database = {
         Args: { p_contract_id: string }
         Returns: number
       }
+      generate_journal_entry_for_payment: {
+        Args: { p_payment_id: string }
+        Returns: string
+      }
+      generate_journal_entry_for_utility_bill: {
+        Args: { p_bill_id: string }
+        Returns: string
+      }
       generate_payment_reminders: {
         Args: { p_upcoming_days?: number }
         Returns: number
@@ -5970,6 +6387,22 @@ export type Database = {
           p_scheduled_for?: string
         }
         Returns: string
+      }
+      log_erp_sync: {
+        Args: {
+          p_action: string
+          p_duration_ms?: number
+          p_entry_id: string
+          p_error?: string
+          p_external_id?: string
+          p_http_status?: number
+          p_integration_id: string
+          p_org_id: string
+          p_outcome: Database["public"]["Enums"]["sync_outcome"]
+          p_request?: Json
+          p_response?: Json
+        }
+        Returns: number
       }
       log_integration_call: {
         Args: {
@@ -6081,6 +6514,16 @@ export type Database = {
       release_suspension: {
         Args: { p_subscription_id: string }
         Returns: undefined
+      }
+      resolve_account_for_mapping: {
+        Args: {
+          p_compound_id?: string
+          p_currency?: string
+          p_integration_id: string
+          p_kind: Database["public"]["Enums"]["mapping_kind"]
+          p_payment_method?: string
+        }
+        Returns: string
       }
       resolve_organization_by_host: {
         Args: { p_host: string }
@@ -6239,6 +6682,21 @@ export type Database = {
         | "unit_photo"
         | "utility_bill"
         | "other"
+      erp_kind:
+        | "odoo"
+        | "sap"
+        | "csv"
+        | "custom"
+        | "sage"
+        | "quickbooks"
+        | "xero"
+        | "generic"
+      erp_status:
+        | "disconnected"
+        | "configured"
+        | "connected"
+        | "degraded"
+        | "error"
       facility_type:
         | "gym"
         | "pool"
@@ -6285,6 +6743,13 @@ export type Database = {
         | "degraded"
         | "error"
       job_status: "queued" | "processing" | "succeeded" | "failed" | "dead"
+      journal_status:
+        | "draft"
+        | "queued"
+        | "syncing"
+        | "posted"
+        | "failed"
+        | "reversed"
       maintenance_status:
         | "scheduled"
         | "in_progress"
@@ -6292,6 +6757,19 @@ export type Database = {
         | "completed"
         | "cancelled"
       maintenance_type: "preventive" | "corrective" | "emergency"
+      mapping_kind:
+        | "installment_revenue"
+        | "utility_revenue"
+        | "marketplace_revenue"
+        | "commission_income"
+        | "cash_account"
+        | "bank_account"
+        | "penalty_income"
+        | "refund_expense"
+        | "tax_payable"
+        | "customer_receivable"
+        | "provider_payable"
+        | "other"
       meter_status: "active" | "inactive" | "faulty" | "replaced"
       notification_kind:
         | "ticket_update"
@@ -6400,6 +6878,7 @@ export type Database = {
         | "maintenance"
         | "request"
       suspension_status: "active" | "released" | "expired"
+      sync_outcome: "success" | "failure" | "timeout" | "skipped"
       tariff_type: "fixed" | "tiered" | "time_of_use" | "seasonal"
       technician_availability: "available" | "busy" | "off_duty" | "vacation"
       tenancy_type: "owner" | "tenant" | "family_member" | "guest"
@@ -6733,6 +7212,23 @@ export const Constants = {
         "utility_bill",
         "other",
       ],
+      erp_kind: [
+        "odoo",
+        "sap",
+        "csv",
+        "custom",
+        "sage",
+        "quickbooks",
+        "xero",
+        "generic",
+      ],
+      erp_status: [
+        "disconnected",
+        "configured",
+        "connected",
+        "degraded",
+        "error",
+      ],
       facility_type: [
         "gym",
         "pool",
@@ -6784,6 +7280,14 @@ export const Constants = {
         "error",
       ],
       job_status: ["queued", "processing", "succeeded", "failed", "dead"],
+      journal_status: [
+        "draft",
+        "queued",
+        "syncing",
+        "posted",
+        "failed",
+        "reversed",
+      ],
       maintenance_status: [
         "scheduled",
         "in_progress",
@@ -6792,6 +7296,20 @@ export const Constants = {
         "cancelled",
       ],
       maintenance_type: ["preventive", "corrective", "emergency"],
+      mapping_kind: [
+        "installment_revenue",
+        "utility_revenue",
+        "marketplace_revenue",
+        "commission_income",
+        "cash_account",
+        "bank_account",
+        "penalty_income",
+        "refund_expense",
+        "tax_payable",
+        "customer_receivable",
+        "provider_payable",
+        "other",
+      ],
       meter_status: ["active", "inactive", "faulty", "replaced"],
       notification_kind: [
         "ticket_update",
@@ -6905,6 +7423,7 @@ export const Constants = {
         "request",
       ],
       suspension_status: ["active", "released", "expired"],
+      sync_outcome: ["success", "failure", "timeout", "skipped"],
       tariff_type: ["fixed", "tiered", "time_of_use", "seasonal"],
       technician_availability: ["available", "busy", "off_duty", "vacation"],
       tenancy_type: ["owner", "tenant", "family_member", "guest"],

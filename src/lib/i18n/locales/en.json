@@ -43,6 +43,7 @@
     "access_zones": "Access zones",
     "access_logs": "Access logs",
     "parking": "Parking",
+    "erp": "ERP bridge",
     "marketplace": "Marketplace",
     "service_providers": "Service providers",
     "orders": "Orders",
@@ -226,7 +227,9 @@
     "access_logs_title": "Access logs",
     "access_logs_desc": "Every entry/exit attempt — granted, denied, or overridden.",
     "parking_title": "Parking",
-    "parking_desc": "Parking spots and resident assignments."
+    "parking_desc": "Parking spots and resident assignments.",
+    "erp_title": "ERP integrations",
+    "erp_desc": "Connect SRP to your accounting system — payments push as journal entries automatically."
   },
   "stats": {
     "outstanding": "Outstanding",

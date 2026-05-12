@@ -31,6 +31,7 @@ export type Capability =
   | "devices:read" | "devices:write"
   | "access:read"  | "access:write"
   | "parking:read" | "parking:write"
+  | "erp:read"     | "erp:write"
   | "saas:admin"
   | "audit:read";
 
@@ -60,6 +61,7 @@ const ALL: readonly Capability[] = [
   "devices:read","devices:write",
   "access:read","access:write",
   "parking:read","parking:write",
+  "erp:read","erp:write",
   "saas:admin",
   "audit:read",
 ] as const;
@@ -95,6 +97,7 @@ export const ROLE_CAPABILITIES: Record<AppRole, readonly Capability[]> = {
     "devices:read","devices:write",
     "access:read","access:write",
     "parking:read","parking:write",
+    "erp:read","erp:write",
     "audit:read",
   ],
 

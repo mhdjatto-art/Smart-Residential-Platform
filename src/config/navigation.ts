@@ -39,6 +39,7 @@ import {
   DoorOpen,
   Car,
   Radio,
+  BookOpen,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -94,6 +95,7 @@ export const navigation: NavSection[] = [
       { title: "Contracts", href: "/contracts", icon: FileText,   requiredCapability: "contract:read" },
       { title: "Payments",  href: "/payments",  icon: DollarSign, requiredCapability: "payment:read" },
       { title: "Reminders", href: "/reminders", icon: Bell,       requiredCapability: "payment:read" },
+      { title: "ERP bridge", href: "/erp",     icon: BookOpen,    requiredCapability: "erp:read" },
     ],
   },
   {

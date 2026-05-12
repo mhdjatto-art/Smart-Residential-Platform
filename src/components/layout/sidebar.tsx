@@ -41,6 +41,7 @@ const NAV_KEYS: Record<string, string> = {
   "/access-zones": "nav.access_zones",
   "/access-logs": "nav.access_logs",
   "/parking": "nav.parking",
+  "/erp": "nav.erp",
   "/marketplace": "nav.marketplace",
   "/service-providers": "nav.service_providers",
   "/orders": "nav.orders",
