@@ -20,6 +20,9 @@ export type Capability =
   | "booking:read"  | "booking:write"
   | "utility:read"  | "utility:write"
   | "marketplace:read" | "marketplace:write" | "marketplace:moderate"
+  | "analytics:read" | "analytics:write"
+  | "automation:read" | "automation:write"
+  | "alerts:read"   | "alerts:write"
   | "audit:read";
 
 const ALL: readonly Capability[] = [
@@ -37,6 +40,9 @@ const ALL: readonly Capability[] = [
   "booking:read","booking:write",
   "utility:read","utility:write",
   "marketplace:read","marketplace:write","marketplace:moderate",
+  "analytics:read","analytics:write",
+  "automation:read","automation:write",
+  "alerts:read","alerts:write",
   "audit:read",
 ] as const;
 
@@ -60,6 +66,9 @@ export const ROLE_CAPABILITIES: Record<AppRole, readonly Capability[]> = {
     "booking:read","booking:write",
     "utility:read","utility:write",
     "marketplace:read","marketplace:write","marketplace:moderate",
+    "analytics:read","analytics:write",
+    "automation:read","automation:write",
+    "alerts:read","alerts:write",
     "audit:read",
   ],
 
@@ -70,6 +79,9 @@ export const ROLE_CAPABILITIES: Record<AppRole, readonly Capability[]> = {
     "ticket:read",
     "utility:read","utility:write",
     "marketplace:read","marketplace:write",
+    "analytics:read",
+    "alerts:read","alerts:write",
+    "audit:read",
   ],
 
   maintenance_staff: [
@@ -78,6 +90,7 @@ export const ROLE_CAPABILITIES: Record<AppRole, readonly Capability[]> = {
     "facility:read",
     "utility:read","utility:write",
     "marketplace:read",
+    "alerts:read",
   ],
 
   security_staff: [

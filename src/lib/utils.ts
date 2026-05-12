@@ -61,7 +61,7 @@ export const SUPPORTED_CURRENCIES = Object.keys(CURRENCY_CONFIG);
  */
 export function formatCurrency(
   amount: number | null | undefined,
-  opts: { currency?: string; locale?: string; signed?: boolean } = {},
+  opts: { currency?: string; locale?: string; signed?: boolean; compact?: boolean } = {},
 ): string {
   if (amount === null || amount === undefined) return "—";
   const code = (opts.currency ?? "USD").toUpperCase();
@@ -70,9 +70,10 @@ export function formatCurrency(
     const formatter = new Intl.NumberFormat(opts.locale ?? cfg.locale, {
       style: "currency",
       currency: code,
-      minimumFractionDigits: cfg.decimals,
-      maximumFractionDigits: cfg.decimals,
+      minimumFractionDigits: opts.compact ? 0 : cfg.decimals,
+      maximumFractionDigits: opts.compact ? 1 : cfg.decimals,
       signDisplay: opts.signed ? "always" : "auto",
+      notation: opts.compact ? "compact" : "standard",
     });
     return formatter.format(amount);
   } catch {

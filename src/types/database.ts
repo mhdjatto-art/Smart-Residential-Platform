@@ -14,6 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_predictions: {
+        Row: {
+          band: string | null
+          compound_id: string | null
+          created_at: string
+          id: string
+          model_version: string
+          organization_id: string
+          predicted_at: string
+          prediction_kind: Database["public"]["Enums"]["prediction_kind"]
+          rationale: Json
+          score: number
+          subject_id: string | null
+          subject_table: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          band?: string | null
+          compound_id?: string | null
+          created_at?: string
+          id?: string
+          model_version?: string
+          organization_id: string
+          predicted_at?: string
+          prediction_kind: Database["public"]["Enums"]["prediction_kind"]
+          rationale?: Json
+          score: number
+          subject_id?: string | null
+          subject_table?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          band?: string | null
+          compound_id?: string | null
+          created_at?: string
+          id?: string
+          model_version?: string
+          organization_id?: string
+          predicted_at?: string
+          prediction_kind?: Database["public"]["Enums"]["prediction_kind"]
+          rationale?: Json
+          score?: number
+          subject_id?: string | null
+          subject_table?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_predictions_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_predictions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      analytics_daily_kpi: {
+        Row: {
+          active_residents: number
+          active_tickets: number
+          collections_mtd: number
+          collections_today: number
+          compound_id: string | null
+          computed_at: string
+          currency: string
+          id: string
+          kpi_date: string
+          marketplace_commission_today: number
+          marketplace_orders_open: number
+          marketplace_revenue_today: number
+          occupancy_rate: number
+          organization_id: string
+          outstanding_balance: number
+          overdue_amount: number
+          overdue_count: number
+          pending_visitors: number
+          satisfaction_avg: number
+          sla_breached: number
+          utility_amount_unpaid: number
+          utility_bills_unpaid: number
+        }
+        Insert: {
+          active_residents?: number
+          active_tickets?: number
+          collections_mtd?: number
+          collections_today?: number
+          compound_id?: string | null
+          computed_at?: string
+          currency?: string
+          id?: string
+          kpi_date: string
+          marketplace_commission_today?: number
+          marketplace_orders_open?: number
+          marketplace_revenue_today?: number
+          occupancy_rate?: number
+          organization_id: string
+          outstanding_balance?: number
+          overdue_amount?: number
+          overdue_count?: number
+          pending_visitors?: number
+          satisfaction_avg?: number
+          sla_breached?: number
+          utility_amount_unpaid?: number
+          utility_bills_unpaid?: number
+        }
+        Update: {
+          active_residents?: number
+          active_tickets?: number
+          collections_mtd?: number
+          collections_today?: number
+          compound_id?: string | null
+          computed_at?: string
+          currency?: string
+          id?: string
+          kpi_date?: string
+          marketplace_commission_today?: number
+          marketplace_orders_open?: number
+          marketplace_revenue_today?: number
+          occupancy_rate?: number
+          organization_id?: string
+          outstanding_balance?: number
+          overdue_amount?: number
+          overdue_count?: number
+          pending_visitors?: number
+          satisfaction_avg?: number
+          sla_breached?: number
+          utility_amount_unpaid?: number
+          utility_bills_unpaid?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_daily_kpi_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_daily_kpi_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       announcements: {
         Row: {
           attachments: Json
@@ -118,6 +271,138 @@ export type Database = {
           table_name?: string
         }
         Relationships: []
+      }
+      automation_rules: {
+        Row: {
+          action: Database["public"]["Enums"]["automation_action"]
+          action_config: Json
+          compound_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          failure_count: number
+          id: string
+          last_run_at: string | null
+          name: string
+          next_run_at: string | null
+          organization_id: string
+          run_count: number
+          status: Database["public"]["Enums"]["automation_status"]
+          trigger_config: Json
+          trigger_kind: Database["public"]["Enums"]["automation_trigger"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          action: Database["public"]["Enums"]["automation_action"]
+          action_config?: Json
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          failure_count?: number
+          id?: string
+          last_run_at?: string | null
+          name: string
+          next_run_at?: string | null
+          organization_id: string
+          run_count?: number
+          status?: Database["public"]["Enums"]["automation_status"]
+          trigger_config?: Json
+          trigger_kind: Database["public"]["Enums"]["automation_trigger"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          action?: Database["public"]["Enums"]["automation_action"]
+          action_config?: Json
+          compound_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          failure_count?: number
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          next_run_at?: string | null
+          organization_id?: string
+          run_count?: number
+          status?: Database["public"]["Enums"]["automation_status"]
+          trigger_config?: Json
+          trigger_kind?: Database["public"]["Enums"]["automation_trigger"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_rules_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_runs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          organization_id: string
+          outcome: string
+          rows_affected: number
+          rule_id: string
+          trigger_context: Json
+          triggered_at: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          outcome: string
+          rows_affected?: number
+          rule_id: string
+          trigger_context?: Json
+          triggered_at?: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          outcome?: string
+          rows_affected?: number
+          rule_id?: string
+          trigger_context?: Json
+          triggered_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_runs_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       buildings: {
         Row: {
@@ -1391,6 +1676,72 @@ export type Database = {
           },
         ]
       }
+      job_queue: {
+        Row: {
+          attempts: number
+          created_at: string
+          dedup_key: string | null
+          finished_at: string | null
+          id: string
+          job_kind: string
+          last_error: string | null
+          max_attempts: number
+          organization_id: string | null
+          payload: Json
+          scheduled_for: string
+          source_rule_id: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["job_status"]
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          dedup_key?: string | null
+          finished_at?: string | null
+          id?: string
+          job_kind: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id?: string | null
+          payload?: Json
+          scheduled_for?: string
+          source_rule_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          dedup_key?: string | null
+          finished_at?: string | null
+          id?: string
+          job_kind?: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id?: string | null
+          payload?: Json
+          scheduled_for?: string
+          source_rule_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_queue_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_queue_source_rule_id_fkey"
+            columns: ["source_rule_id"]
+            isOneToOne: false
+            referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_jobs: {
         Row: {
           assigned_technician_id: string | null
@@ -2408,6 +2759,125 @@ export type Database = {
           },
         ]
       }
+      report_definitions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          parameters: Json
+          recipients: string[]
+          report_kind: Database["public"]["Enums"]["report_kind"]
+          schedule_cron: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          parameters?: Json
+          recipients?: string[]
+          report_kind: Database["public"]["Enums"]["report_kind"]
+          schedule_cron?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          parameters?: Json
+          recipients?: string[]
+          report_kind?: Database["public"]["Enums"]["report_kind"]
+          schedule_cron?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_definitions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          id: string
+          organization_id: string
+          output_format: string
+          parameters: Json
+          report_id: string | null
+          report_kind: Database["public"]["Enums"]["report_kind"]
+          row_count: number | null
+          started_at: string | null
+          status: string
+          storage_path: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          output_format: string
+          parameters?: Json
+          report_id?: string | null
+          report_kind: Database["public"]["Enums"]["report_kind"]
+          row_count?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          output_format?: string
+          parameters?: Json
+          report_id?: string | null
+          report_kind?: Database["public"]["Enums"]["report_kind"]
+          row_count?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "report_runs_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "report_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       residents: {
         Row: {
           compound_id: string
@@ -2896,6 +3366,78 @@ export type Database = {
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          body: string | null
+          compound_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_table: string | null
+          id: string
+          kind: string
+          metric: Json
+          organization_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: Database["public"]["Enums"]["alert_severity"]
+          status: Database["public"]["Enums"]["alert_status"]
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          body?: string | null
+          compound_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_table?: string | null
+          id?: string
+          kind: string
+          metric?: Json
+          organization_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          body?: string | null
+          compound_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_table?: string | null
+          id?: string
+          kind?: string
+          metric?: Json
+          organization_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_alerts_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "system_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -3938,6 +4480,10 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string }
         Returns: undefined
       }
+      compute_overdue_risk_for_org: {
+        Args: { p_org_id: string }
+        Returns: number
+      }
       compute_provider_payout: {
         Args: {
           p_period_end: string
@@ -3948,6 +4494,18 @@ export type Database = {
       }
       contract_currency: { Args: { p_contract_id: string }; Returns: string }
       dismiss_reminder: { Args: { p_reminder_id: string }; Returns: undefined }
+      enqueue_job: {
+        Args: {
+          p_dedup_key?: string
+          p_job_kind: string
+          p_org_id: string
+          p_payload?: Json
+          p_scheduled_for?: string
+          p_source_rule_id?: string
+        }
+        Returns: string
+      }
+      execute_due_automation_rules: { Args: never; Returns: number }
       generate_electricity_bill_for_reading: {
         Args: { p_reading_id: string }
         Returns: string
@@ -3984,6 +4542,20 @@ export type Database = {
         }
         Returns: string
       }
+      raise_system_alert: {
+        Args: {
+          p_body?: string
+          p_compound_id?: string
+          p_entity_id?: string
+          p_entity_table?: string
+          p_kind: string
+          p_metric?: Json
+          p_org_id: string
+          p_severity: Database["public"]["Enums"]["alert_severity"]
+          p_title: string
+        }
+        Returns: string
+      }
       recompute_building_counts: {
         Args: { p_building_id: string }
         Returns: undefined
@@ -4006,6 +4578,11 @@ export type Database = {
           p_payment_method: Database["public"]["Enums"]["payment_method"]
         }
         Returns: string
+      }
+      refresh_all_daily_kpi: { Args: { p_kpi_date?: string }; Returns: number }
+      refresh_daily_kpi: {
+        Args: { p_kpi_date?: string; p_org_id: string }
+        Returns: undefined
       }
       release_suspension: {
         Args: { p_subscription_id: string }
@@ -4034,6 +4611,8 @@ export type Database = {
       user_organization_ids: { Args: { p_user?: string }; Returns: string[] }
     }
     Enums: {
+      alert_severity: "info" | "warning" | "critical"
+      alert_status: "open" | "acknowledged" | "resolved" | "snoozed"
       announcement_kind:
         | "general"
         | "urgent"
@@ -4051,6 +4630,23 @@ export type Database = {
         | "resident"
       assignment_status: "active" | "ended" | "cancelled"
       assignment_type: "owner" | "tenant"
+      automation_action:
+        | "send_notification"
+        | "send_reminder"
+        | "apply_penalty"
+        | "suspend_service"
+        | "escalate_ticket"
+        | "create_job"
+        | "assign_technician"
+        | "export_report"
+        | "webhook"
+      automation_status: "active" | "paused" | "disabled"
+      automation_trigger:
+        | "cron"
+        | "event_insert"
+        | "event_update"
+        | "event_delete"
+        | "condition_threshold"
       billing_cycle:
         | "monthly"
         | "quarterly"
@@ -4130,6 +4726,7 @@ export type Database = {
         | "paid"
         | "overdue"
         | "cancelled"
+      job_status: "queued" | "processing" | "succeeded" | "failed" | "dead"
       maintenance_status:
         | "scheduled"
         | "in_progress"
@@ -4174,6 +4771,13 @@ export type Database = {
       payout_status: "pending" | "processing" | "paid" | "cancelled"
       penalty_status: "pending" | "applied" | "waived" | "paid"
       penalty_type: "fixed" | "percentage" | "daily" | "monthly"
+      prediction_kind:
+        | "overdue_risk"
+        | "churn_risk"
+        | "utility_anomaly"
+        | "maintenance_risk"
+        | "cashflow_forecast"
+        | "satisfaction_score"
       provider_availability: "open" | "busy" | "closed"
       provider_kind:
         | "maintenance"
@@ -4197,6 +4801,14 @@ export type Database = {
       reminder_channel: "in_app" | "email" | "sms"
       reminder_kind: "upcoming" | "overdue" | "penalty" | "payment_received"
       reminder_status: "pending" | "sent" | "failed" | "dismissed"
+      report_kind:
+        | "financial"
+        | "utility"
+        | "maintenance"
+        | "occupancy"
+        | "resident"
+        | "marketplace"
+        | "custom"
       resident_status: "active" | "pending" | "former"
       service_kind: "product" | "on_demand_service" | "subscription" | "package"
       subscription_status:
@@ -4396,6 +5008,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      alert_severity: ["info", "warning", "critical"],
+      alert_status: ["open", "acknowledged", "resolved", "snoozed"],
       announcement_kind: [
         "general",
         "urgent",
@@ -4415,6 +5029,25 @@ export const Constants = {
       ],
       assignment_status: ["active", "ended", "cancelled"],
       assignment_type: ["owner", "tenant"],
+      automation_action: [
+        "send_notification",
+        "send_reminder",
+        "apply_penalty",
+        "suspend_service",
+        "escalate_ticket",
+        "create_job",
+        "assign_technician",
+        "export_report",
+        "webhook",
+      ],
+      automation_status: ["active", "paused", "disabled"],
+      automation_trigger: [
+        "cron",
+        "event_insert",
+        "event_update",
+        "event_delete",
+        "condition_threshold",
+      ],
       billing_cycle: ["monthly", "quarterly", "biannual", "annual", "one_time"],
       billing_method: [
         "flat",
@@ -4497,6 +5130,7 @@ export const Constants = {
         "overdue",
         "cancelled",
       ],
+      job_status: ["queued", "processing", "succeeded", "failed", "dead"],
       maintenance_status: [
         "scheduled",
         "in_progress",
@@ -4540,6 +5174,14 @@ export const Constants = {
       payout_status: ["pending", "processing", "paid", "cancelled"],
       penalty_status: ["pending", "applied", "waived", "paid"],
       penalty_type: ["fixed", "percentage", "daily", "monthly"],
+      prediction_kind: [
+        "overdue_risk",
+        "churn_risk",
+        "utility_anomaly",
+        "maintenance_risk",
+        "cashflow_forecast",
+        "satisfaction_score",
+      ],
       provider_availability: ["open", "busy", "closed"],
       provider_kind: [
         "maintenance",
@@ -4564,6 +5206,15 @@ export const Constants = {
       reminder_channel: ["in_app", "email", "sms"],
       reminder_kind: ["upcoming", "overdue", "penalty", "payment_received"],
       reminder_status: ["pending", "sent", "failed", "dismissed"],
+      report_kind: [
+        "financial",
+        "utility",
+        "maintenance",
+        "occupancy",
+        "resident",
+        "marketplace",
+        "custom",
+      ],
       resident_status: ["active", "pending", "former"],
       service_kind: ["product", "on_demand_service", "subscription", "package"],
       subscription_status: [

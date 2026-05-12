@@ -25,6 +25,10 @@ import {
   ShoppingBag,
   Store,
   Star,
+  Sparkles,
+  AlertOctagon,
+  Workflow,
+  History,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -96,6 +100,16 @@ export const navigation: NavSection[] = [
       { title: "Service providers",  href: "/service-providers",  icon: Store,       requiredCapability: "marketplace:read" },
       { title: "Orders",             href: "/orders",             icon: ShoppingBag, requiredCapability: "marketplace:read" },
       { title: "Reviews",            href: "/reviews",            icon: Star,        requiredCapability: "marketplace:read" },
+    ],
+  },
+  {
+    title: "Intelligence",
+    items: [
+      { title: "Control Center", href: "/control-center",   icon: Activity,     requiredCapability: "analytics:read" },
+      { title: "Risk scoring",   href: "/analytics/risk",   icon: Sparkles,     requiredCapability: "analytics:read" },
+      { title: "Automation",     href: "/automation",       icon: Workflow,     requiredCapability: "automation:read" },
+      { title: "Alerts",         href: "/alerts",           icon: AlertOctagon, requiredCapability: "alerts:read" },
+      { title: "Audit log",      href: "/audit-log",        icon: History,      requiredCapability: "audit:read" },
     ],
   },
   {
