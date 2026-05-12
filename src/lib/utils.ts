@@ -33,22 +33,52 @@ export function assertNever(x: never, label = "value"): never {
 }
 
 /**
- * Format a number as currency. Defaults to USD; callers can override per
- * organization later when we add a currency setting.
+ * Currency definitions for the supported set. IQD is shown without decimals
+ * by convention (sub-unit "fils" is not used in practice). Other currencies
+ * follow the standard 2-decimal convention.
+ */
+const CURRENCY_CONFIG: Record<string, { locale: string; decimals: number }> = {
+  USD: { locale: "en-US", decimals: 2 },
+  IQD: { locale: "en-US", decimals: 0 },   // 1,000,000 IQD (no fils in commerce)
+  EUR: { locale: "en-IE", decimals: 2 },
+  GBP: { locale: "en-GB", decimals: 2 },
+  SAR: { locale: "en-SA", decimals: 2 },
+  AED: { locale: "en-AE", decimals: 2 },
+  EGP: { locale: "en-EG", decimals: 2 },
+  JOD: { locale: "en-JO", decimals: 3 },
+  KWD: { locale: "en-KW", decimals: 3 },
+  QAR: { locale: "en-QA", decimals: 2 },
+  BHD: { locale: "en-BH", decimals: 3 },
+  OMR: { locale: "en-OM", decimals: 3 },
+  TRY: { locale: "en-US", decimals: 2 },
+};
+
+export const SUPPORTED_CURRENCIES = Object.keys(CURRENCY_CONFIG);
+
+/**
+ * Format a number as currency. The currency code is required for accuracy —
+ * callers should pull it from the contract or organization context.
  */
 export function formatCurrency(
   amount: number | null | undefined,
   opts: { currency?: string; locale?: string; signed?: boolean } = {},
 ): string {
   if (amount === null || amount === undefined) return "—";
-  const formatter = new Intl.NumberFormat(opts.locale ?? "en-US", {
-    style: "currency",
-    currency: opts.currency ?? "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    signDisplay: opts.signed ? "always" : "auto",
-  });
-  return formatter.format(amount);
+  const code = (opts.currency ?? "USD").toUpperCase();
+  const cfg = CURRENCY_CONFIG[code] ?? CURRENCY_CONFIG.USD!;
+  try {
+    const formatter = new Intl.NumberFormat(opts.locale ?? cfg.locale, {
+      style: "currency",
+      currency: code,
+      minimumFractionDigits: cfg.decimals,
+      maximumFractionDigits: cfg.decimals,
+      signDisplay: opts.signed ? "always" : "auto",
+    });
+    return formatter.format(amount);
+  } catch {
+    // Fallback for unknown currency codes
+    return `${code} ${amount.toFixed(cfg.decimals)}`;
+  }
 }
 
 export function formatPercent(value: number | null | undefined, digits = 2): string {

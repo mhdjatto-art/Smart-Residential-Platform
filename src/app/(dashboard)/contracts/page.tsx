@@ -88,19 +88,23 @@ export default async function ContractsPage({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell>
-                    <Link href={`/contracts/${c.id}`} className="font-medium hover:underline">{c.contract_number}</Link>
-                  </TableCell>
-                  <TableCell className="capitalize text-muted-foreground">{c.contract_type.replace(/_/g, " ")}</TableCell>
-                  <TableCell><StatusBadge status={c.contract_status} /></TableCell>
-                  <TableCell className="text-right tabular-nums">{formatCurrency(c.total_property_price)}</TableCell>
-                  <TableCell className="text-right tabular-nums">{formatCurrency(c.financed_amount)}</TableCell>
-                  <TableCell className="text-right tabular-nums">{c.monthly_amount !== null ? formatCurrency(c.monthly_amount) : "—"}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{formatDate(c.contract_start_date)}</TableCell>
-                </TableRow>
-              ))}
+              {data.map((c) => {
+                const cur = c.currency ?? "USD";
+                return (
+                  <TableRow key={c.id}>
+                    <TableCell>
+                      <Link href={`/contracts/${c.id}`} className="font-medium hover:underline">{c.contract_number}</Link>
+                      <div className="text-xs text-muted-foreground">{cur}</div>
+                    </TableCell>
+                    <TableCell className="capitalize text-muted-foreground">{c.contract_type.replace(/_/g, " ")}</TableCell>
+                    <TableCell><StatusBadge status={c.contract_status} /></TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(c.total_property_price, { currency: cur })}</TableCell>
+                    <TableCell className="text-right tabular-nums">{formatCurrency(c.financed_amount, { currency: cur })}</TableCell>
+                    <TableCell className="text-right tabular-nums">{c.monthly_amount !== null ? formatCurrency(c.monthly_amount, { currency: cur }) : "—"}</TableCell>
+                    <TableCell className="text-right text-muted-foreground">{formatDate(c.contract_start_date)}</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
           <Pagination total={total} pageSize={PAGE_SIZE} page={page} />

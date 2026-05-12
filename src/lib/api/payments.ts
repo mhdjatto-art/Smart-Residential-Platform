@@ -16,6 +16,7 @@ export interface PaymentRow {
   payment_method: string;
   payment_amount: number;
   payment_status: string;
+  currency: string | null;
   notes: string | null;
   external_reference: string | null;
   reversed_at: string | null;

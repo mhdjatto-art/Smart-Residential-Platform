@@ -16,11 +16,13 @@ interface PaymentFormProps {
   contractId: string;
   outstandingTotal: number;
   nextDueAmount: number | null;
+  currency?: string;
 }
 
 type Errors = Partial<Record<keyof PaymentInput | "form", string>>;
 
-export function PaymentForm({ contractId, outstandingTotal, nextDueAmount }: PaymentFormProps) {
+export function PaymentForm({ contractId, outstandingTotal, nextDueAmount, currency = "USD" }: PaymentFormProps) {
+  const fmt = (n: number) => formatCurrency(n, { currency });
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
@@ -49,7 +51,7 @@ export function PaymentForm({ contractId, outstandingTotal, nextDueAmount }: Pay
       return;
     }
     if (parsed.data.amount > outstandingTotal + 0.01) {
-      setErrors({ amount: `Amount exceeds outstanding ${formatCurrency(outstandingTotal)}` });
+      setErrors({ amount: `Amount exceeds outstanding ${fmt(outstandingTotal)}` });
       return;
     }
 
@@ -74,11 +76,11 @@ export function PaymentForm({ contractId, outstandingTotal, nextDueAmount }: Pay
           <div className="md:col-span-2 grid grid-cols-2 gap-3 rounded-lg border bg-muted/30 p-4 text-sm">
             <div>
               <p className="text-xs uppercase text-muted-foreground tracking-wider">Outstanding total</p>
-              <p className="mt-1 font-semibold">{formatCurrency(outstandingTotal)}</p>
+              <p className="mt-1 font-semibold">{fmt(outstandingTotal)}</p>
             </div>
             <div>
               <p className="text-xs uppercase text-muted-foreground tracking-wider">Next installment due</p>
-              <p className="mt-1 font-semibold">{nextDueAmount !== null ? formatCurrency(nextDueAmount) : "—"}</p>
+              <p className="mt-1 font-semibold">{nextDueAmount !== null ? fmt(nextDueAmount) : "—"}</p>
             </div>
           </div>
 

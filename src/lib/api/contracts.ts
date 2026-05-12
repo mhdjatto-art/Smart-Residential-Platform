@@ -16,6 +16,7 @@ export interface ContractRow {
   contract_status: string;
   contract_start_date: string;
   contract_end_date: string | null;
+  currency: string | null;
   total_property_price: number;
   down_payment: number;
   financed_amount: number;
@@ -89,6 +90,7 @@ export async function createContract(input: ContractInput): Promise<ContractRow>
       resident_id: parsed.resident_id,
       contract_number: parsed.contract_number,
       contract_type: parsed.contract_type,
+      currency: parsed.currency,
       contract_start_date: parsed.contract_start_date,
       contract_end_date: parsed.contract_end_date ?? null,
       total_property_price: parsed.total_property_price,

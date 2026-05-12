@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { PaymentForm } from "@/components/payments/payment-form";
 import { requireRole } from "@/lib/auth/guards";
 import { getContract, listContractsPaged, listSchedule } from "@/lib/api/contracts";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -43,13 +44,17 @@ export default async function NewPaymentPage({
     ? Number(nextDue.total_due) + Number(nextDue.penalty_amount) - Number(nextDue.paid_amount)
     : null;
 
+  const supabase = await createClient();
+  const orgRes = await supabase.from("organizations").select("currency").eq("id", contract.organization_id).maybeSingle();
+  const cur = contract.currency ?? ((orgRes.data as { currency?: string } | null)?.currency ?? "USD");
+
   return (
     <div>
       <PageHeader
         title={`Record payment · ${contract.contract_number}`}
-        description="Funds are allocated FIFO across overdue → upcoming installments."
+        description={`Funds allocated FIFO across overdue → upcoming installments · Currency: ${cur}`}
       />
-      <PaymentForm contractId={contract.id} outstandingTotal={outstanding} nextDueAmount={nextDueAmount} />
+      <PaymentForm contractId={contract.id} outstandingTotal={outstanding} nextDueAmount={nextDueAmount} currency={cur} />
     </div>
   );
 }

@@ -21,16 +21,21 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
   if (!contract) notFound();
 
   const supabase = await createClient();
-  const [schedule, paymentsResult, unitRes, residentRes] = await Promise.all([
+  const [schedule, paymentsResult, unitRes, residentRes, orgRes] = await Promise.all([
     listSchedule(id),
     listPaymentsPaged({ contractId: id, pageSize: 50 }),
     supabase.from("units").select("id, unit_number").eq("id", contract.unit_id).maybeSingle(),
     supabase.from("residents").select("id, first_name, last_name").eq("id", contract.resident_id).maybeSingle(),
+    supabase.from("organizations").select("currency").eq("id", contract.organization_id).maybeSingle(),
   ]);
 
   const unitNumber = (unitRes.data as { unit_number?: string } | null)?.unit_number ?? "—";
   const residentRow = residentRes.data as { first_name?: string; last_name?: string } | null;
   const residentName = residentRow ? `${residentRow.first_name ?? ""} ${residentRow.last_name ?? ""}`.trim() : "—";
+  const orgCurrency = (orgRes.data as { currency?: string } | null)?.currency ?? "USD";
+  // Effective currency: contract override → org default → USD
+  const cur = contract.currency ?? orgCurrency;
+  const fmt = (n: number | null | undefined) => formatCurrency(n, { currency: cur });
 
   const outstanding = schedule.reduce(
     (sum, s) => sum + (Number(s.total_due) + Number(s.penalty_amount) - Number(s.paid_amount)),
@@ -43,7 +48,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
     <div>
       <PageHeader
         title={contract.contract_number}
-        description={`${contract.contract_type.replace(/_/g, " ")} · Unit ${unitNumber} · ${residentName}`}
+        description={`${contract.contract_type.replace(/_/g, " ")} · ${cur} · Unit ${unitNumber} · ${residentName}`}
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
@@ -61,10 +66,10 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total price" value={formatCurrency(contract.total_property_price)} />
-        <StatCard label="Financed" value={formatCurrency(contract.financed_amount)} />
-        <StatCard label="Paid to date" value={formatCurrency(paidTotal)} />
-        <StatCard label="Outstanding" value={formatCurrency(outstanding)} />
+        <StatCard label="Total price" value={fmt(contract.total_property_price)} />
+        <StatCard label="Financed" value={fmt(contract.financed_amount)} />
+        <StatCard label="Paid to date" value={fmt(paidTotal)} />
+        <StatCard label="Outstanding" value={fmt(outstanding)} />
       </div>
 
       <div className="mt-6">
@@ -74,7 +79,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
               <CardTitle>Contract</CardTitle>
               <p className="text-xs text-muted-foreground capitalize mt-1">
                 <StatusBadge status={contract.contract_status} /> · {contract.installment_count} ×{" "}
-                {contract.installment_frequency} at {formatCurrency(contract.monthly_amount)}
+                {contract.installment_frequency} at {fmt(contract.monthly_amount)}
               </p>
             </div>
             <ContractActions
@@ -84,13 +89,13 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
             />
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
+            <Field label="Currency" value={cur} />
             <Field label="Start date" value={formatDate(contract.contract_start_date)} />
             <Field label="End date" value={formatDate(contract.contract_end_date)} />
-            <Field label="Down payment" value={formatCurrency(contract.down_payment)} />
+            <Field label="Down payment" value={fmt(contract.down_payment)} />
             <Field label="Interest rate" value={`${contract.annual_interest_rate}%`} />
             <Field label="Frequency" value={contract.installment_frequency} />
             <Field label="Penalty type" value={contract.late_penalty_type ?? "—"} />
-            <Field label="Penalty value" value={contract.late_penalty_value ?? "—"} />
             <Field label="Grace period" value={`${contract.grace_period_days} days`} />
           </CardContent>
         </Card>
@@ -125,11 +130,11 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
                     <TableRow key={s.id}>
                       <TableCell>{s.installment_number}</TableCell>
                       <TableCell className="text-muted-foreground">{formatDate(s.due_date)}</TableCell>
-                      <TableCell className="text-right tabular-nums">{formatCurrency(s.principal_amount)}</TableCell>
-                      <TableCell className="text-right tabular-nums">{formatCurrency(s.interest_amount)}</TableCell>
-                      <TableCell className="text-right tabular-nums">{formatCurrency(s.penalty_amount)}</TableCell>
-                      <TableCell className="text-right tabular-nums font-medium">{formatCurrency(Number(s.total_due) + Number(s.penalty_amount))}</TableCell>
-                      <TableCell className="text-right tabular-nums">{formatCurrency(s.paid_amount)}</TableCell>
+                      <TableCell className="text-right tabular-nums">{fmt(s.principal_amount)}</TableCell>
+                      <TableCell className="text-right tabular-nums">{fmt(s.interest_amount)}</TableCell>
+                      <TableCell className="text-right tabular-nums">{fmt(s.penalty_amount)}</TableCell>
+                      <TableCell className="text-right tabular-nums font-medium">{fmt(Number(s.total_due) + Number(s.penalty_amount))}</TableCell>
+                      <TableCell className="text-right tabular-nums">{fmt(s.paid_amount)}</TableCell>
                       <TableCell><StatusBadge status={s.status} /></TableCell>
                     </TableRow>
                   ))}
@@ -159,7 +164,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium tabular-nums">{formatCurrency(p.payment_amount)}</p>
+                      <p className="font-medium tabular-nums">{fmt(p.payment_amount)}</p>
                       <StatusBadge status={p.payment_status} />
                     </div>
                   </li>
@@ -174,7 +179,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
         <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">
           <p className="text-sm">
             <strong>Next due:</strong> {formatDate(nextDue.due_date)} —{" "}
-            {formatCurrency(Number(nextDue.total_due) + Number(nextDue.penalty_amount) - Number(nextDue.paid_amount))}
+            {fmt(Number(nextDue.total_due) + Number(nextDue.penalty_amount) - Number(nextDue.paid_amount))}
           </p>
         </div>
       )}

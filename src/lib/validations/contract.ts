@@ -13,26 +13,29 @@ const num = (min: number, max: number) =>
     .transform((v) => (v === "" ? undefined : v))
     .pipe(z.number().min(min).max(max));
 
+export const SUPPORTED_CURRENCY_CODES = ["USD", "IQD", "EUR", "GBP", "SAR", "AED", "EGP", "JOD", "KWD", "QAR", "BHD", "OMR", "TRY"] as const;
+
 export const contractSchema = z
   .object({
     unit_id: z.string().uuid(),
     resident_id: z.string().uuid(),
     contract_number: z.string().trim().min(2).max(64),
     contract_type: z.enum(["property_sale", "rental", "lease_to_own"]),
+    currency: z.enum(SUPPORTED_CURRENCY_CODES).default("USD"),
     contract_start_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD"),
     contract_end_date: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD")
       .optional()
       .or(z.literal("").transform(() => undefined)),
-    total_property_price: num(0, 1_000_000_000),
-    down_payment: num(0, 1_000_000_000),
+    total_property_price: num(0, 100_000_000_000),
+    down_payment: num(0, 100_000_000_000),
     installment_frequency: z.enum(["monthly", "quarterly", "biannual", "annual"]).default("monthly"),
     installment_count: num(1, 600),
     annual_interest_rate: num(0, 100).default(0),
     late_penalty_type: z.enum(["fixed", "percentage", "daily", "monthly"]).optional()
       .or(z.literal("").transform(() => undefined)),
-    late_penalty_value: num(0, 100_000).optional(),
+    late_penalty_value: num(0, 100_000_000).optional(),
     grace_period_days: num(0, 365).default(0),
     notes: optionalString,
   })

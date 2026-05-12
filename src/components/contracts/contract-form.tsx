@@ -37,6 +37,7 @@ export function ContractForm({ units, residents }: ContractFormProps) {
       resident_id: String(fd.get("resident_id") ?? ""),
       contract_number: String(fd.get("contract_number") ?? ""),
       contract_type: String(fd.get("contract_type") ?? "property_sale"),
+      currency: String(fd.get("currency") ?? "USD"),
       contract_start_date: String(fd.get("contract_start_date") ?? ""),
       contract_end_date: String(fd.get("contract_end_date") ?? ""),
       total_property_price: String(fd.get("total_property_price") ?? ""),
@@ -106,6 +107,27 @@ export function ContractForm({ units, residents }: ContractFormProps) {
                 <SelectItem value="property_sale">Property sale</SelectItem>
                 <SelectItem value="rental">Rental</SelectItem>
                 <SelectItem value="lease_to_own">Lease to own</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+
+          <Field label="Currency" error={errors.currency}>
+            <Select name="currency" defaultValue="USD">
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USD">USD — US Dollar ($)</SelectItem>
+                <SelectItem value="IQD">IQD — Iraqi Dinar (د.ع)</SelectItem>
+                <SelectItem value="EUR">EUR — Euro (€)</SelectItem>
+                <SelectItem value="GBP">GBP — British Pound (£)</SelectItem>
+                <SelectItem value="SAR">SAR — Saudi Riyal</SelectItem>
+                <SelectItem value="AED">AED — UAE Dirham</SelectItem>
+                <SelectItem value="EGP">EGP — Egyptian Pound</SelectItem>
+                <SelectItem value="JOD">JOD — Jordanian Dinar</SelectItem>
+                <SelectItem value="KWD">KWD — Kuwaiti Dinar</SelectItem>
+                <SelectItem value="QAR">QAR — Qatari Riyal</SelectItem>
+                <SelectItem value="BHD">BHD — Bahraini Dinar</SelectItem>
+                <SelectItem value="OMR">OMR — Omani Rial</SelectItem>
+                <SelectItem value="TRY">TRY — Turkish Lira</SelectItem>
               </SelectContent>
             </Select>
           </Field>

@@ -529,6 +529,7 @@ export type Database = {
           contract_type: Database["public"]["Enums"]["contract_type"]
           created_at: string
           created_by: string | null
+          currency: string | null
           down_payment: number
           financed_amount: number | null
           grace_period_days: number
@@ -557,6 +558,7 @@ export type Database = {
           contract_type: Database["public"]["Enums"]["contract_type"]
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           down_payment?: number
           financed_amount?: number | null
           grace_period_days?: number
@@ -585,6 +587,7 @@ export type Database = {
           contract_type?: Database["public"]["Enums"]["contract_type"]
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           down_payment?: number
           financed_amount?: number | null
           grace_period_days?: number
@@ -720,6 +723,7 @@ export type Database = {
           country_code: string | null
           created_at: string
           created_by: string | null
+          currency: string
           id: string
           metadata: Json
           name: string
@@ -734,6 +738,7 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
           metadata?: Json
           name: string
@@ -748,6 +753,7 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
           metadata?: Json
           name?: string
@@ -900,6 +906,7 @@ export type Database = {
           contract_id: string
           created_at: string
           created_by: string | null
+          currency: string | null
           external_reference: string | null
           id: string
           notes: string | null
@@ -921,6 +928,7 @@ export type Database = {
           contract_id: string
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           external_reference?: string | null
           id?: string
           notes?: string | null
@@ -942,6 +950,7 @@ export type Database = {
           contract_id?: string
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           external_reference?: string | null
           id?: string
           notes?: string | null
@@ -1559,6 +1568,7 @@ export type Database = {
         Returns: string
       }
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
+      contract_currency: { Args: { p_contract_id: string }; Returns: string }
       generate_installment_schedule: {
         Args: { p_contract_id: string }
         Returns: number
