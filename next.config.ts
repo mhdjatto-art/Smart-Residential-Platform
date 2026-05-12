@@ -21,9 +21,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  // In Next.js 15, typedRoutes moved out of experimental.
+  typedRoutes: true,
   images: {
     remotePatterns: [
       {
