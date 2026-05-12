@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileText, Plus } from "lucide-react";
+import { Download, FileText, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,9 +36,14 @@ export default async function ContractsPage({
         title="Contracts"
         description="Installment contracts: property sales, rentals, and lease-to-own agreements."
         actions={
-          <Button asChild>
-            <Link href="/contracts/new"><Plus className="h-4 w-4" />New contract</Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild variant="outline">
+              <Link href="/api/exports/contracts.csv"><Download className="h-4 w-4" />Export CSV</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/contracts/new"><Plus className="h-4 w-4" />New contract</Link>
+            </Button>
+          </div>
         }
       />
 

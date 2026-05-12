@@ -9,6 +9,7 @@ import {
   FileText,
   DollarSign,
   Wallet,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -51,6 +52,7 @@ export const navigation: NavSection[] = [
       { title: "Finance",   href: "/finance",   icon: Wallet,     requiredCapability: "payment:read" },
       { title: "Contracts", href: "/contracts", icon: FileText,   requiredCapability: "contract:read" },
       { title: "Payments",  href: "/payments",  icon: DollarSign, requiredCapability: "payment:read" },
+      { title: "Reminders", href: "/reminders", icon: Bell,       requiredCapability: "payment:read" },
     ],
   },
   {

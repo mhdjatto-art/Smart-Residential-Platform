@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DollarSign, Plus } from "lucide-react";
+import { DollarSign, Download, Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,9 +36,14 @@ export default async function PaymentsPage({
         title="Payments"
         description="All recorded payments across active contracts."
         actions={
-          <Button asChild>
-            <Link href="/payments/new"><Plus className="h-4 w-4" />Record payment</Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild variant="outline">
+              <Link href="/api/exports/payments.csv"><Download className="h-4 w-4" />Export CSV</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/payments/new"><Plus className="h-4 w-4" />Record payment</Link>
+            </Button>
+          </div>
         }
       />
 
