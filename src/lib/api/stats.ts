@@ -16,40 +16,109 @@ export interface DashboardStats {
   recent_move_outs: number;
 }
 
+/**
+ * Safely count rows in a table with optional filters. Returns 0 on any error
+ * (missing table, missing column, RLS denial) and logs the failure so it
+ * shows up in Vercel runtime logs. This way the dashboard never crashes
+ * because one widget had a problem.
+ */
+async function safeCount(
+  label: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query: any,
+): Promise<number> {
+  try {
+    const { count, error } = await query;
+    if (error) {
+      console.error(`[dashboard-stats] ${label} failed:`, error.message);
+      return 0;
+    }
+    return count ?? 0;
+  } catch (e) {
+    console.error(`[dashboard-stats] ${label} threw:`, e instanceof Error ? e.message : String(e));
+    return 0;
+  }
+}
+
 export async function getDashboardStats(): Promise<DashboardStats> {
   await requireUser();
   const supabase = await createClient();
+  const last30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-  // All queries respect RLS — we get the slice the caller is allowed to see.
-  const [compounds, buildings, units, occupied, vacant, residents, owners, tenants, moveIns, moveOuts] = await Promise.all([
-    supabase.from("compounds").select("id", { count: "exact", head: true }),
-    supabase.from("buildings").select("id", { count: "exact", head: true }),
-    supabase.from("units").select("id", { count: "exact", head: true }),
-    supabase.from("units").select("id", { count: "exact", head: true }).eq("status", "occupied"),
-    supabase.from("units").select("id", { count: "exact", head: true }).eq("status", "vacant"),
-    supabase.from("residents").select("id", { count: "exact", head: true }).eq("status", "active"),
-    supabase.from("unit_assignments").select("id", { count: "exact", head: true })
-      .eq("assignment_type", "owner").eq("status", "active"),
-    supabase.from("unit_assignments").select("id", { count: "exact", head: true })
-      .eq("assignment_type", "tenant").eq("status", "active"),
-    supabase.from("unit_assignments").select("id", { count: "exact", head: true })
-      .eq("status", "active")
-      .gte("start_date", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)),
-    supabase.from("unit_assignments").select("id", { count: "exact", head: true })
-      .eq("status", "ended")
-      .gte("end_date", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)),
+  // Run every query in parallel but isolate failures so one bad table doesn't
+  // bring the whole dashboard down.
+  const [
+    compounds,
+    buildings,
+    units,
+    occupied,
+    vacant,
+    residents,
+    owners,
+    tenants,
+    moveIns,
+    moveOuts,
+  ] = await Promise.all([
+    safeCount("compounds", supabase.from("compounds").select("id", { count: "exact", head: true })),
+    safeCount("buildings", supabase.from("buildings").select("id", { count: "exact", head: true })),
+    safeCount("units", supabase.from("units").select("id", { count: "exact", head: true })),
+    safeCount(
+      "occupied_units",
+      supabase.from("units").select("id", { count: "exact", head: true }).eq("status", "occupied"),
+    ),
+    safeCount(
+      "vacant_units",
+      supabase.from("units").select("id", { count: "exact", head: true }).eq("status", "vacant"),
+    ),
+    safeCount(
+      "residents",
+      supabase.from("residents").select("id", { count: "exact", head: true }).eq("status", "active"),
+    ),
+    // Fall back to residents.tenancy_type if unit_assignments table or columns are missing.
+    safeCount(
+      "owners",
+      supabase
+        .from("residents")
+        .select("id", { count: "exact", head: true })
+        .eq("tenancy_type", "owner")
+        .eq("status", "active"),
+    ),
+    safeCount(
+      "tenants",
+      supabase
+        .from("residents")
+        .select("id", { count: "exact", head: true })
+        .eq("tenancy_type", "tenant")
+        .eq("status", "active"),
+    ),
+    safeCount(
+      "recent_move_ins",
+      supabase
+        .from("residents")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "active")
+        .gte("move_in_date", last30),
+    ),
+    safeCount(
+      "recent_move_outs",
+      supabase
+        .from("residents")
+        .select("id", { count: "exact", head: true })
+        .not("move_out_date", "is", null)
+        .gte("move_out_date", last30),
+    ),
   ]);
 
   return {
-    compounds: compounds.count ?? 0,
-    buildings: buildings.count ?? 0,
-    units: units.count ?? 0,
-    occupied_units: occupied.count ?? 0,
-    vacant_units: vacant.count ?? 0,
-    residents: residents.count ?? 0,
-    owners: owners.count ?? 0,
-    tenants: tenants.count ?? 0,
-    recent_move_ins: moveIns.count ?? 0,
-    recent_move_outs: moveOuts.count ?? 0,
+    compounds,
+    buildings,
+    units,
+    occupied_units: occupied,
+    vacant_units: vacant,
+    residents,
+    owners,
+    tenants,
+    recent_move_ins: moveIns,
+    recent_move_outs: moveOuts,
   };
 }

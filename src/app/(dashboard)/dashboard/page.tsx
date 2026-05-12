@@ -19,14 +19,31 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const user = await requireUser();
   const supabase = await createClient();
-  const stats = await getDashboardStats();
 
-  const { data: recent } = await supabase
-    .from("residents")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(5);
-  const recentResidents = ((recent ?? []) as unknown as ResidentRow[]);
+  // Defensive: never let one failure crash the whole dashboard.
+  const stats = await getDashboardStats().catch((e) => {
+    console.error("[dashboard] getDashboardStats failed:", e instanceof Error ? e.message : String(e));
+    return {
+      compounds: 0, buildings: 0, units: 0, occupied_units: 0, vacant_units: 0,
+      residents: 0, owners: 0, tenants: 0, recent_move_ins: 0, recent_move_outs: 0,
+    };
+  });
+
+  let recentResidents: ResidentRow[] = [];
+  try {
+    const { data: recent, error } = await supabase
+      .from("residents")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(5);
+    if (error) {
+      console.error("[dashboard] recent residents query failed:", error.message);
+    } else {
+      recentResidents = (recent ?? []) as unknown as ResidentRow[];
+    }
+  } catch (e) {
+    console.error("[dashboard] recent residents threw:", e instanceof Error ? e.message : String(e));
+  }
 
   const occupancyRate = stats.units > 0 ? Math.round((stats.occupied_units / stats.units) * 100) : 0;
   const primaryRole = user.roles[0]?.role;
@@ -107,7 +124,7 @@ export default async function DashboardPage() {
                         </Link>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{r.email ?? "—"}</TableCell>
-                      <TableCell className="capitalize text-muted-foreground">{r.tenancy_type.replace("_", " ")}</TableCell>
+                      <TableCell className="capitalize text-muted-foreground">{(r.tenancy_type ?? "").toString().replace(/_/g, " ")}</TableCell>
                       <TableCell><StatusBadge status={r.status} /></TableCell>
                       <TableCell className="text-right text-muted-foreground">{formatDate(r.created_at)}</TableCell>
                     </TableRow>
