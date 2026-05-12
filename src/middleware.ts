@@ -16,7 +16,7 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 const PUBLIC_PATHS = [
   "/login",
-  "/verify-otp",
+  "/verify-otp", // kept public so the redirect inside it can run
   "/auth/callback",
 ];
 
@@ -37,8 +37,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Authenticated users on /login or /verify-otp → /dashboard
-  if (user && (pathname === "/login" || pathname === "/verify-otp")) {
+  // Authenticated users on /login → /dashboard
+  if (user && pathname === "/login") {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     url.search = "";
