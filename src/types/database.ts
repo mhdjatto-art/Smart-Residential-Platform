@@ -391,6 +391,66 @@ export type Database = {
           },
         ]
       }
+      financial_transactions: {
+        Row: {
+          action_type: Database["public"]["Enums"]["financial_action"]
+          actor_id: string | null
+          amount: number | null
+          compound_id: string | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: number
+          new_values: Json | null
+          old_values: Json | null
+          organization_id: string
+          reason: string | null
+        }
+        Insert: {
+          action_type: Database["public"]["Enums"]["financial_action"]
+          actor_id?: string | null
+          amount?: number | null
+          compound_id?: string | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: number
+          new_values?: Json | null
+          old_values?: Json | null
+          organization_id: string
+          reason?: string | null
+        }
+        Update: {
+          action_type?: Database["public"]["Enums"]["financial_action"]
+          actor_id?: string | null
+          amount?: number | null
+          compound_id?: string | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: number
+          new_values?: Json | null
+          old_values?: Json | null
+          organization_id?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_transactions_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       floors: {
         Row: {
           building_id: string
@@ -458,6 +518,201 @@ export type Database = {
           },
         ]
       }
+      installment_contracts: {
+        Row: {
+          annual_interest_rate: number
+          compound_id: string
+          contract_end_date: string | null
+          contract_number: string
+          contract_start_date: string
+          contract_status: Database["public"]["Enums"]["contract_status"]
+          contract_type: Database["public"]["Enums"]["contract_type"]
+          created_at: string
+          created_by: string | null
+          down_payment: number
+          financed_amount: number | null
+          grace_period_days: number
+          id: string
+          installment_count: number
+          installment_frequency: Database["public"]["Enums"]["installment_frequency"]
+          late_penalty_type: Database["public"]["Enums"]["penalty_type"] | null
+          late_penalty_value: number | null
+          metadata: Json
+          monthly_amount: number | null
+          notes: string | null
+          organization_id: string
+          resident_id: string
+          total_property_price: number
+          unit_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          annual_interest_rate?: number
+          compound_id: string
+          contract_end_date?: string | null
+          contract_number: string
+          contract_start_date: string
+          contract_status?: Database["public"]["Enums"]["contract_status"]
+          contract_type: Database["public"]["Enums"]["contract_type"]
+          created_at?: string
+          created_by?: string | null
+          down_payment?: number
+          financed_amount?: number | null
+          grace_period_days?: number
+          id?: string
+          installment_count: number
+          installment_frequency?: Database["public"]["Enums"]["installment_frequency"]
+          late_penalty_type?: Database["public"]["Enums"]["penalty_type"] | null
+          late_penalty_value?: number | null
+          metadata?: Json
+          monthly_amount?: number | null
+          notes?: string | null
+          organization_id: string
+          resident_id: string
+          total_property_price: number
+          unit_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          annual_interest_rate?: number
+          compound_id?: string
+          contract_end_date?: string | null
+          contract_number?: string
+          contract_start_date?: string
+          contract_status?: Database["public"]["Enums"]["contract_status"]
+          contract_type?: Database["public"]["Enums"]["contract_type"]
+          created_at?: string
+          created_by?: string | null
+          down_payment?: number
+          financed_amount?: number | null
+          grace_period_days?: number
+          id?: string
+          installment_count?: number
+          installment_frequency?: Database["public"]["Enums"]["installment_frequency"]
+          late_penalty_type?: Database["public"]["Enums"]["penalty_type"] | null
+          late_penalty_value?: number | null
+          metadata?: Json
+          monthly_amount?: number | null
+          notes?: string | null
+          organization_id?: string
+          resident_id?: string
+          total_property_price?: number
+          unit_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "installment_contracts_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "installment_contracts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "installment_contracts_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "installment_contracts_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      installment_schedules: {
+        Row: {
+          compound_id: string
+          contract_id: string
+          created_at: string
+          due_date: string
+          id: string
+          installment_number: number
+          interest_amount: number
+          notes: string | null
+          organization_id: string
+          paid_amount: number
+          paid_at: string | null
+          penalty_amount: number
+          principal_amount: number
+          status: Database["public"]["Enums"]["installment_status"]
+          total_due: number
+          updated_at: string
+        }
+        Insert: {
+          compound_id: string
+          contract_id: string
+          created_at?: string
+          due_date: string
+          id?: string
+          installment_number: number
+          interest_amount?: number
+          notes?: string | null
+          organization_id: string
+          paid_amount?: number
+          paid_at?: string | null
+          penalty_amount?: number
+          principal_amount: number
+          status?: Database["public"]["Enums"]["installment_status"]
+          total_due: number
+          updated_at?: string
+        }
+        Update: {
+          compound_id?: string
+          contract_id?: string
+          created_at?: string
+          due_date?: string
+          id?: string
+          installment_number?: number
+          interest_amount?: number
+          notes?: string | null
+          organization_id?: string
+          paid_amount?: number
+          paid_at?: string | null
+          penalty_amount?: number
+          principal_amount?: number
+          status?: Database["public"]["Enums"]["installment_status"]
+          total_due?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "installment_schedules_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "installment_schedules_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "installment_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "installment_schedules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           contact_email: string | null
@@ -502,6 +757,365 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: []
+      }
+      payment_allocations: {
+        Row: {
+          amount: number
+          applied_to: string
+          created_at: string
+          id: string
+          installment_id: string
+          organization_id: string
+          payment_id: string
+        }
+        Insert: {
+          amount: number
+          applied_to?: string
+          created_at?: string
+          id?: string
+          installment_id: string
+          organization_id: string
+          payment_id: string
+        }
+        Update: {
+          amount?: number
+          applied_to?: string
+          created_at?: string
+          id?: string
+          installment_id?: string
+          organization_id?: string
+          payment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_installment_id_fkey"
+            columns: ["installment_id"]
+            isOneToOne: false
+            referencedRelation: "installment_schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_reminders: {
+        Row: {
+          channel: Database["public"]["Enums"]["reminder_channel"]
+          compound_id: string
+          contract_id: string
+          created_at: string
+          id: string
+          installment_id: string | null
+          kind: Database["public"]["Enums"]["reminder_kind"]
+          organization_id: string
+          payload: Json
+          resident_id: string
+          scheduled_for: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["reminder_status"]
+        }
+        Insert: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          compound_id: string
+          contract_id: string
+          created_at?: string
+          id?: string
+          installment_id?: string | null
+          kind: Database["public"]["Enums"]["reminder_kind"]
+          organization_id: string
+          payload?: Json
+          resident_id: string
+          scheduled_for?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["reminder_status"]
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          compound_id?: string
+          contract_id?: string
+          created_at?: string
+          id?: string
+          installment_id?: string | null
+          kind?: Database["public"]["Enums"]["reminder_kind"]
+          organization_id?: string
+          payload?: Json
+          resident_id?: string
+          scheduled_for?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["reminder_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_reminders_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_reminders_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "installment_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_reminders_installment_id_fkey"
+            columns: ["installment_id"]
+            isOneToOne: false
+            referencedRelation: "installment_schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_reminders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_reminders_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          compound_id: string
+          contract_id: string
+          created_at: string
+          created_by: string | null
+          external_reference: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          payment_amount: number
+          payment_date: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_reference: string
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          resident_id: string
+          reversal_reason: string | null
+          reversed_at: string | null
+          reversed_by: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          compound_id: string
+          contract_id: string
+          created_at?: string
+          created_by?: string | null
+          external_reference?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          payment_amount: number
+          payment_date?: string
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_reference: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          resident_id: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          reversed_by?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          compound_id?: string
+          contract_id?: string
+          created_at?: string
+          created_by?: string | null
+          external_reference?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          payment_amount?: number
+          payment_date?: string
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_reference?: string
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          resident_id?: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          reversed_by?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "installment_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      penalties: {
+        Row: {
+          amount: number
+          compound_id: string
+          contract_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          installment_id: string
+          organization_id: string
+          penalty_date: string
+          penalty_type: Database["public"]["Enums"]["penalty_type"]
+          penalty_value: number
+          reason: string | null
+          status: Database["public"]["Enums"]["penalty_status"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          amount: number
+          compound_id: string
+          contract_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          installment_id: string
+          organization_id: string
+          penalty_date: string
+          penalty_type: Database["public"]["Enums"]["penalty_type"]
+          penalty_value: number
+          reason?: string | null
+          status?: Database["public"]["Enums"]["penalty_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          amount?: number
+          compound_id?: string
+          contract_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          installment_id?: string
+          organization_id?: string
+          penalty_date?: string
+          penalty_type?: Database["public"]["Enums"]["penalty_type"]
+          penalty_value?: number
+          reason?: string | null
+          status?: Database["public"]["Enums"]["penalty_status"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "penalties_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "penalties_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "installment_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "penalties_installment_id_fkey"
+            columns: ["installment_id"]
+            isOneToOne: false
+            referencedRelation: "installment_schedules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "penalties_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          id: string
+          issued_at: string
+          issued_by: string | null
+          organization_id: string
+          payment_id: string
+          pdf_storage_path: string | null
+          receipt_number: string
+        }
+        Insert: {
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          organization_id: string
+          payment_id: string
+          pdf_storage_path?: string | null
+          receipt_number: string
+        }
+        Update: {
+          id?: string
+          issued_at?: string
+          issued_by?: string | null
+          organization_id?: string
+          payment_id?: string
+          pdf_storage_path?: string | null
+          receipt_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipts_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: true
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       residents: {
         Row: {
@@ -934,11 +1548,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      activate_contract: { Args: { p_contract_id: string }; Returns: undefined }
+      apply_penalties_all: { Args: never; Returns: number }
+      apply_penalties_for_contract: {
+        Args: { p_contract_id: string }
+        Returns: number
+      }
       bootstrap_organization: {
         Args: { p_admin_email: string; p_name: string; p_slug: string }
         Returns: string
       }
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
+      generate_installment_schedule: {
+        Args: { p_contract_id: string }
+        Returns: number
+      }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
       recompute_building_counts: {
         Args: { p_building_id: string }
@@ -950,6 +1574,21 @@ export type Database = {
       }
       recompute_floor_counts: {
         Args: { p_floor_id: string }
+        Returns: undefined
+      }
+      record_payment: {
+        Args: {
+          p_amount: number
+          p_contract_id: string
+          p_external_ref?: string
+          p_notes?: string
+          p_payment_date?: string
+          p_payment_method: Database["public"]["Enums"]["payment_method"]
+        }
+        Returns: string
+      }
+      reverse_payment: {
+        Args: { p_payment_id: string; p_reason: string }
         Returns: undefined
       }
       show_limit: { Args: never; Returns: number }
@@ -974,6 +1613,13 @@ export type Database = {
       assignment_status: "active" | "ended" | "cancelled"
       assignment_type: "owner" | "tenant"
       compound_status: "active" | "inactive" | "archived"
+      contract_status:
+        | "draft"
+        | "active"
+        | "completed"
+        | "cancelled"
+        | "defaulted"
+      contract_type: "property_sale" | "rental" | "lease_to_own"
       document_kind:
         | "national_id"
         | "passport"
@@ -986,7 +1632,27 @@ export type Database = {
         | "unit_photo"
         | "utility_bill"
         | "other"
+      financial_action:
+        | "contract_created"
+        | "contract_updated"
+        | "contract_cancelled"
+        | "schedule_generated"
+        | "schedule_regenerated"
+        | "payment_recorded"
+        | "payment_reversed"
+        | "payment_refunded"
+        | "penalty_applied"
+        | "penalty_waived"
+        | "adjustment"
+        | "reminder_sent"
       gender_type: "male" | "female" | "unspecified"
+      installment_frequency: "monthly" | "quarterly" | "biannual" | "annual"
+      installment_status:
+        | "pending"
+        | "partial"
+        | "paid"
+        | "overdue"
+        | "cancelled"
       organization_status: "active" | "suspended" | "archived"
       ownership_status:
         | "owned"
@@ -994,6 +1660,18 @@ export type Database = {
         | "for_rent"
         | "leased"
         | "reserved"
+      payment_method:
+        | "cash"
+        | "bank_transfer"
+        | "online_payment"
+        | "wallet"
+        | "cheque"
+      payment_status: "pending" | "confirmed" | "reversed" | "refunded"
+      penalty_status: "pending" | "applied" | "waived" | "paid"
+      penalty_type: "fixed" | "percentage" | "daily" | "monthly"
+      reminder_channel: "in_app" | "email" | "sms"
+      reminder_kind: "upcoming" | "overdue" | "penalty" | "payment_received"
+      reminder_status: "pending" | "sent" | "failed" | "dismissed"
       resident_status: "active" | "pending" | "former"
       tenancy_type: "owner" | "tenant" | "family_member" | "guest"
       unit_status: "vacant" | "occupied" | "reserved" | "maintenance"
@@ -1146,6 +1824,14 @@ export const Constants = {
       assignment_status: ["active", "ended", "cancelled"],
       assignment_type: ["owner", "tenant"],
       compound_status: ["active", "inactive", "archived"],
+      contract_status: [
+        "draft",
+        "active",
+        "completed",
+        "cancelled",
+        "defaulted",
+      ],
+      contract_type: ["property_sale", "rental", "lease_to_own"],
       document_kind: [
         "national_id",
         "passport",
@@ -1159,9 +1845,44 @@ export const Constants = {
         "utility_bill",
         "other",
       ],
+      financial_action: [
+        "contract_created",
+        "contract_updated",
+        "contract_cancelled",
+        "schedule_generated",
+        "schedule_regenerated",
+        "payment_recorded",
+        "payment_reversed",
+        "payment_refunded",
+        "penalty_applied",
+        "penalty_waived",
+        "adjustment",
+        "reminder_sent",
+      ],
       gender_type: ["male", "female", "unspecified"],
+      installment_frequency: ["monthly", "quarterly", "biannual", "annual"],
+      installment_status: [
+        "pending",
+        "partial",
+        "paid",
+        "overdue",
+        "cancelled",
+      ],
       organization_status: ["active", "suspended", "archived"],
       ownership_status: ["owned", "for_sale", "for_rent", "leased", "reserved"],
+      payment_method: [
+        "cash",
+        "bank_transfer",
+        "online_payment",
+        "wallet",
+        "cheque",
+      ],
+      payment_status: ["pending", "confirmed", "reversed", "refunded"],
+      penalty_status: ["pending", "applied", "waived", "paid"],
+      penalty_type: ["fixed", "percentage", "daily", "monthly"],
+      reminder_channel: ["in_app", "email", "sms"],
+      reminder_kind: ["upcoming", "overdue", "penalty", "payment_received"],
+      reminder_status: ["pending", "sent", "failed", "dismissed"],
       resident_status: ["active", "pending", "former"],
       tenancy_type: ["owner", "tenant", "family_member", "guest"],
       unit_status: ["vacant", "occupied", "reserved", "maintenance"],

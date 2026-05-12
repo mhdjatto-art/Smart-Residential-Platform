@@ -31,3 +31,27 @@ export function formatDate(d: string | Date | null | undefined, opts?: Intl.Date
 export function assertNever(x: never, label = "value"): never {
   throw new Error(`Unhandled ${label}: ${JSON.stringify(x)}`);
 }
+
+/**
+ * Format a number as currency. Defaults to USD; callers can override per
+ * organization later when we add a currency setting.
+ */
+export function formatCurrency(
+  amount: number | null | undefined,
+  opts: { currency?: string; locale?: string; signed?: boolean } = {},
+): string {
+  if (amount === null || amount === undefined) return "—";
+  const formatter = new Intl.NumberFormat(opts.locale ?? "en-US", {
+    style: "currency",
+    currency: opts.currency ?? "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    signDisplay: opts.signed ? "always" : "auto",
+  });
+  return formatter.format(amount);
+}
+
+export function formatPercent(value: number | null | undefined, digits = 2): string {
+  if (value === null || value === undefined) return "—";
+  return `${value.toFixed(digits)}%`;
+}
