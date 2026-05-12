@@ -17,6 +17,11 @@ import {
   CalendarDays,
   Megaphone,
   Activity,
+  Zap,
+  Repeat,
+  Gauge,
+  Wifi,
+  Receipt,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -68,6 +73,17 @@ export const navigation: NavSection[] = [
       { title: "Contracts", href: "/contracts", icon: FileText,   requiredCapability: "contract:read" },
       { title: "Payments",  href: "/payments",  icon: DollarSign, requiredCapability: "payment:read" },
       { title: "Reminders", href: "/reminders", icon: Bell,       requiredCapability: "payment:read" },
+    ],
+  },
+  {
+    title: "Utilities",
+    items: [
+      { title: "Utilities",       href: "/utilities",         icon: Zap,     requiredCapability: "utility:read" },
+      { title: "Providers",       href: "/providers",         icon: Zap,     requiredCapability: "utility:read" },
+      { title: "Subscriptions",   href: "/subscriptions",     icon: Repeat,  requiredCapability: "utility:read" },
+      { title: "Meters",          href: "/meters",            icon: Gauge,   requiredCapability: "utility:read" },
+      { title: "Internet plans",  href: "/internet-packages", icon: Wifi,    requiredCapability: "utility:read" },
+      { title: "Utility bills",   href: "/utility-bills",     icon: Receipt, requiredCapability: "utility:read" },
     ],
   },
   {

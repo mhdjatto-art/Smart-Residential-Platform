@@ -343,6 +343,166 @@ export type Database = {
           },
         ]
       }
+      electricity_meters: {
+        Row: {
+          adapter_config: Json
+          adapter_kind: string | null
+          brand: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          current_reading: number
+          id: string
+          installed_at: string | null
+          meter_number: string
+          model: string | null
+          notes: string | null
+          organization_id: string
+          serial_number: string | null
+          smart_enabled: boolean
+          status: Database["public"]["Enums"]["meter_status"]
+          unit_id: string | null
+          unit_of_measure: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          adapter_config?: Json
+          adapter_kind?: string | null
+          brand?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          current_reading?: number
+          id?: string
+          installed_at?: string | null
+          meter_number: string
+          model?: string | null
+          notes?: string | null
+          organization_id: string
+          serial_number?: string | null
+          smart_enabled?: boolean
+          status?: Database["public"]["Enums"]["meter_status"]
+          unit_id?: string | null
+          unit_of_measure?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          adapter_config?: Json
+          adapter_kind?: string | null
+          brand?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          current_reading?: number
+          id?: string
+          installed_at?: string | null
+          meter_number?: string
+          model?: string | null
+          notes?: string | null
+          organization_id?: string
+          serial_number?: string | null
+          smart_enabled?: boolean
+          status?: Database["public"]["Enums"]["meter_status"]
+          unit_id?: string | null
+          unit_of_measure?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "electricity_meters_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "electricity_meters_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "electricity_meters_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      electricity_tariffs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          currency: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          metadata: Json
+          organization_id: string
+          provider_id: string
+          rate_per_unit: number
+          service_fee: number
+          tariff_name: string
+          tier_brackets: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          effective_from: string
+          effective_to?: string | null
+          id?: string
+          metadata?: Json
+          organization_id: string
+          provider_id: string
+          rate_per_unit: number
+          service_fee?: number
+          tariff_name: string
+          tier_brackets?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          provider_id?: string
+          rate_per_unit?: number
+          service_fee?: number
+          tariff_name?: string
+          tier_brackets?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "electricity_tariffs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "electricity_tariffs_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emergency_contacts: {
         Row: {
           created_at: string
@@ -767,6 +927,130 @@ export type Database = {
           },
         ]
       }
+      gas_orders: {
+        Row: {
+          bill_id: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          cylinder_count: number
+          delivered_at: string | null
+          delivered_by: string | null
+          delivery_address: string | null
+          delivery_notes: string | null
+          id: string
+          notes: string | null
+          order_number: string
+          organization_id: string
+          provider_id: string
+          requested_at: string
+          resident_id: string | null
+          scheduled_for: string | null
+          status: Database["public"]["Enums"]["gas_order_status"]
+          total_amount: number | null
+          unit_id: string | null
+          unit_price: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bill_id?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          cylinder_count?: number
+          delivered_at?: string | null
+          delivered_by?: string | null
+          delivery_address?: string | null
+          delivery_notes?: string | null
+          id?: string
+          notes?: string | null
+          order_number: string
+          organization_id: string
+          provider_id: string
+          requested_at?: string
+          resident_id?: string | null
+          scheduled_for?: string | null
+          status?: Database["public"]["Enums"]["gas_order_status"]
+          total_amount?: number | null
+          unit_id?: string | null
+          unit_price: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bill_id?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          cylinder_count?: number
+          delivered_at?: string | null
+          delivered_by?: string | null
+          delivery_address?: string | null
+          delivery_notes?: string | null
+          id?: string
+          notes?: string | null
+          order_number?: string
+          organization_id?: string
+          provider_id?: string
+          requested_at?: string
+          resident_id?: string | null
+          scheduled_for?: string | null
+          status?: Database["public"]["Enums"]["gas_order_status"]
+          total_amount?: number | null
+          unit_id?: string | null
+          unit_price?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gas_orders_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "utility_bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gas_orders_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gas_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gas_orders_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gas_orders_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gas_orders_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       installment_contracts: {
         Row: {
           annual_interest_rate: number
@@ -965,6 +1249,84 @@ export type Database = {
           },
         ]
       }
+      internet_packages: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          currency: string
+          data_cap_gb: number | null
+          description: string | null
+          id: string
+          is_active: boolean
+          metadata: Json
+          monthly_price: number
+          organization_id: string
+          package_name: string
+          package_tier: string
+          provider_id: string
+          speed_mbps_down: number
+          speed_mbps_up: number | null
+          suspension_policy: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          data_cap_gb?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          monthly_price: number
+          organization_id: string
+          package_name: string
+          package_tier?: string
+          provider_id: string
+          speed_mbps_down: number
+          speed_mbps_up?: number | null
+          suspension_policy?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          data_cap_gb?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          monthly_price?: number
+          organization_id?: string
+          package_name?: string
+          package_tier?: string
+          provider_id?: string
+          speed_mbps_down?: number
+          speed_mbps_up?: number | null
+          suspension_policy?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internet_packages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "internet_packages_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_jobs: {
         Row: {
           assigned_technician_id: string | null
@@ -1088,6 +1450,78 @@ export type Database = {
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meter_readings: {
+        Row: {
+          consumption: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_validated: boolean
+          meter_id: string
+          notes: string | null
+          organization_id: string
+          photo_path: string | null
+          previous_reading: number
+          reading_date: string
+          reading_value: number
+          source: Database["public"]["Enums"]["reading_source"]
+          updated_at: string
+          validated_at: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          consumption?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_validated?: boolean
+          meter_id: string
+          notes?: string | null
+          organization_id: string
+          photo_path?: string | null
+          previous_reading?: number
+          reading_date?: string
+          reading_value: number
+          source?: Database["public"]["Enums"]["reading_source"]
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          consumption?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_validated?: boolean
+          meter_id?: string
+          notes?: string | null
+          organization_id?: string
+          photo_path?: string | null
+          previous_reading?: number
+          reading_date?: string
+          reading_value?: number
+          source?: Database["public"]["Enums"]["reading_source"]
+          updated_at?: string
+          validated_at?: string | null
+          validated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meter_readings_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meter_readings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1710,6 +2144,96 @@ export type Database = {
           },
         ]
       }
+      service_suspensions: {
+        Row: {
+          compound_id: string
+          created_at: string
+          id: string
+          initiated_by: string | null
+          organization_id: string
+          reason: Database["public"]["Enums"]["suspension_reason"]
+          reason_notes: string | null
+          released_at: string | null
+          resident_id: string | null
+          status: Database["public"]["Enums"]["suspension_status"]
+          subscription_id: string
+          suspended_at: string
+          unit_id: string | null
+          updated_at: string
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          id?: string
+          initiated_by?: string | null
+          organization_id: string
+          reason: Database["public"]["Enums"]["suspension_reason"]
+          reason_notes?: string | null
+          released_at?: string | null
+          resident_id?: string | null
+          status?: Database["public"]["Enums"]["suspension_status"]
+          subscription_id: string
+          suspended_at?: string
+          unit_id?: string | null
+          updated_at?: string
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          id?: string
+          initiated_by?: string | null
+          organization_id?: string
+          reason?: Database["public"]["Enums"]["suspension_reason"]
+          reason_notes?: string | null
+          released_at?: string | null
+          resident_id?: string | null
+          status?: Database["public"]["Enums"]["suspension_status"]
+          subscription_id?: string
+          suspended_at?: string
+          unit_id?: string | null
+          updated_at?: string
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_suspensions_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_suspensions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_suspensions_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_suspensions_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "utility_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_suspensions_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       technicians: {
         Row: {
           availability_status: Database["public"]["Enums"]["technician_availability"]
@@ -2171,6 +2695,370 @@ export type Database = {
           },
         ]
       }
+      utility_bills: {
+        Row: {
+          bill_number: string
+          billing_period_end: string
+          billing_period_start: string
+          compound_id: string
+          consumption: number | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          current_reading: number | null
+          due_date: string
+          id: string
+          metadata: Json
+          meter_id: string | null
+          notes: string | null
+          organization_id: string
+          paid_amount: number
+          paid_at: string | null
+          payment_id: string | null
+          penalty_amount: number
+          previous_reading: number | null
+          provider_id: string | null
+          rate_per_unit: number | null
+          resident_id: string | null
+          status: Database["public"]["Enums"]["utility_bill_status"]
+          subscription_id: string | null
+          subtotal: number
+          tax_amount: number
+          total_amount: number
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Insert: {
+          bill_number: string
+          billing_period_end: string
+          billing_period_start: string
+          compound_id: string
+          consumption?: number | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          current_reading?: number | null
+          due_date: string
+          id?: string
+          metadata?: Json
+          meter_id?: string | null
+          notes?: string | null
+          organization_id: string
+          paid_amount?: number
+          paid_at?: string | null
+          payment_id?: string | null
+          penalty_amount?: number
+          previous_reading?: number | null
+          provider_id?: string | null
+          rate_per_unit?: number | null
+          resident_id?: string | null
+          status?: Database["public"]["Enums"]["utility_bill_status"]
+          subscription_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Update: {
+          bill_number?: string
+          billing_period_end?: string
+          billing_period_start?: string
+          compound_id?: string
+          consumption?: number | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          current_reading?: number | null
+          due_date?: string
+          id?: string
+          metadata?: Json
+          meter_id?: string | null
+          notes?: string | null
+          organization_id?: string
+          paid_amount?: number
+          paid_at?: string | null
+          payment_id?: string | null
+          penalty_amount?: number
+          previous_reading?: number | null
+          provider_id?: string | null
+          rate_per_unit?: number | null
+          resident_id?: string | null
+          status?: Database["public"]["Enums"]["utility_bill_status"]
+          subscription_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_bills_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "utility_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_providers: {
+        Row: {
+          adapter_config: Json
+          adapter_kind: string | null
+          billing_method: Database["public"]["Enums"]["billing_method"]
+          compound_id: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          metadata: Json
+          organization_id: string
+          provider_code: string | null
+          provider_name: string
+          provider_status: Database["public"]["Enums"]["provider_status"]
+          provider_type: Database["public"]["Enums"]["utility_type"]
+          tariff_type: Database["public"]["Enums"]["tariff_type"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          adapter_config?: Json
+          adapter_kind?: string | null
+          billing_method?: Database["public"]["Enums"]["billing_method"]
+          compound_id?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          organization_id: string
+          provider_code?: string | null
+          provider_name: string
+          provider_status?: Database["public"]["Enums"]["provider_status"]
+          provider_type: Database["public"]["Enums"]["utility_type"]
+          tariff_type?: Database["public"]["Enums"]["tariff_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          adapter_config?: Json
+          adapter_kind?: string | null
+          billing_method?: Database["public"]["Enums"]["billing_method"]
+          compound_id?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          organization_id?: string
+          provider_code?: string | null
+          provider_name?: string
+          provider_status?: Database["public"]["Enums"]["provider_status"]
+          provider_type?: Database["public"]["Enums"]["utility_type"]
+          tariff_type?: Database["public"]["Enums"]["tariff_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_providers_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_providers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_subscriptions: {
+        Row: {
+          auto_suspend: boolean
+          billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          end_date: string | null
+          id: string
+          internet_package_id: string | null
+          last_billed_at: string | null
+          metadata: Json
+          monthly_fee: number
+          next_billing_date: string | null
+          notes: string | null
+          organization_id: string
+          provider_id: string
+          resident_id: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          subscription_type: Database["public"]["Enums"]["utility_type"]
+          unit_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_suspend?: boolean
+          billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          end_date?: string | null
+          id?: string
+          internet_package_id?: string | null
+          last_billed_at?: string | null
+          metadata?: Json
+          monthly_fee?: number
+          next_billing_date?: string | null
+          notes?: string | null
+          organization_id: string
+          provider_id: string
+          resident_id?: string | null
+          start_date: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          subscription_type: Database["public"]["Enums"]["utility_type"]
+          unit_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_suspend?: boolean
+          billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          end_date?: string | null
+          id?: string
+          internet_package_id?: string | null
+          last_billed_at?: string | null
+          metadata?: Json
+          monthly_fee?: number
+          next_billing_date?: string | null
+          notes?: string | null
+          organization_id?: string
+          provider_id?: string
+          resident_id?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          subscription_type?: Database["public"]["Enums"]["utility_type"]
+          unit_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_subscriptions_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_subscriptions_internet_package_id_fkey"
+            columns: ["internet_package_id"]
+            isOneToOne: false
+            referencedRelation: "internet_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_subscriptions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_subscriptions_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_subscriptions_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_subscriptions_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vehicles: {
         Row: {
           color: string | null
@@ -2371,6 +3259,10 @@ export type Database = {
         Args: { p_contract_id: string }
         Returns: number
       }
+      auto_suspend_overdue_utilities: {
+        Args: { p_grace_days?: number }
+        Returns: number
+      }
       bootstrap_organization: {
         Args: { p_admin_email: string; p_name: string; p_slug: string }
         Returns: string
@@ -2378,12 +3270,20 @@ export type Database = {
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
       contract_currency: { Args: { p_contract_id: string }; Returns: string }
       dismiss_reminder: { Args: { p_reminder_id: string }; Returns: undefined }
+      generate_electricity_bill_for_reading: {
+        Args: { p_reading_id: string }
+        Returns: string
+      }
       generate_installment_schedule: {
         Args: { p_contract_id: string }
         Returns: number
       }
       generate_payment_reminders: {
         Args: { p_upcoming_days?: number }
+        Returns: number
+      }
+      generate_recurring_utility_bills: {
+        Args: { p_billing_date?: string }
         Returns: number
       }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
@@ -2410,6 +3310,10 @@ export type Database = {
         }
         Returns: string
       }
+      release_suspension: {
+        Args: { p_subscription_id: string }
+        Returns: undefined
+      }
       reverse_payment: {
         Args: { p_payment_id: string; p_reason: string }
         Returns: undefined
@@ -2417,6 +3321,14 @@ export type Database = {
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       storage_org_from_path: { Args: { p_path: string }; Returns: string }
+      suspend_subscription: {
+        Args: {
+          p_notes?: string
+          p_reason: Database["public"]["Enums"]["suspension_reason"]
+          p_subscription_id: string
+        }
+        Returns: string
+      }
       user_compound_ids: { Args: { p_user?: string }; Returns: string[] }
       user_has_management_role: {
         Args: { p_compound?: string; p_org: string; p_user?: string }
@@ -2442,6 +3354,19 @@ export type Database = {
         | "resident"
       assignment_status: "active" | "ended" | "cancelled"
       assignment_type: "owner" | "tenant"
+      billing_cycle:
+        | "monthly"
+        | "quarterly"
+        | "biannual"
+        | "annual"
+        | "one_time"
+      billing_method:
+        | "flat"
+        | "metered"
+        | "tiered"
+        | "time_of_use"
+        | "package"
+        | "pay_per_use"
       booking_status:
         | "pending"
         | "approved"
@@ -2492,6 +3417,12 @@ export type Database = {
         | "penalty_waived"
         | "adjustment"
         | "reminder_sent"
+      gas_order_status:
+        | "pending"
+        | "scheduled"
+        | "out_for_delivery"
+        | "delivered"
+        | "cancelled"
       gender_type: "male" | "female" | "unspecified"
       installment_frequency: "monthly" | "quarterly" | "biannual" | "annual"
       installment_status:
@@ -2507,6 +3438,7 @@ export type Database = {
         | "completed"
         | "cancelled"
       maintenance_type: "preventive" | "corrective" | "emergency"
+      meter_status: "active" | "inactive" | "faulty" | "replaced"
       notification_kind:
         | "ticket_update"
         | "maintenance_assigned"
@@ -2533,10 +3465,26 @@ export type Database = {
       payment_status: "pending" | "confirmed" | "reversed" | "refunded"
       penalty_status: "pending" | "applied" | "waived" | "paid"
       penalty_type: "fixed" | "percentage" | "daily" | "monthly"
+      provider_status: "active" | "inactive" | "suspended"
+      reading_source: "manual" | "photo" | "smart_meter" | "imported"
       reminder_channel: "in_app" | "email" | "sms"
       reminder_kind: "upcoming" | "overdue" | "penalty" | "payment_received"
       reminder_status: "pending" | "sent" | "failed" | "dismissed"
       resident_status: "active" | "pending" | "former"
+      subscription_status:
+        | "pending"
+        | "active"
+        | "suspended"
+        | "cancelled"
+        | "expired"
+      suspension_reason:
+        | "overdue"
+        | "manual"
+        | "violation"
+        | "maintenance"
+        | "request"
+      suspension_status: "active" | "released" | "expired"
+      tariff_type: "fixed" | "tiered" | "time_of_use" | "seasonal"
       technician_availability: "available" | "busy" | "off_duty" | "vacation"
       tenancy_type: "owner" | "tenant" | "family_member" | "guest"
       ticket_category:
@@ -2570,6 +3518,21 @@ export type Database = {
         | "other"
         | "office"
         | "commercial"
+      utility_bill_status:
+        | "draft"
+        | "issued"
+        | "partial"
+        | "paid"
+        | "overdue"
+        | "cancelled"
+      utility_type:
+        | "electricity"
+        | "internet"
+        | "gas"
+        | "water"
+        | "maintenance"
+        | "generator"
+        | "other"
       visitor_status:
         | "pending"
         | "approved"
@@ -2724,6 +3687,15 @@ export const Constants = {
       ],
       assignment_status: ["active", "ended", "cancelled"],
       assignment_type: ["owner", "tenant"],
+      billing_cycle: ["monthly", "quarterly", "biannual", "annual", "one_time"],
+      billing_method: [
+        "flat",
+        "metered",
+        "tiered",
+        "time_of_use",
+        "package",
+        "pay_per_use",
+      ],
       booking_status: [
         "pending",
         "approved",
@@ -2779,6 +3751,13 @@ export const Constants = {
         "adjustment",
         "reminder_sent",
       ],
+      gas_order_status: [
+        "pending",
+        "scheduled",
+        "out_for_delivery",
+        "delivered",
+        "cancelled",
+      ],
       gender_type: ["male", "female", "unspecified"],
       installment_frequency: ["monthly", "quarterly", "biannual", "annual"],
       installment_status: [
@@ -2796,6 +3775,7 @@ export const Constants = {
         "cancelled",
       ],
       maintenance_type: ["preventive", "corrective", "emergency"],
+      meter_status: ["active", "inactive", "faulty", "replaced"],
       notification_kind: [
         "ticket_update",
         "maintenance_assigned",
@@ -2819,10 +3799,28 @@ export const Constants = {
       payment_status: ["pending", "confirmed", "reversed", "refunded"],
       penalty_status: ["pending", "applied", "waived", "paid"],
       penalty_type: ["fixed", "percentage", "daily", "monthly"],
+      provider_status: ["active", "inactive", "suspended"],
+      reading_source: ["manual", "photo", "smart_meter", "imported"],
       reminder_channel: ["in_app", "email", "sms"],
       reminder_kind: ["upcoming", "overdue", "penalty", "payment_received"],
       reminder_status: ["pending", "sent", "failed", "dismissed"],
       resident_status: ["active", "pending", "former"],
+      subscription_status: [
+        "pending",
+        "active",
+        "suspended",
+        "cancelled",
+        "expired",
+      ],
+      suspension_reason: [
+        "overdue",
+        "manual",
+        "violation",
+        "maintenance",
+        "request",
+      ],
+      suspension_status: ["active", "released", "expired"],
+      tariff_type: ["fixed", "tiered", "time_of_use", "seasonal"],
       technician_availability: ["available", "busy", "off_duty", "vacation"],
       tenancy_type: ["owner", "tenant", "family_member", "guest"],
       ticket_category: [
@@ -2858,6 +3856,23 @@ export const Constants = {
         "other",
         "office",
         "commercial",
+      ],
+      utility_bill_status: [
+        "draft",
+        "issued",
+        "partial",
+        "paid",
+        "overdue",
+        "cancelled",
+      ],
+      utility_type: [
+        "electricity",
+        "internet",
+        "gas",
+        "water",
+        "maintenance",
+        "generator",
+        "other",
       ],
       visitor_status: [
         "pending",
