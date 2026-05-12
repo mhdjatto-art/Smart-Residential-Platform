@@ -16,7 +16,9 @@ export default async function ServiceProvidersPage() {
     <div>
       <PageHeader
         title="Service providers"
+        titleKey="headers.providers_title"
         description="Marketplace providers offering on-demand services and products to residents."
+        descKey="headers.providers_desc"
         actions={
           <Button asChild>
             <Link href="/service-providers/new"><Plus className="h-4 w-4" />Add provider</Link>

@@ -18,7 +18,9 @@ export default async function AutomationPage() {
     <div>
       <PageHeader
         title="Automation"
+        titleKey="headers.automation_title"
         description="Declarative rules that schedule jobs across the platform — reminders, escalations, suspensions, exports."
+        descKey="headers.automation_desc"
         actions={
           <div className="flex gap-2">
             <ExecuteRulesButton />

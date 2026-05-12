@@ -35,11 +35,13 @@ export default async function DashboardPage() {
     <div>
       <PageHeader
         title={`Welcome back${user.email ? `, ${user.email.split("@")[0]}` : ""}`}
+        titleKey="headers.dashboard_title"
         description={
           primaryRole
             ? `Signed in as ${ROLE_LABELS[primaryRole]}.`
             : "Your account is set up — ask your administrator to assign a role."
         }
+        descKey="headers.dashboard_desc"
       />
 
       {/* Primary KPIs */}

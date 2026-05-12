@@ -21,7 +21,9 @@ export default async function DomainsPage() {
     <div>
       <PageHeader
         title="Custom domains"
+        titleKey="headers.domains_title"
         description="Point custom hostnames at SRP. Add a CNAME from your DNS, then verify."
+        descKey="headers.domains_desc"
       />
       <DomainsForm orgId={orgId} />
 

@@ -36,7 +36,9 @@ export default async function TicketsPage({
     <div>
       <PageHeader
         title="Tickets"
+        titleKey="headers.tickets_title"
         description="Resident complaints, maintenance requests, and operational issues."
+        descKey="headers.tickets_desc"
         actions={
           <Button asChild>
             <Link href="/tickets/new"><Plus className="h-4 w-4" />New ticket</Link>

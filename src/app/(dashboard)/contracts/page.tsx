@@ -34,7 +34,9 @@ export default async function ContractsPage({
     <div>
       <PageHeader
         title="Contracts"
+        titleKey="headers.contracts_title"
         description="Installment contracts: property sales, rentals, and lease-to-own agreements."
+        descKey="headers.contracts_desc"
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">

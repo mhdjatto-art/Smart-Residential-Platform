@@ -43,7 +43,9 @@ export default async function ResidentsPage({
     <div>
       <PageHeader
         title="Residents"
+        titleKey="headers.residents_title"
         description="Owners, tenants, family members, and guests across your compounds."
+        descKey="headers.residents_desc"
         actions={
           <Button asChild>
             <Link href="/residents/new"><Plus className="h-4 w-4" />Add resident</Link>

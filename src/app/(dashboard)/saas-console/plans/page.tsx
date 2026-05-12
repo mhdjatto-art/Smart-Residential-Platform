@@ -12,7 +12,10 @@ export default async function PlansPage() {
   const plans = await listPlans();
   return (
     <div>
-      <PageHeader title="Subscription plans" description="Plan catalog. Quotas null = unlimited." />
+      <PageHeader
+        title="Subscription plans"
+        titleKey="headers.plans_title"
+        description="Plan catalog. Quotas null = unlimited." />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {plans.map((p) => (
           <Card key={p.id} className={p.tier === "enterprise" ? "border-emerald-500/40" : undefined}>

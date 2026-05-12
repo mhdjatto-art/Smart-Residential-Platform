@@ -54,7 +54,11 @@ export default async function BillingSettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Billing" description="Your subscription and platform invoices." />
+      <PageHeader
+        title="Billing"
+        titleKey="headers.billing_title"
+        description="Your subscription and platform invoices."
+        descKey="headers.billing_desc" />
 
       <Card>
         <CardHeader><CardTitle>Subscription</CardTitle></CardHeader>

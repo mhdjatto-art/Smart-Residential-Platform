@@ -9,7 +9,7 @@ const colorHex = z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Use #RRGGBB").default("#
 export const PLAN_TIERS = ["starter","professional","enterprise","custom"] as const;
 export const SUBSCRIPTION_STATUSES = ["trialing","active","past_due","suspended","cancelled"] as const;
 export const BILLING_CYCLES = ["monthly","quarterly","annual","custom"] as const;
-export const SUPPORTED_LOCALES = ["en","ar","ku","fr","es"] as const;
+export const SUPPORTED_LOCALES = ["en","ar","ku"] as const;
 
 export const provisionOrganizationSchema = z.object({
   name: z.string().trim().min(2).max(120),

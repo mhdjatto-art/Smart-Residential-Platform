@@ -12,7 +12,11 @@ export default async function AlertsPage() {
   const alerts = await listAlerts(["open","acknowledged","snoozed","resolved"]);
   return (
     <div>
-      <PageHeader title="Alerts" description="System-detected operational issues. Acknowledge or resolve when handled." />
+      <PageHeader
+        title="Alerts"
+        titleKey="headers.alerts_title"
+        description="System-detected operational issues. Acknowledge or resolve when handled."
+        descKey="headers.alerts_desc" />
       {alerts.length === 0 ? (
         <EmptyState icon={AlertOctagon} title="No alerts" description="Nothing operationally concerning right now." />
       ) : (

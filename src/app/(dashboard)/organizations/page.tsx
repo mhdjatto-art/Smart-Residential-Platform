@@ -17,7 +17,9 @@ export default async function OrganizationsPage() {
     <div>
       <PageHeader
         title="Organizations"
+        titleKey="headers.organizations_title"
         description="Developers and property management companies on the platform."
+        descKey="headers.organizations_desc"
       />
       {orgs.length === 0 ? (
         <EmptyState icon={Boxes} title="No organizations" />

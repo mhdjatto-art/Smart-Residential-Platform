@@ -18,7 +18,9 @@ export default async function SaasConsolePage() {
     <div>
       <PageHeader
         title="SaaS console"
+        titleKey="headers.saas_console_title"
         description="Platform-wide tenant, plan, and revenue management. Super-admin only."
+        descKey="headers.saas_console_desc"
         actions={
           <Button asChild>
             <Link href="/saas-console/organizations/new"><Sparkles className="h-4 w-4" />Provision tenant</Link>

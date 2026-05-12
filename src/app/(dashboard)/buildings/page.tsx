@@ -34,7 +34,9 @@ export default async function BuildingsPage({
     <div>
       <PageHeader
         title="Buildings"
+        titleKey="headers.buildings_title"
         description="Buildings across your compounds."
+        descKey="headers.buildings_desc"
         actions={
           <Button asChild>
             <Link href="/buildings/new"><Plus className="h-4 w-4" />Add building</Link>

@@ -14,7 +14,9 @@ export default async function OverdueRiskPage() {
     <div>
       <PageHeader
         title="Overdue risk scoring"
+        titleKey="headers.risk_title"
         description="Heuristic predictor (heuristic-v1). Higher scores = greater likelihood of continued delinquency. Recompute regularly."
+        descKey="headers.risk_desc"
         actions={<RecomputeRiskButton />}
       />
       {rows.length === 0 ? (

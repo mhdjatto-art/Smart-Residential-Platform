@@ -15,7 +15,11 @@ export default async function BrandingSettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Branding" description="White-label your tenant — logo, colors, typography, and email signature." />
+      <PageHeader
+        title="Branding"
+        titleKey="headers.branding_title"
+        description="White-label your tenant — logo, colors, typography, and email signature."
+        descKey="headers.branding_desc" />
       <BrandingForm orgId={orgId} initial={branding} />
     </div>
   );

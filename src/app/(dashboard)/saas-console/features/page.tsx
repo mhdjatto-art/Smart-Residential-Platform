@@ -17,7 +17,10 @@ export default async function FeaturesPage() {
 
   return (
     <div>
-      <PageHeader title="Feature catalog" description="Every feature the platform exposes. Premium features unlock with higher plans." />
+      <PageHeader
+        title="Feature catalog"
+        titleKey="headers.features_title"
+        description="Every feature the platform exposes. Premium features unlock with higher plans." />
       <div className="space-y-6">
         {Object.entries(grouped).map(([category, items]) => (
           <Card key={category}>

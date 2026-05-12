@@ -52,7 +52,9 @@ export default async function UnitsPage({
     <div>
       <PageHeader
         title="Units"
+        titleKey="headers.units_title"
         description="All units across your compounds with availability and pricing."
+        descKey="headers.units_desc"
         actions={
           <Button asChild>
             <Link href="/units/new"><Plus className="h-4 w-4" />Add unit</Link>

@@ -14,7 +14,9 @@ export default async function AuditLogPage({ searchParams }: { searchParams: Pro
     <div>
       <PageHeader
         title="Audit log"
+        titleKey="headers.audit_log_title"
         description="Immutable record of every change across the platform. Useful for compliance and forensics."
+        descKey="headers.audit_log_desc"
       />
       {entries.length === 0 ? (
         <EmptyState icon={History} title="No audit entries" description="Activity logs will appear here as the system runs." />

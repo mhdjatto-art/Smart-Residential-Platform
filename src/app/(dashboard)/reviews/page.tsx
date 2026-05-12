@@ -15,7 +15,9 @@ export default async function ReviewsPage() {
     <div>
       <PageHeader
         title="Provider reviews"
+        titleKey="headers.reviews_title"
         description="All resident reviews across the marketplace."
+        descKey="headers.reviews_desc"
       />
       {reviews.length === 0 ? (
         <EmptyState icon={Star} title="No reviews yet" description="Residents will leave reviews after completing orders." />

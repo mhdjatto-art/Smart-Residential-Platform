@@ -35,7 +35,9 @@ export default async function CompoundsPage({
     <div>
       <PageHeader
         title="Compounds"
+        titleKey="headers.compounds_title"
         description="Residential projects under your organization."
+        descKey="headers.compounds_desc"
         actions={
           <Button asChild>
             <Link href="/compounds/new">

@@ -17,7 +17,9 @@ export default async function OrdersPage() {
     <div>
       <PageHeader
         title="Marketplace orders"
+        titleKey="headers.orders_title"
         description="Orders placed by residents through the service marketplace."
+        descKey="headers.orders_desc"
         actions={
           <Button asChild>
             <Link href="/orders/new"><Plus className="h-4 w-4" />New order</Link>

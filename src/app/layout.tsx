@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // i18n resolution is best-effort — never crash the root layout if cookies
   // or headers are unavailable (e.g. during static prerender). Default to
   // English LTR in that case.
-  let locale: "en" | "ar" | "ku" | "fr" | "es" = "en";
+  let locale: "en" | "ar" | "ku" = "en";
   let dir: "rtl" | "ltr" = "ltr";
   try {
     locale = await getActiveLocale();

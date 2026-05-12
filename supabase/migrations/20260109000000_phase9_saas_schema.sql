@@ -185,7 +185,7 @@ create unique index if not exists od_one_primary_per_org on public.organization_
 
 create table if not exists public.organization_settings (
   organization_id uuid primary key references public.organizations(id) on delete cascade,
-  default_locale  text not null default 'en' check (default_locale in ('en','ar','ku','fr','es')),
+  default_locale  text not null default 'en' check (default_locale in ('en','ar','ku')),
   supported_locales text[] not null default array['en']::text[],
   timezone        text not null default 'UTC',
   date_format     text not null default 'YYYY-MM-DD',

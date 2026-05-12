@@ -7,7 +7,7 @@ import { getActiveLocale } from "@/lib/i18n/server";
 export const dynamic = "force-dynamic";
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
-  let locale: "en" | "ar" | "ku" | "fr" | "es" = "en";
+  let locale: "en" | "ar" | "ku" = "en";
   try { locale = await getActiveLocale(); } catch { /* swallowed */ }
   return (
     <div className="grid min-h-screen lg:grid-cols-2">

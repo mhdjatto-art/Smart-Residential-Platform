@@ -34,7 +34,9 @@ export default async function PaymentsPage({
     <div>
       <PageHeader
         title="Payments"
+        titleKey="headers.payments_title"
         description="All recorded payments across active contracts."
+        descKey="headers.payments_desc"
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">

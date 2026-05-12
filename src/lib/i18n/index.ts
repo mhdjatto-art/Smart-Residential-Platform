@@ -10,17 +10,15 @@
 
 import type en from "./locales/en.json";
 
-export type LocaleCode = "en" | "ar" | "ku" | "fr" | "es";
+export type LocaleCode = "en" | "ar" | "ku";
 
-export const SUPPORTED_LOCALES: readonly LocaleCode[] = ["en", "ar", "ku", "fr", "es"];
+export const SUPPORTED_LOCALES: readonly LocaleCode[] = ["en", "ar", "ku"];
 export const RTL_LOCALES: ReadonlySet<LocaleCode> = new Set<LocaleCode>(["ar", "ku"]);
 
 export const LOCALE_NAMES: Record<LocaleCode, string> = {
   en: "English",
   ar: "العربية",
   ku: "کوردی",
-  fr: "Français",
-  es: "Español",
 };
 
 export function isRtl(locale: LocaleCode): boolean {
@@ -52,6 +50,8 @@ export async function loadLocale(locale: LocaleCode): Promise<Dict> {
       dict = (await import("./locales/en.json")).default as Dict;
     } else if (locale === "ar") {
       dict = (await import("./locales/ar.json")).default as Dict;
+    } else if (locale === "ku") {
+      dict = (await import("./locales/ku.json")).default as Dict;
     } else {
       dict = (await import("./locales/en.json")).default as Dict;
     }
