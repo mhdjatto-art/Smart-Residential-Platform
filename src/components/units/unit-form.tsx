@@ -49,9 +49,12 @@ export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuilding
     setErrors({});
     const fd = new FormData(e.currentTarget);
 
+    // Sentinel "__none__" represents "no floor selected" because Radix Select
+    // disallows empty string values. Convert to "" so Zod treats it as undefined.
+    const rawFloorId = String(fd.get("floor_id") ?? "");
     const candidate = {
       building_id: String(fd.get("building_id") ?? ""),
-      floor_id: String(fd.get("floor_id") ?? ""),
+      floor_id: rawFloorId === "__none__" ? "" : rawFloorId,
       unit_number: String(fd.get("unit_number") ?? ""),
       unit_type: String(fd.get("unit_type") ?? "apartment"),
       status: String(fd.get("status") ?? "vacant"),
@@ -111,10 +114,10 @@ export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuilding
           </Field>
 
           <Field label="Floor" error={errors.floor_id}>
-            <Select name="floor_id" defaultValue={initial?.floor_id ?? ""}>
+            <Select name="floor_id" defaultValue={initial?.floor_id ?? "__none__"}>
               <SelectTrigger><SelectValue placeholder="Optional" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">— None —</SelectItem>
+                <SelectItem value="__none__">— None —</SelectItem>
                 {floors.map((f) => <SelectItem key={f.id} value={f.id}>{f.label}</SelectItem>)}
               </SelectContent>
             </Select>
