@@ -39,6 +39,10 @@
     "utility_bills": "Utility bills",
     "pricing_rules": "Pricing rules",
     "integrations": "Integrations",
+    "devices": "Devices",
+    "access_zones": "Access zones",
+    "access_logs": "Access logs",
+    "parking": "Parking",
     "marketplace": "Marketplace",
     "service_providers": "Service providers",
     "orders": "Orders",
@@ -214,7 +218,15 @@
     "pricing_rules_title": "Pricing rules",
     "pricing_rules_desc": "Dynamic service fees — by apartment size, consumption tiers, time-of-use, or formulas.",
     "integrations_title": "Provider integrations",
-    "integrations_desc": "Adapter configurations for utility providers — Mikrotik, UniFi, Modbus, RADIUS, REST APIs."
+    "integrations_desc": "Adapter configurations for utility providers — Mikrotik, UniFi, Modbus, RADIUS, REST APIs.",
+    "devices_title": "Devices",
+    "devices_desc": "Every IoT device the platform tracks — smart meters, gates, locks, cameras, sensors.",
+    "access_zones_title": "Access zones",
+    "access_zones_desc": "Gates, doors, parkings, and amenities — controllable entry points.",
+    "access_logs_title": "Access logs",
+    "access_logs_desc": "Every entry/exit attempt — granted, denied, or overridden.",
+    "parking_title": "Parking",
+    "parking_desc": "Parking spots and resident assignments."
   },
   "stats": {
     "outstanding": "Outstanding",

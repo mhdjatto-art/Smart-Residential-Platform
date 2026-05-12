@@ -39,6 +39,10 @@
     "utility_bills": "فواتير الخدمات",
     "pricing_rules": "قواعد التسعير",
     "integrations": "التكاملات",
+    "devices": "الأجهزة",
+    "access_zones": "مناطق الوصول",
+    "access_logs": "سجلات الدخول",
+    "parking": "المواقف",
     "marketplace": "السوق",
     "service_providers": "مقدمو الخدمات",
     "orders": "الطلبات",
@@ -214,7 +218,15 @@
     "pricing_rules_title": "قواعد التسعير",
     "pricing_rules_desc": "رسوم خدمات ديناميكية — حسب مساحة الشقة، شرائح الاستهلاك، وقت الاستخدام، أو معادلات.",
     "integrations_title": "تكاملات المزودين",
-    "integrations_desc": "إعدادات محوّلات مزودي الخدمة — Mikrotik و UniFi و Modbus و RADIUS و REST APIs."
+    "integrations_desc": "إعدادات محوّلات مزودي الخدمة — Mikrotik و UniFi و Modbus و RADIUS و REST APIs.",
+    "devices_title": "الأجهزة",
+    "devices_desc": "كل أجهزة IoT التي تتابعها المنصة — العدادات الذكية، البوابات، الأقفال، الكاميرات، المستشعرات.",
+    "access_zones_title": "مناطق الوصول",
+    "access_zones_desc": "البوابات والأبواب والمواقف والمرافق — نقاط دخول قابلة للتحكم.",
+    "access_logs_title": "سجلات الدخول",
+    "access_logs_desc": "كل محاولة دخول/خروج — مسموحة، مرفوضة، أو متجاوزة.",
+    "parking_title": "المواقف",
+    "parking_desc": "مواقف السيارات وتخصيصها للسكان."
   },
   "stats": {
     "outstanding": "المستحق",

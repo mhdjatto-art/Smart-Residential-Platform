@@ -39,6 +39,10 @@
     "utility_bills": "پسوولەکانی خزمەتگوزاری",
     "pricing_rules": "ڕێسای نرخگوزاری",
     "integrations": "تەکنیکی پەیوەندی",
+    "devices": "ئامێرەکان",
+    "access_zones": "ناوچەکانی دەسپێگەیشتن",
+    "access_logs": "تۆماری دەسپێگەیشتن",
+    "parking": "پارکینگ",
     "marketplace": "بازاڕ",
     "service_providers": "دابینکەرانی خزمەتگوزاری",
     "orders": "داواکارییەکان",
@@ -214,7 +218,15 @@
     "pricing_rules_title": "ڕێسای نرخگوزاری",
     "pricing_rules_desc": "تێچووی خزمەتگوزاری گۆڕاو — بەپێی ڕووبەری شوقە، ئاستی بەکارهێنان، کاتی بەکارهێنان، یان فۆرمولا.",
     "integrations_title": "تەکنیکی پەیوەندی دابینکەران",
-    "integrations_desc": "ڕێکخستنی ئەدابتەرەکانی دابینکەران — Mikrotik و UniFi و Modbus و RADIUS و REST APIs."
+    "integrations_desc": "ڕێکخستنی ئەدابتەرەکانی دابینکەران — Mikrotik و UniFi و Modbus و RADIUS و REST APIs.",
+    "devices_title": "ئامێرەکان",
+    "devices_desc": "هەموو ئامێرە IoTیەکان کە پلاتفۆڕم چاودێریان دەکات — مەترە زیرەکەکان، دەرگاکان، قفڵەکان، کامێراکان، هەستەوەرەکان.",
+    "access_zones_title": "ناوچەکانی دەسپێگەیشتن",
+    "access_zones_desc": "دەرگا، پارکینگ و ئامێرەکان — خاڵی کۆنترۆڵکراوی چوونەژوورەوە.",
+    "access_logs_title": "تۆماری دەسپێگەیشتن",
+    "access_logs_desc": "هەموو هەوڵێکی چوونەژوورەوە/دەرەوە — ڕێگەپێدراو، ڕەتکراوەتەوە، یان ئەم سەرکردایەتی.",
+    "parking_title": "پارکینگ",
+    "parking_desc": "شوێنی پارکینگ و دیاریکردنیان بۆ دانیشتووان."
   },
   "stats": {
     "outstanding": "ماوەتەوە",

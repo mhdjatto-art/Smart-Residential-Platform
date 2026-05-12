@@ -14,6 +14,167 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_logs: {
+        Row: {
+          compound_id: string
+          device_id: string | null
+          direction: string | null
+          id: number
+          identifier: string | null
+          method: Database["public"]["Enums"]["access_method"]
+          notes: string | null
+          occurred_at: string
+          organization_id: string
+          outcome: Database["public"]["Enums"]["access_outcome"]
+          payload: Json
+          resident_id: string | null
+          vehicle_plate: string | null
+          visitor_id: string | null
+          zone_id: string | null
+        }
+        Insert: {
+          compound_id: string
+          device_id?: string | null
+          direction?: string | null
+          id?: number
+          identifier?: string | null
+          method: Database["public"]["Enums"]["access_method"]
+          notes?: string | null
+          occurred_at?: string
+          organization_id: string
+          outcome: Database["public"]["Enums"]["access_outcome"]
+          payload?: Json
+          resident_id?: string | null
+          vehicle_plate?: string | null
+          visitor_id?: string | null
+          zone_id?: string | null
+        }
+        Update: {
+          compound_id?: string
+          device_id?: string | null
+          direction?: string | null
+          id?: number
+          identifier?: string | null
+          method?: Database["public"]["Enums"]["access_method"]
+          notes?: string | null
+          occurred_at?: string
+          organization_id?: string
+          outcome?: Database["public"]["Enums"]["access_outcome"]
+          payload?: Json
+          resident_id?: string | null
+          vehicle_plate?: string | null
+          visitor_id?: string | null
+          zone_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_logs_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_logs_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_logs_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_logs_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "visitors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_logs_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "access_zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      access_zones: {
+        Row: {
+          compound_id: string
+          created_at: string
+          device_id: string | null
+          id: string
+          is_active: boolean
+          metadata: Json
+          name: string
+          organization_id: string
+          requires_approval: boolean
+          updated_at: string
+          zone_kind: string
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          device_id?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          name: string
+          organization_id: string
+          requires_approval?: boolean
+          updated_at?: string
+          zone_kind: string
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          device_id?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          name?: string
+          organization_id?: string
+          requires_approval?: boolean
+          updated_at?: string
+          zone_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "access_zones_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_zones_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "access_zones_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_predictions: {
         Row: {
           band: string | null
@@ -613,6 +774,237 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      device_commands: {
+        Row: {
+          acknowledged_at: string | null
+          attempts: number
+          command: string
+          completed_at: string | null
+          created_at: string
+          device_id: string
+          error_message: string | null
+          id: string
+          issued_by: string | null
+          max_attempts: number
+          organization_id: string
+          payload: Json
+          result: Json | null
+          scheduled_for: string
+          status: Database["public"]["Enums"]["command_status"]
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          attempts?: number
+          command: string
+          completed_at?: string | null
+          created_at?: string
+          device_id: string
+          error_message?: string | null
+          id?: string
+          issued_by?: string | null
+          max_attempts?: number
+          organization_id: string
+          payload?: Json
+          result?: Json | null
+          scheduled_for?: string
+          status?: Database["public"]["Enums"]["command_status"]
+        }
+        Update: {
+          acknowledged_at?: string | null
+          attempts?: number
+          command?: string
+          completed_at?: string | null
+          created_at?: string
+          device_id?: string
+          error_message?: string | null
+          id?: string
+          issued_by?: string | null
+          max_attempts?: number
+          organization_id?: string
+          payload?: Json
+          result?: Json | null
+          scheduled_for?: string
+          status?: Database["public"]["Enums"]["command_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_commands_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "device_commands_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      device_events: {
+        Row: {
+          device_id: string
+          event_kind: Database["public"]["Enums"]["device_event_kind"]
+          id: number
+          measurement_unit: string | null
+          measurement_value: number | null
+          occurred_at: string
+          organization_id: string
+          payload: Json
+          source: string | null
+        }
+        Insert: {
+          device_id: string
+          event_kind: Database["public"]["Enums"]["device_event_kind"]
+          id?: number
+          measurement_unit?: string | null
+          measurement_value?: number | null
+          occurred_at?: string
+          organization_id: string
+          payload?: Json
+          source?: string | null
+        }
+        Update: {
+          device_id?: string
+          event_kind?: Database["public"]["Enums"]["device_event_kind"]
+          id?: number
+          measurement_unit?: string | null
+          measurement_value?: number | null
+          occurred_at?: string
+          organization_id?: string
+          payload?: Json
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_events_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "device_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      devices: {
+        Row: {
+          building_id: string | null
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          device_kind: Database["public"]["Enums"]["device_kind"]
+          firmware_version: string | null
+          id: string
+          installed_at: string | null
+          integration_id: string | null
+          ip_address: string | null
+          last_seen_at: string | null
+          mac_address: string | null
+          metadata: Json
+          model: string | null
+          name: string
+          organization_id: string
+          serial: string | null
+          status: Database["public"]["Enums"]["device_status"]
+          unit_id: string | null
+          updated_at: string
+          updated_by: string | null
+          vendor: string | null
+        }
+        Insert: {
+          building_id?: string | null
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          device_kind: Database["public"]["Enums"]["device_kind"]
+          firmware_version?: string | null
+          id?: string
+          installed_at?: string | null
+          integration_id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          mac_address?: string | null
+          metadata?: Json
+          model?: string | null
+          name: string
+          organization_id: string
+          serial?: string | null
+          status?: Database["public"]["Enums"]["device_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          building_id?: string | null
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          device_kind?: Database["public"]["Enums"]["device_kind"]
+          firmware_version?: string | null
+          id?: string
+          installed_at?: string | null
+          integration_id?: string | null
+          ip_address?: string | null
+          last_seen_at?: string | null
+          mac_address?: string | null
+          metadata?: Json
+          model?: string | null
+          name?: string
+          organization_id?: string
+          serial?: string | null
+          status?: Database["public"]["Enums"]["device_status"]
+          unit_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vendor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "devices_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "devices_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "devices_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "provider_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "devices_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "devices_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -2677,6 +3069,157 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: []
+      }
+      parking_assignments: {
+        Row: {
+          compound_id: string
+          created_at: string
+          end_date: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          resident_id: string | null
+          spot_id: string
+          start_date: string
+          status: Database["public"]["Enums"]["parking_assignment_status"]
+          unit_id: string | null
+          updated_at: string
+          vehicle_make: string | null
+          vehicle_model: string | null
+          vehicle_plate: string | null
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          resident_id?: string | null
+          spot_id: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["parking_assignment_status"]
+          unit_id?: string | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          resident_id?: string | null
+          spot_id?: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["parking_assignment_status"]
+          unit_id?: string | null
+          updated_at?: string
+          vehicle_make?: string | null
+          vehicle_model?: string | null
+          vehicle_plate?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parking_assignments_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_assignments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_assignments_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_assignments_spot_id_fkey"
+            columns: ["spot_id"]
+            isOneToOne: false
+            referencedRelation: "parking_spots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_assignments_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parking_spots: {
+        Row: {
+          compound_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          organization_id: string
+          spot_kind: string
+          spot_number: string
+          updated_at: string
+          zone_id: string | null
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          organization_id: string
+          spot_kind?: string
+          spot_number: string
+          updated_at?: string
+          zone_id?: string | null
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          organization_id?: string
+          spot_kind?: string
+          spot_number?: string
+          updated_at?: string
+          zone_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parking_spots_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_spots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parking_spots_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "access_zones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payment_allocations: {
         Row: {
@@ -5331,6 +5874,15 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string }
         Returns: undefined
       }
+      complete_device_command: {
+        Args: {
+          p_error?: string
+          p_id: string
+          p_result?: Json
+          p_status: Database["public"]["Enums"]["command_status"]
+        }
+        Returns: undefined
+      }
       compute_dynamic_fee: {
         Args: {
           p_consumption?: number
@@ -5367,6 +5919,17 @@ export type Database = {
         }
         Returns: string
       }
+      evaluate_access: {
+        Args: {
+          p_device_id?: string
+          p_direction?: string
+          p_identifier: string
+          p_method: Database["public"]["Enums"]["access_method"]
+          p_vehicle_plate?: string
+          p_zone_id: string
+        }
+        Returns: Database["public"]["Enums"]["access_outcome"]
+      }
       evaluate_pricing_rule: {
         Args: {
           p_consumption?: number
@@ -5399,6 +5962,15 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { p_user?: string }; Returns: boolean }
+      issue_device_command: {
+        Args: {
+          p_command: string
+          p_device_id: string
+          p_payload?: Json
+          p_scheduled_for?: string
+        }
+        Returns: string
+      }
       log_integration_call: {
         Args: {
           p_action: string
@@ -5470,6 +6042,17 @@ export type Database = {
         Args: { p_floor_id: string }
         Returns: undefined
       }
+      record_device_event: {
+        Args: {
+          p_device_id: string
+          p_event_kind: Database["public"]["Enums"]["device_event_kind"]
+          p_measurement_unit?: string
+          p_measurement_value?: number
+          p_payload?: Json
+          p_source?: string
+        }
+        Returns: number
+      }
       record_payment: {
         Args: {
           p_amount: number
@@ -5526,6 +6109,22 @@ export type Database = {
       user_organization_ids: { Args: { p_user?: string }; Returns: string[] }
     }
     Enums: {
+      access_method:
+        | "qr"
+        | "rfid"
+        | "pin"
+        | "plate"
+        | "biometric"
+        | "manual"
+        | "app"
+        | "intercom"
+      access_outcome:
+        | "granted"
+        | "denied"
+        | "tailgate"
+        | "manual_override"
+        | "expired"
+        | "blacklisted"
       alert_severity: "info" | "warning" | "critical"
       alert_status: "open" | "acknowledged" | "resolved" | "snoozed"
       announcement_kind:
@@ -5581,6 +6180,14 @@ export type Database = {
         | "rejected"
         | "cancelled"
         | "completed"
+      command_status:
+        | "queued"
+        | "sent"
+        | "acknowledged"
+        | "succeeded"
+        | "failed"
+        | "timeout"
+        | "cancelled"
       commission_kind: "percentage" | "fixed"
       commission_payee: "platform" | "compound" | "organization"
       compound_status: "active" | "inactive" | "archived"
@@ -5591,6 +6198,35 @@ export type Database = {
         | "cancelled"
         | "defaulted"
       contract_type: "property_sale" | "rental" | "lease_to_own"
+      device_event_kind:
+        | "heartbeat"
+        | "online"
+        | "offline"
+        | "measurement"
+        | "alarm"
+        | "config_change"
+        | "firmware_update"
+        | "manual"
+      device_kind:
+        | "smart_meter"
+        | "router"
+        | "switch"
+        | "access_point"
+        | "smart_lock"
+        | "gate_controller"
+        | "camera"
+        | "sensor"
+        | "intercom"
+        | "parking_barrier"
+        | "generator"
+        | "other"
+      device_status:
+        | "provisioned"
+        | "online"
+        | "offline"
+        | "degraded"
+        | "retired"
+        | "unknown"
       document_kind:
         | "national_id"
         | "passport"
@@ -5683,6 +6319,7 @@ export type Database = {
         | "for_rent"
         | "leased"
         | "reserved"
+      parking_assignment_status: "active" | "expired" | "released" | "suspended"
       payment_method:
         | "cash"
         | "bank_transfer"
@@ -5957,6 +6594,24 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      access_method: [
+        "qr",
+        "rfid",
+        "pin",
+        "plate",
+        "biometric",
+        "manual",
+        "app",
+        "intercom",
+      ],
+      access_outcome: [
+        "granted",
+        "denied",
+        "tailgate",
+        "manual_override",
+        "expired",
+        "blacklisted",
+      ],
       alert_severity: ["info", "warning", "critical"],
       alert_status: ["open", "acknowledged", "resolved", "snoozed"],
       announcement_kind: [
@@ -6013,6 +6668,15 @@ export const Constants = {
         "cancelled",
         "completed",
       ],
+      command_status: [
+        "queued",
+        "sent",
+        "acknowledged",
+        "succeeded",
+        "failed",
+        "timeout",
+        "cancelled",
+      ],
       commission_kind: ["percentage", "fixed"],
       commission_payee: ["platform", "compound", "organization"],
       compound_status: ["active", "inactive", "archived"],
@@ -6024,6 +6688,38 @@ export const Constants = {
         "defaulted",
       ],
       contract_type: ["property_sale", "rental", "lease_to_own"],
+      device_event_kind: [
+        "heartbeat",
+        "online",
+        "offline",
+        "measurement",
+        "alarm",
+        "config_change",
+        "firmware_update",
+        "manual",
+      ],
+      device_kind: [
+        "smart_meter",
+        "router",
+        "switch",
+        "access_point",
+        "smart_lock",
+        "gate_controller",
+        "camera",
+        "sensor",
+        "intercom",
+        "parking_barrier",
+        "generator",
+        "other",
+      ],
+      device_status: [
+        "provisioned",
+        "online",
+        "offline",
+        "degraded",
+        "retired",
+        "unknown",
+      ],
       document_kind: [
         "national_id",
         "passport",
@@ -6120,6 +6816,7 @@ export const Constants = {
       ],
       organization_status: ["active", "suspended", "archived"],
       ownership_status: ["owned", "for_sale", "for_rent", "leased", "reserved"],
+      parking_assignment_status: ["active", "expired", "released", "suspended"],
       payment_method: [
         "cash",
         "bank_transfer",

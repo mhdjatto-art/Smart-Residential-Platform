@@ -35,6 +35,10 @@ import {
   Crown,
   Calculator,
   Cable,
+  Cpu,
+  DoorOpen,
+  Car,
+  Radio,
   type LucideIcon,
 } from "lucide-react";
 import type { Capability } from "@/lib/auth/permissions";
@@ -103,6 +107,15 @@ export const navigation: NavSection[] = [
       { title: "Utility bills",   href: "/utility-bills",     icon: Receipt,     requiredCapability: "utility:read" },
       { title: "Pricing rules",   href: "/pricing-rules",     icon: Calculator,  requiredCapability: "pricing:read" },
       { title: "Integrations",    href: "/integrations",      icon: Cable,       requiredCapability: "integrations:read" },
+    ],
+  },
+  {
+    title: "Smart infrastructure",
+    items: [
+      { title: "Devices",       href: "/devices",       icon: Cpu,      requiredCapability: "devices:read" },
+      { title: "Access zones",  href: "/access-zones",  icon: DoorOpen, requiredCapability: "access:read" },
+      { title: "Access logs",   href: "/access-logs",   icon: Radio,    requiredCapability: "access:read" },
+      { title: "Parking",       href: "/parking",       icon: Car,      requiredCapability: "parking:read" },
     ],
   },
   {
