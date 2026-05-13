@@ -9,6 +9,8 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { SearchBar } from "@/components/shared/search-bar";
 import { FilterSelect } from "@/components/shared/filter-select";
 import { Pagination } from "@/components/shared/pagination";
+import { VisitorActions } from "@/components/visitors/visitor-actions";
+import { VisitorQr } from "@/components/visitors/visitor-qr";
 import { listVisitorsPaged } from "@/lib/api/visitors";
 import { formatDate } from "@/lib/utils";
 
@@ -82,10 +84,11 @@ export default async function VisitorsPage({
               <TableRow>
                 <TableHead>Pass</TableHead>
                 <TableHead>Visitor</TableHead>
-                <TableHead>Type</TableHead>
+                <TableHead className="hidden md:table-cell">Type</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Time</TableHead>
+                <TableHead className="hidden lg:table-cell">Date</TableHead>
+                <TableHead className="hidden lg:table-cell">Time</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -100,10 +103,18 @@ export default async function VisitorsPage({
                       {v.mobile && <p className="text-xs text-muted-foreground">{v.mobile}</p>}
                     </div>
                   </TableCell>
-                  <TableCell className="capitalize text-muted-foreground">{v.visitor_type}</TableCell>
+                  <TableCell className="hidden capitalize text-muted-foreground md:table-cell">{v.visitor_type}</TableCell>
                   <TableCell><StatusBadge status={v.status} /></TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(v.scheduled_date)}</TableCell>
-                  <TableCell className="text-muted-foreground">{v.scheduled_time ?? "—"}</TableCell>
+                  <TableCell className="hidden text-muted-foreground lg:table-cell">{formatDate(v.scheduled_date)}</TableCell>
+                  <TableCell className="hidden text-muted-foreground lg:table-cell">{v.scheduled_time ?? "—"}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-end gap-1">
+                      {(v.status === "approved" || v.status === "checked_in") && (
+                        <VisitorQr passCode={v.pass_code} visitorName={v.full_name} scheduledDate={formatDate(v.scheduled_date) ?? v.scheduled_date} />
+                      )}
+                      <VisitorActions visitorId={v.id} status={v.status} compact />
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
