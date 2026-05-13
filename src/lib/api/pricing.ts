@@ -117,15 +117,54 @@ export interface IntegrationRow {
   last_synced_at: string | null;
   last_error: string | null;
   is_active: boolean;
+  // Joined from utility_providers
+  provider_name: string | null;
+  provider_type: string | null;
+  provider_country: string | null;
+  provider_category: string | null;
 }
 
 export async function listIntegrations(): Promise<IntegrationRow[]> {
   await requireRole(["super_admin","developer_admin","compound_manager"]);
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("provider_integrations").select("*").order("name");
+    .from("provider_integrations")
+    .select("*, provider:utility_providers(provider_name,provider_type,metadata)")
+    .order("name");
   if (error) throw new Error(error.message);
-  return (data ?? []) as unknown as IntegrationRow[];
+
+  type RawRow = {
+    id: string; organization_id: string; provider_id: string | null;
+    adapter_kind: string; name: string; endpoint_url: string | null;
+    config: Record<string, unknown>; status: string;
+    last_synced_at: string | null; last_error: string | null; is_active: boolean;
+    provider: {
+      provider_name: string | null;
+      provider_type: string | null;
+      metadata: Record<string, unknown> | null;
+    } | null;
+  };
+
+  return ((data ?? []) as unknown as RawRow[]).map((r) => {
+    const md = (r.provider?.metadata ?? {}) as Record<string, unknown>;
+    return {
+      id: r.id,
+      organization_id: r.organization_id,
+      provider_id: r.provider_id,
+      adapter_kind: r.adapter_kind,
+      name: r.name,
+      endpoint_url: r.endpoint_url,
+      config: r.config,
+      status: r.status,
+      last_synced_at: r.last_synced_at,
+      last_error: r.last_error,
+      is_active: r.is_active,
+      provider_name:     r.provider?.provider_name ?? null,
+      provider_type:     r.provider?.provider_type ?? null,
+      provider_country:  typeof md.country === "string"  ? md.country  : null,
+      provider_category: typeof md.category === "string" ? md.category : null,
+    };
+  });
 }
 
 export async function createIntegration(input: IntegrationInput): Promise<IntegrationRow> {
