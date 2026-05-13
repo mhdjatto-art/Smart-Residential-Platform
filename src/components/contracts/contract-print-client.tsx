@@ -2,11 +2,13 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Pencil, Printer, Save } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, Download, Loader2, Pencil, Printer, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { downloadElementAsPdf } from "@/lib/pdf/html-to-pdf";
 
 interface TemplateOption {
   id: string;
@@ -46,7 +48,25 @@ export function ContractPrintClient({
 }: Props) {
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(html);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const paperRef = useRef<HTMLDivElement>(null);
+
+  async function onDownloadPdf() {
+    if (!paperRef.current) return;
+    if (editing && ref.current) {
+      setBody(ref.current.innerHTML);
+      setEditing(false);
+    }
+    setPdfLoading(true);
+    try {
+      await downloadElementAsPdf(paperRef.current, `contract-${contractNumber}.pdf`);
+    } catch (err) {
+      toast.error("PDF generation failed", { description: err instanceof Error ? err.message : "" });
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   function onSwitchTemplate(id: string) {
     if (id === currentTemplateId) return;
@@ -134,6 +154,11 @@ export function ContractPrintClient({
             {editing ? "Done editing" : "Edit"}
           </Button>
 
+          <Button size="sm" variant="outline" onClick={() => void onDownloadPdf()} disabled={pdfLoading}>
+            {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            PDF
+          </Button>
+
           <Button size="sm" onClick={onPrint}>
             <Printer className="h-4 w-4" />Print
           </Button>
@@ -143,6 +168,7 @@ export function ContractPrintClient({
       {/* Paper */}
       <div className="mx-auto my-6 max-w-[800px] px-4">
         <div
+          ref={paperRef}
           className={`print-paper rounded-lg border bg-white p-12 text-[14px] text-black shadow-lg outline-none ${editing ? "ring-2 ring-primary/50" : ""}`}
         >
           {/* Branded banner */}

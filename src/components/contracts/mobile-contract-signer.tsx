@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Eraser, Loader2, PenLine } from "lucide-react";
+import { Download, Eraser, Loader2, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signContract } from "@/lib/api/contract-signatures";
+import { downloadElementAsPdf } from "@/lib/pdf/html-to-pdf";
 
 interface Props {
   contractId: string;
@@ -36,11 +37,25 @@ export function MobileContractSignerClient({
   residentDisplayName,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasInk, setHasInk] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [fullName, setFullName] = useState(residentDisplayName);
   const router = useRouter();
+
+  async function downloadPdf() {
+    if (!bodyRef.current) return;
+    setPdfLoading(true);
+    try {
+      await downloadElementAsPdf(bodyRef.current, `contract-${contractId.slice(0, 8)}.pdf`);
+    } catch (err) {
+      toast.error("PDF generation failed", { description: err instanceof Error ? err.message : "" });
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   // Initialize canvas (white bg + smooth line settings) on mount
   useEffect(() => {
@@ -139,10 +154,23 @@ export function MobileContractSignerClient({
     <div className="space-y-4">
       {/* Contract body — read-only, scrollable on mobile */}
       <div
+        ref={bodyRef}
         className="rounded-xl border bg-white p-4 text-[13px] text-black"
         style={{ lineHeight: 1.5 }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => void downloadPdf()}
+        disabled={pdfLoading}
+        className="w-full"
+        type="button"
+      >
+        {pdfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+        {pdfLoading ? "Preparing PDF…" : "Download PDF"}
+      </Button>
 
       {alreadySigned ? null : (
         <div className="rounded-xl border bg-card p-4 space-y-3">
