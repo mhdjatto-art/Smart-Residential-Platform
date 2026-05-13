@@ -9,10 +9,15 @@ import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
 import { csvResponse, toCsv } from "@/lib/api/csv";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  // CSV pulls are expensive — cap at 10 / min per IP.
+  const limited = enforceRateLimit(request, "csv-export", 10, 60_000);
+  if (limited) return limited;
+
   await requireRole(["super_admin", "developer_admin", "compound_manager", "finance_officer"]);
   const supabase = await createClient();
   const sp = request.nextUrl.searchParams;

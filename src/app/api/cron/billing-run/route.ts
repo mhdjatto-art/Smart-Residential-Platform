@@ -3,27 +3,23 @@
  * ─────────────────────────
  * Daily auto-billing endpoint, triggered by Vercel Cron.
  *
- * Authentication: relies on the standard CRON_SECRET pattern. Vercel sends
- * the Authorization header `Bearer <CRON_SECRET>` if the env var is set.
- * In dev / preview, the secret check is skipped so you can hit it locally.
+ * Authentication: fail-closed via requireCronAuth() — in production, if
+ * CRON_SECRET is unset OR the Authorization header doesn't match, we 401/503.
+ * In dev with the env unset, calls are allowed for local testing.
  *
  * Uses the service-role client so it does NOT need a user session.
  */
 
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireCronAuth } from "@/lib/cron/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+  const denied = requireCronAuth(request, "billing-run");
+  if (denied) return denied;
 
   try {
     const admin = createAdminClient();

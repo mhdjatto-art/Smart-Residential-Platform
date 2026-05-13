@@ -17,11 +17,17 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature, type StripeEvent } from "@/lib/payments/stripe";
 import { sendPaymentReceiptEmail } from "@/lib/email/notify";
 import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  // Generous limit — Stripe legitimately bursts during retries — but stops
+  // brute force on the signature secret from a single IP.
+  const limited = enforceRateLimit(req, "stripe-webhook", 120, 60_000);
+  if (limited) return limited;
+
   const sig = req.headers.get("stripe-signature");
   const body = await req.text();
 

@@ -11,18 +11,14 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBillReminderEmail } from "@/lib/email/notify";
+import { requireCronAuth } from "@/lib/cron/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+  const denied = requireCronAuth(request, "send-reminders");
+  if (denied) return denied;
 
   const admin = createAdminClient();
   const today = new Date();

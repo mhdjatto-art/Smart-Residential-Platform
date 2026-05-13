@@ -11,11 +11,16 @@
 import { NextResponse } from "next/server";
 import { requireUser, AuthorizationError } from "@/lib/auth/guards";
 import { runDemoSeed } from "@/lib/seed/demo";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export async function POST(req: Request) {
+  // Very tight limit — this endpoint wipes data, so 3 runs / 10 min is plenty.
+  const limited = enforceRateLimit(req, "seed-demo", 3, 10 * 60_000);
+  if (limited) return limited;
+
   let user;
   try {
     user = await requireUser();

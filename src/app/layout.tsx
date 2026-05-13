@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SwRegister } from "@/components/pwa/sw-register";
+import { CookieBanner } from "@/components/legal/cookie-banner";
 import { siteConfig } from "@/config/site";
 import { getActiveLocale } from "@/lib/i18n/server";
 import { htmlDir } from "@/lib/i18n";
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         <Toaster />
         <SwRegister />
+        <CookieBanner />
       </body>
     </html>
   );

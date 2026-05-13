@@ -8,19 +8,15 @@
 
 import { NextResponse } from "next/server";
 import { pushQueuedJournalEntries } from "@/lib/erp/worker";
+import { requireCronAuth } from "@/lib/cron/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-  }
+  const denied = requireCronAuth(request, "erp-push");
+  if (denied) return denied;
 
   try {
     const summary = await pushQueuedJournalEntries();
