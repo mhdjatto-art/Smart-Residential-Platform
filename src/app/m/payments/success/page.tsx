@@ -23,10 +23,15 @@ export default async function PaymentSuccessPage({
         <p className="mt-2 font-mono text-[11px] text-muted-foreground">Ref: {sp.bill}</p>
       )}
       <div className="mt-8 flex flex-col gap-2 sm:flex-row">
-        <Button asChild>
+        {sp.bill && (
+          <Button asChild>
+            <Link href={`/m/payments/${sp.bill}/receipt`}>View receipt</Link>
+          </Button>
+        )}
+        <Button asChild variant="outline">
           <Link href="/m/payments">Back to payments</Link>
         </Button>
-        <Button asChild variant="outline">
+        <Button asChild variant="ghost">
           <Link href="/m">Home</Link>
         </Button>
       </div>
