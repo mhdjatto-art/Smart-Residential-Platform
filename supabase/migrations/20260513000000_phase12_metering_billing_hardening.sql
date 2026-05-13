@@ -14,7 +14,7 @@
 --   • CREATE TABLE IF NOT EXISTS
 --   • ALTER TABLE ADD COLUMN IF NOT EXISTS
 --   • CREATE INDEX IF NOT EXISTS
---   • Named FK constraints added via DO $$ … pg_constraint guard
+--   • Named FK constraints added via DO ... pg_constraint guard (dollar-quoted blocks)
 --   • Policy names follow pattern <table>_rls_v2_<purpose>
 -- ─────────────────────────────────────────────────────────────────────────────
 
