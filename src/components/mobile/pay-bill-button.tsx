@@ -11,6 +11,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { payMyUtilityBill } from "@/lib/api/resident-payments";
+import { startBillCheckout } from "@/lib/api/checkout";
 import { formatCurrency } from "@/lib/utils";
 
 interface PayBillButtonProps {
@@ -37,6 +38,23 @@ export function PayBillButton({
     if (amount <= 0) { toast.error("Amount must be > 0"); return; }
     startTransition(async () => {
       try {
+        // For "Card / Online" try Stripe Checkout first
+        if (method === "online_payment") {
+          const result = await startBillCheckout(billId);
+          if (result.error) {
+            toast.error("Payment failed", { description: result.error });
+            return;
+          }
+          if (result.url) {
+            // Redirect to Stripe-hosted checkout
+            window.location.href = result.url;
+            return;
+          }
+          // Stripe not configured → fall through to direct pay (test mode)
+          toast.message("Stripe not configured — recording payment directly (test mode)");
+        }
+
+        // Wallet OR Stripe fallback → record directly via SQL
         await payMyUtilityBill({ bill_id: billId, amount, method });
         toast.success("Payment recorded ✓");
         setOpen(false);
