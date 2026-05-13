@@ -242,3 +242,77 @@ export async function createParkingAssignment(input: ParkingAssignmentInput): Pr
   if (error) throw new Error(error.message);
   revalidatePath("/parking");
 }
+
+export async function releaseParkingAssignment(id: string): Promise<void> {
+  await requireRole(["super_admin","developer_admin","compound_manager"]);
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("parking_assignments")
+    .update({ status: "released", end_date: new Date().toISOString().slice(0,10), updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/parking");
+}
+
+/**
+ * Enriched parking view: every spot with its current active assignment + resident name.
+ */
+export interface ParkingSpotEnriched {
+  spot_id: string;
+  spot_number: string;
+  spot_kind: string;
+  is_active: boolean;
+  compound_id: string;
+  assignment_id: string | null;
+  vehicle_plate: string | null;
+  vehicle_make: string | null;
+  vehicle_model: string | null;
+  resident_id: string | null;
+  resident_name: string | null;
+  unit_number: string | null;
+  start_date: string | null;
+}
+
+export async function listEnrichedParking(): Promise<ParkingSpotEnriched[]> {
+  await requireUser();
+  const supabase = await createClient();
+  const [spotsRes, assigRes] = await Promise.all([
+    supabase.from("parking_spots").select("id, spot_number, spot_kind, is_active, compound_id").order("spot_number"),
+    supabase
+      .from("parking_assignments")
+      .select("id, spot_id, vehicle_plate, vehicle_make, vehicle_model, start_date, resident:residents(id, first_name, last_name, unit:units(unit_number))")
+      .eq("status", "active"),
+  ]);
+
+  type Spot = { id: string; spot_number: string; spot_kind: string; is_active: boolean; compound_id: string };
+  type Ass  = {
+    id: string; spot_id: string;
+    vehicle_plate: string | null; vehicle_make: string | null; vehicle_model: string | null; start_date: string | null;
+    resident: { id: string; first_name: string | null; last_name: string | null; unit: { unit_number: string | null } | null } | null;
+  };
+
+  const byspot = new Map<string, Ass>();
+  for (const a of ((assigRes.data ?? []) as unknown as Ass[])) byspot.set(a.spot_id, a);
+
+  return ((spotsRes.data ?? []) as unknown as Spot[]).map((s) => {
+    const a = byspot.get(s.id);
+    const name = a?.resident
+      ? [a.resident.first_name, a.resident.last_name].filter(Boolean).join(" ") || null
+      : null;
+    return {
+      spot_id: s.id,
+      spot_number: s.spot_number,
+      spot_kind: s.spot_kind,
+      is_active: s.is_active,
+      compound_id: s.compound_id,
+      assignment_id: a?.id ?? null,
+      vehicle_plate: a?.vehicle_plate ?? null,
+      vehicle_make: a?.vehicle_make ?? null,
+      vehicle_model: a?.vehicle_model ?? null,
+      resident_id: a?.resident?.id ?? null,
+      resident_name: name,
+      unit_number: a?.resident?.unit?.unit_number ?? null,
+      start_date: a?.start_date ?? null,
+    };
+  });
+}

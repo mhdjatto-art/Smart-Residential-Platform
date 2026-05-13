@@ -1,100 +1,189 @@
-import { Car } from "lucide-react";
+import { Car, ParkingMeter, PlusCircle } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
-import { StatusBadge } from "@/components/shared/status-badge";
-import { listParkingSpots, listParkingAssignments } from "@/lib/api/iot";
+import { AssignSpotDialog, PlateBadge } from "@/components/parking/assign-spot-dialog";
+import { requireUser } from "@/lib/auth/guards";
+import { listEnrichedParking } from "@/lib/api/iot";
+import { listResidentOptions } from "@/lib/api/residents";
 
 export const dynamic = "force-dynamic";
 
+const KIND_BADGE: Record<string, string> = {
+  standard:    "bg-slate-100 text-slate-700",
+  compact:     "bg-cyan-100 text-cyan-700",
+  disabled:    "bg-violet-100 text-violet-700",
+  ev:          "bg-emerald-100 text-emerald-700",
+  visitor:     "bg-amber-100 text-amber-700",
+  motorcycle:  "bg-orange-100 text-orange-700",
+  other:       "bg-muted text-muted-foreground",
+};
+
 export default async function ParkingPage() {
-  const [spots, assignments] = await Promise.all([listParkingSpots(), listParkingAssignments()]);
-  const activeAssignmentsBySpot = new Map(
-    assignments.filter((a) => a.status === "active").map((a) => [a.spot_id, a])
-  );
+  const user = await requireUser();
+  const [spots, residents] = await Promise.all([
+    listEnrichedParking(),
+    listResidentOptions(),
+  ]);
+
+  const residentsForDialog = residents.map((r) => ({
+    id: r.id,
+    full_name: r.full_name,
+    unit_id: null as string | null,
+  }));
+
+  const occupied = spots.filter((s) => s.assignment_id).length;
+  const vacant   = spots.length - occupied;
+  const inactive = spots.filter((s) => !s.is_active).length;
+
+  // Pick first org/compound from user — needed to insert assignments
+  const orgId = user.organizationIds[0] ?? "";
+  const compoundId = spots[0]?.compound_id ?? user.compoundIds[0] ?? "";
 
   return (
     <div>
       <PageHeader
         title="Parking"
-        titleKey="headers.parking_title"
-        description="Parking spots and resident assignments."
-        descKey="headers.parking_desc"
+        description="Visual grid of every spot. Click Assign to bind a resident's vehicle to a spot, or Manage to release."
+        actions={null}
       />
 
-      <Card>
-        <CardHeader><CardTitle>Spots ({spots.length})</CardTitle></CardHeader>
-        <CardContent className="p-0">
-          {spots.length === 0 ? (
-            <EmptyState icon={Car} title="No parking spots configured" description="Add parking spots to your compound, then assign them to units." />
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Spot</TableHead>
-                  <TableHead>Kind</TableHead>
-                  <TableHead>Assigned to (plate)</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+      {/* Stats */}
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <Stat label="Total"    value={spots.length} tone="default" icon={ParkingMeter} />
+        <Stat label="Occupied" value={occupied}    tone="emerald" icon={Car} />
+        <Stat label="Vacant"   value={vacant}      tone="muted"   icon={PlusCircle} />
+        <Stat label="Inactive" value={inactive}    tone="destructive" icon={ParkingMeter} />
+      </div>
+
+      {spots.length === 0 ? (
+        <EmptyState
+          icon={ParkingMeter}
+          title="No parking spots yet"
+          description="Add spots by inserting rows into parking_spots, or build a bulk-create form in a later step."
+        />
+      ) : (
+        <>
+          {/* Grid view (visual) */}
+          <Card className="mb-6 p-4">
+            <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">Grid view</p>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-12">
+              {spots.map((s) => {
+                const occ = !!s.assignment_id;
+                return (
+                  <div key={s.spot_id}
+                    className={`group relative aspect-square overflow-hidden rounded-md border p-1.5 text-center text-xs transition-colors ${
+                      !s.is_active ? "bg-muted/40 opacity-50" :
+                      occ ? "border-emerald-400/60 bg-emerald-50 dark:bg-emerald-950/30" :
+                      "bg-card hover:bg-muted/50"
+                    }`}
+                    title={occ ? `${s.resident_name} · ${s.vehicle_plate ?? "no plate"}` : "Vacant"}
+                  >
+                    <p className="font-mono text-[11px] font-semibold">{s.spot_number}</p>
+                    <span className={`mt-1 inline-block rounded px-1 text-[9px] ${KIND_BADGE[s.spot_kind] ?? KIND_BADGE.other}`}>
+                      {s.spot_kind}
+                    </span>
+                    {occ && (
+                      <Car className="absolute right-1 top-1 h-3 w-3 text-emerald-600" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+
+          {/* Detail table */}
+          <Card className="overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-2 text-left">Spot</th>
+                  <th className="px-3 py-2 text-left">Type</th>
+                  <th className="px-3 py-2 text-left">Status</th>
+                  <th className="px-3 py-2 text-left">Resident</th>
+                  <th className="px-3 py-2 text-left">Vehicle</th>
+                  <th className="px-3 py-2 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
                 {spots.map((s) => {
-                  const assignment = activeAssignmentsBySpot.get(s.id);
+                  const occ = !!s.assignment_id;
                   return (
-                    <TableRow key={s.id}>
-                      <TableCell className="font-medium font-mono">{s.spot_number}</TableCell>
-                      <TableCell className="text-xs capitalize">{s.spot_kind}</TableCell>
-                      <TableCell className="text-xs font-mono">
-                        {assignment ? assignment.vehicle_plate ?? "(assigned)" : "—"}
-                      </TableCell>
-                      <TableCell>
-                        <StatusBadge status={assignment ? "occupied" : "vacant"} />
-                      </TableCell>
-                    </TableRow>
+                    <tr key={s.spot_id} className="border-t">
+                      <td className="px-3 py-2 font-mono font-semibold">{s.spot_number}</td>
+                      <td className="px-3 py-2">
+                        <span className={`inline-block rounded px-2 py-0.5 text-[10px] ${KIND_BADGE[s.spot_kind] ?? KIND_BADGE.other}`}>
+                          {s.spot_kind}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2">
+                        {!s.is_active ? (
+                          <span className="text-xs text-muted-foreground">inactive</span>
+                        ) : occ ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-800">
+                            <Car className="h-3 w-3" /> occupied
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                            vacant
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-muted-foreground">
+                        {s.resident_name ?? "—"}
+                        {s.unit_number && <p className="text-[10px]">{s.unit_number}</p>}
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <PlateBadge plate={s.vehicle_plate} />
+                          {(s.vehicle_make || s.vehicle_model) && (
+                            <span className="text-[11px] text-muted-foreground">
+                              {[s.vehicle_make, s.vehicle_model].filter(Boolean).join(" ")}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        {s.is_active && (
+                          <AssignSpotDialog
+                            spotId={s.spot_id}
+                            spotNumber={s.spot_number}
+                            organizationId={orgId}
+                            compoundId={compoundId}
+                            residents={residentsForDialog}
+                            currentAssignmentId={s.assignment_id}
+                            currentResidentName={s.resident_name}
+                            currentPlate={s.vehicle_plate}
+                          />
+                        )}
+                      </td>
+                    </tr>
                   );
                 })}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className="mt-6">
-        <CardHeader><CardTitle>Assignments ({assignments.length})</CardTitle></CardHeader>
-        <CardContent className="p-0">
-          {assignments.length === 0 ? (
-            <p className="p-6 text-sm text-muted-foreground">No assignments yet.</p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Spot</TableHead>
-                  <TableHead>Vehicle</TableHead>
-                  <TableHead>Plate</TableHead>
-                  <TableHead>Start</TableHead>
-                  <TableHead>End</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {assignments.map((a) => (
-                  <TableRow key={a.id}>
-                    <TableCell className="font-mono">{a.spot_number ?? a.spot_id.slice(0, 8)}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
-                      {[a.vehicle_make, a.vehicle_model].filter(Boolean).join(" ") || "—"}
-                    </TableCell>
-                    <TableCell className="text-xs font-mono">{a.vehicle_plate ?? "—"}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{new Date(a.start_date).toLocaleDateString()}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{a.end_date ? new Date(a.end_date).toLocaleDateString() : "—"}</TableCell>
-                    <TableCell><StatusBadge status={a.status} /></TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+              </tbody>
+            </table>
+          </Card>
+        </>
+      )}
     </div>
+  );
+}
+
+function Stat({ label, value, tone, icon: Icon }: {
+  label: string; value: number; tone: "default" | "emerald" | "muted" | "destructive";
+  icon: typeof Car;
+}) {
+  const styles = {
+    default: "", emerald: "text-emerald-600 dark:text-emerald-400",
+    muted: "text-muted-foreground", destructive: "text-destructive",
+  } as const;
+  return (
+    <Card className="p-3">
+      <div className="flex items-center gap-1.5">
+        <Icon className={`h-4 w-4 ${styles[tone]}`} />
+        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      </div>
+      <p className={`mt-1 text-2xl font-bold tabular-nums ${styles[tone]}`}>{value}</p>
+    </Card>
   );
 }
