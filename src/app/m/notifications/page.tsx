@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Bell, CheckCheck } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
+import { PushSubscribeButton } from "@/components/notifications/push-subscribe-button";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { listMyNotifications, markAllRead } from "@/lib/api/notifications";
 import { getT } from "@/lib/i18n/server";
@@ -22,6 +23,10 @@ export default async function MobileNotificationsPage() {
     <div>
       <MobileTopbar title={t("headers.notifications_title")} userId={ctx.user_id} unread={unread} showBack />
       <div className="p-4">
+        <div className="mb-4 flex justify-end">
+          <PushSubscribeButton />
+        </div>
+
         {unread > 0 && (
           <form action={doMarkAll}>
             <button type="submit" className="mb-3 flex items-center gap-1 text-xs text-emerald-600 hover:underline">

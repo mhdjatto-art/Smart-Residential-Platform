@@ -11,6 +11,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createNotification } from "@/lib/api/notifications";
+import { sendPushToUser } from "@/lib/push/send";
 
 async function resolveRecipientUserId(billId: string): Promise<{
   user_id: string | null;
@@ -71,16 +72,21 @@ function formatCurrency(amount: number, currency: string): string {
 export async function notifyPaymentReceived(billId: string, amount: number): Promise<void> {
   const ctx = await resolveRecipientUserId(billId);
   if (!ctx?.user_id) return;
-  await createNotification({
-    user_id: ctx.user_id,
-    organization_id: ctx.organization_id,
-    kind: "payment_received",
-    title: `Payment received · ${formatCurrency(amount, ctx.currency)}`,
-    body: `Your ${ctx.utility_type} bill ${ctx.bill_number} has been marked paid.`,
-    entity_type: "utility_bill",
-    entity_id: billId,
-    href: `/m/payments/${billId}/receipt`,
-  });
+  const title = `Payment received · ${formatCurrency(amount, ctx.currency)}`;
+  const body = `Your ${ctx.utility_type} bill ${ctx.bill_number} has been marked paid.`;
+  const href = `/m/payments/${billId}/receipt`;
+  await Promise.all([
+    createNotification({
+      user_id: ctx.user_id,
+      organization_id: ctx.organization_id,
+      kind: "payment_received",
+      title, body,
+      entity_type: "utility_bill",
+      entity_id: billId,
+      href,
+    }),
+    sendPushToUser(ctx.user_id, { title, body, url: href, tag: `payment-${billId}` }),
+  ]);
 }
 
 // ─── New bill issued ─────────────────────────────────────────────────────────
@@ -89,16 +95,20 @@ export async function notifyNewBill(billId: string): Promise<void> {
   const ctx = await resolveRecipientUserId(billId);
   if (!ctx?.user_id) return;
   const owed = Math.max(0, ctx.total_amount + ctx.penalty_amount - ctx.paid_amount);
-  await createNotification({
-    user_id: ctx.user_id,
-    organization_id: ctx.organization_id,
-    kind: "new_bill",
-    title: `New ${ctx.utility_type} bill · ${formatCurrency(owed, ctx.currency)}`,
-    body: `Bill ${ctx.bill_number} is due on ${ctx.due_date}. Tap to view or pay.`,
-    entity_type: "utility_bill",
-    entity_id: billId,
-    href: "/m/payments",
-  });
+  const title = `New ${ctx.utility_type} bill · ${formatCurrency(owed, ctx.currency)}`;
+  const body = `Bill ${ctx.bill_number} is due on ${ctx.due_date}. Tap to view or pay.`;
+  await Promise.all([
+    createNotification({
+      user_id: ctx.user_id,
+      organization_id: ctx.organization_id,
+      kind: "new_bill",
+      title, body,
+      entity_type: "utility_bill",
+      entity_id: billId,
+      href: "/m/payments",
+    }),
+    sendPushToUser(ctx.user_id, { title, body, url: "/m/payments", tag: `bill-${billId}` }),
+  ]);
 }
 
 // ─── Penalty applied ─────────────────────────────────────────────────────────
@@ -106,14 +116,18 @@ export async function notifyNewBill(billId: string): Promise<void> {
 export async function notifyPenaltyApplied(billId: string, penaltyAmount: number): Promise<void> {
   const ctx = await resolveRecipientUserId(billId);
   if (!ctx?.user_id) return;
-  await createNotification({
-    user_id: ctx.user_id,
-    organization_id: ctx.organization_id,
-    kind: "penalty_applied",
-    title: `Late penalty added · ${formatCurrency(penaltyAmount, ctx.currency)}`,
-    body: `Bill ${ctx.bill_number} is overdue. Pay now to stop further penalties.`,
-    entity_type: "utility_bill",
-    entity_id: billId,
-    href: "/m/payments",
-  });
+  const title = `Late penalty added · ${formatCurrency(penaltyAmount, ctx.currency)}`;
+  const body = `Bill ${ctx.bill_number} is overdue. Pay now to stop further penalties.`;
+  await Promise.all([
+    createNotification({
+      user_id: ctx.user_id,
+      organization_id: ctx.organization_id,
+      kind: "penalty_applied",
+      title, body,
+      entity_type: "utility_bill",
+      entity_id: billId,
+      href: "/m/payments",
+    }),
+    sendPushToUser(ctx.user_id, { title, body, url: "/m/payments", tag: `penalty-${billId}` }),
+  ]);
 }
