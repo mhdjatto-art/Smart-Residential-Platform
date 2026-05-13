@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, DollarSign, Download, FileText } from "lucide-react";
+import { ArrowLeft, DollarSign, Download, FileText, Printer } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,6 +53,11 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
           <div className="flex gap-2">
             <Button asChild variant="outline">
               <Link href="/contracts"><ArrowLeft className="h-4 w-4" />Back</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`/contracts/${contract.id}/print`}>
+                <Printer className="h-4 w-4" />Print contract
+              </Link>
             </Button>
             {schedule.length > 0 && (
               <Button asChild variant="outline">

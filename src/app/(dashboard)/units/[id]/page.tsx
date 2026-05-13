@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Edit, Home } from "lucide-react";
+import { ArrowLeft, Edit, Home, QrCode } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +47,9 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
           <div className="flex gap-2">
             <Button asChild variant="outline">
               <Link href={`/buildings/${unit.building_id}`}><ArrowLeft className="h-4 w-4" />Building</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`/units/${unit.id}/barcode`}><QrCode className="h-4 w-4" />Barcode</Link>
             </Button>
             <Button asChild>
               <Link href={`/units/${unit.id}/edit`}><Edit className="h-4 w-4" />Edit</Link>
