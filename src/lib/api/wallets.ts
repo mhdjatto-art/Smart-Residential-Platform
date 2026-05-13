@@ -159,7 +159,7 @@ export async function getWalletDetail(id: string): Promise<{
 export async function topupWalletAction(input: {
   walletId: string;
   amount: number;
-  method: "cash" | "bank_transfer" | "stripe" | "fastpay" | "zaincash" | "asiapay" | "admin_credit";
+  method: "cash" | "bank_transfer" | "stripe" | "fastpay" | "zaincash" | "asiapay" | "nass" | "qicard" | "admin_credit";
   paymentId?: string;
   externalRef?: string;
   notes?: string;
@@ -169,7 +169,7 @@ export async function topupWalletAction(input: {
 
   // Cash / bank_transfer / admin_credit require management role.
   // Stripe / fastpay / zaincash / asiapay can be initiated by the resident.
-  const onlineMethods = new Set(["stripe","fastpay","zaincash","asiapay"]);
+  const onlineMethods = new Set(["stripe","fastpay","zaincash","asiapay","nass","qicard"]);
   if (!onlineMethods.has(input.method)) {
     if (!user.isSuperAdmin &&
         !user.roles.some(r => ["super_admin","developer_admin","compound_manager","finance_officer"].includes(r.role))) {
