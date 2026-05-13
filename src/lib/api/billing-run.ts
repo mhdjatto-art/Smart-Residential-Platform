@@ -102,3 +102,83 @@ export async function previewDueSubscriptions(): Promise<SubscriptionsDueRow[]> 
     unit_number: r.unit?.unit_number ?? null,
   }));
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Phase 12 — single-bill generation with idempotency
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Generate ONE utility bill for a specific subscription + period via the
+ * Phase 12 RPC `generate_utility_bill`. Idempotent — calling it twice for
+ * the same (subscription, period_start, period_end) returns the same bill id.
+ *
+ * Use this for manual one-offs (e.g. "re-issue the May bill for unit A-101").
+ * The bulk auto-billing flow still goes through `runAutoBilling()` above,
+ * which uses the original Phase 5 batch function.
+ */
+export async function generateSingleUtilityBill(input: {
+  subscriptionId: string;
+  periodStart: string;   // YYYY-MM-DD
+  periodEnd: string;     // YYYY-MM-DD
+  dueDate?: string;      // YYYY-MM-DD; defaults to period_end + 14 days
+  tariffId?: string;
+  idempotencyKey?: string;
+}): Promise<string> {
+  await requireRole(["super_admin", "developer_admin", "compound_manager", "finance_officer"]);
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("generate_utility_bill", {
+    p_subscription_id: input.subscriptionId,
+    p_period_start:    input.periodStart,
+    p_period_end:      input.periodEnd,
+    p_due_date:        input.dueDate ?? null,
+    p_tariff_id:       input.tariffId ?? null,
+    p_idempotency_key: input.idempotencyKey ?? null,
+  });
+  if (error) throw new Error(`generate_utility_bill: ${error.message}`);
+
+  // Fire-and-forget notification (best-effort)
+  notifyNewBill(String(data)).catch((e) => {
+    console.error("[generateSingleUtilityBill] notifyNewBill failed:", e instanceof Error ? e.message : String(e));
+  });
+
+  revalidatePath("/utility-bills");
+  return String(data);
+}
+
+/**
+ * Mark a utility bill paid via the Phase 12 RPC `mark_bill_as_paid`.
+ * Provides strict idempotency on (bill_id, amount, gateway_payment_intent)
+ * so duplicate webhook retries cannot double-charge.
+ *
+ * Returns the payment_id created.
+ */
+export async function markUtilityBillPaid(input: {
+  billId: string;
+  amount: number;
+  paymentMethod: "cash" | "bank_transfer" | "online_payment" | "wallet" | "cheque";
+  paymentMethodCode?: string;
+  gatewayProvider?: string;
+  gatewayPaymentIntent?: string;
+  paymentReference?: string;
+  idempotencyKey?: string;
+}): Promise<string> {
+  await requireRole(["super_admin", "developer_admin", "compound_manager", "finance_officer"]);
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("mark_bill_as_paid", {
+    p_bill_id:                input.billId,
+    p_amount:                 input.amount,
+    p_payment_method:         input.paymentMethod,
+    p_payment_method_code:    input.paymentMethodCode ?? null,
+    p_gateway_provider:       input.gatewayProvider ?? null,
+    p_gateway_payment_intent: input.gatewayPaymentIntent ?? null,
+    p_payment_reference:      input.paymentReference ?? null,
+    p_idempotency_key:        input.idempotencyKey ?? null,
+  });
+  if (error) throw new Error(`mark_bill_as_paid: ${error.message}`);
+
+  revalidatePath("/utility-bills");
+  revalidatePath(`/utility-bills/${input.billId}`);
+  return String(data);
+}

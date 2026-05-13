@@ -33,7 +33,7 @@ echo ""
 
 git add -A
 
-git commit -m "feat+harden: steps 14H/15/16/17/18/19 + production hardening (cron, rate limit, CSP/HSTS, legal pages)
+git commit -m "feat+harden: steps 14H/15/16/17/18/19 + Phase 12 backend + production hardening
 
 - 14H: org branding applied to dashboard topbar + print
 - 15:  contract templates (sale/rental/purchase × EN/AR) + unit barcodes
@@ -41,12 +41,24 @@ git commit -m "feat+harden: steps 14H/15/16/17/18/19 + production hardening (cro
 - 17:  client-side PDF export (CDN html2pdf, no npm dep)
 - 18:  branding on /m/* + branded login by host
 - 19:  audit triggers on all critical tables + /audit-log UI + activity timeline
+- p12: 11 new tables (utility_meter_readings, utility_usage_events,
+       utility_usage_aggregates, provider_credentials, sync_jobs,
+       sync_job_logs, external_reference_mapping, utility_payment_allocation,
+       payment_method_registry, service_overdue_actions, idempotency_keys)
+- p12: 10 SECURITY DEFINER RPCs with idempotency + audit_admin_action
+- p12: admin_action_log view, expanded audit_log columns
+- p12: wired generateSingleUtilityBill + markUtilityBillPaid in lib/api
+- p12: listAdminActions + recordAdminAction in lib/api/audit.ts
 - fix: cron endpoints fail-closed in production
 - fix: next.config no longer silences TS/ESLint errors
 - fix: CSP + HSTS headers added
 - fix: in-memory token-bucket rate limiter applied to Stripe webhook,
        seed-demo, push/subscribe, CSV exports
-- fix: /terms /privacy /cookies + dismissible cookie banner" || echo "  (no changes)"
+- fix: in-process error/event reporter (Sentry+Slack ready)
+- fix: /api/health pings DB + 503 on outage
+- fix: CSV exports stream in 1000-row chunks with hard cap
+- fix: /terms /privacy /cookies + dismissible cookie banner
+- docs: BACKEND_AUDIT_AND_MIGRATION.md + POST_DEPLOY_CHECKLIST.md" || echo "  (no changes)"
 
 for i in 1 2 3 4 5; do
   if git push origin main; then
