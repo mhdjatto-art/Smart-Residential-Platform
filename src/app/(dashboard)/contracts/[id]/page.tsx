@@ -11,6 +11,7 @@ import { ContractActions } from "@/components/contracts/contract-actions";
 import { getContract, listSchedule } from "@/lib/api/contracts";
 import { listPaymentsPaged } from "@/lib/api/payments";
 import { getLatestSignature } from "@/lib/api/contract-signatures";
+import { ActivityTimeline } from "@/components/audit/activity-timeline";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -212,6 +213,10 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
           </p>
         </div>
       )}
+
+      <div className="mt-6">
+        <ActivityTimeline table="installment_contracts" rowId={contract.id} />
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { AssignmentSection } from "@/components/assignments/assignment-section";
+import { ActivityTimeline } from "@/components/audit/activity-timeline";
 import { getUnit } from "@/lib/api/units";
 import { listAssignmentsByUnit } from "@/lib/api/assignments";
 import { listResidentOptions } from "@/lib/api/residents";
@@ -105,6 +106,10 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
           residents={residents}
           residentNames={residentNames}
         />
+      </div>
+
+      <div className="mt-6">
+        <ActivityTimeline table="units" rowId={unit.id} />
       </div>
     </div>
   );
