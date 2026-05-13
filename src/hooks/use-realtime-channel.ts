@@ -15,7 +15,7 @@
  *   });
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import type { RealtimePostgresChangesPayload, RealtimeChannel } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 
@@ -40,10 +40,14 @@ export function useRealtimeChannel<T extends Row = Row>(opts: UseRealtimeChannel
   const handlersRef = useRef({ onInsert, onUpdate, onDelete });
   handlersRef.current = { onInsert, onUpdate, onDelete };
 
+  // Unique per React-tree instance — avoids "cannot add callbacks after subscribe()"
+  // when the same component is mounted in two places (e.g. responsive duplicates).
+  const instanceId = useId();
+
   useEffect(() => {
     if (!enabled) return;
     const supabase = createClient();
-    const name = channelName ?? `rt-${table}-${filter ?? "all"}`;
+    const name = channelName ?? `rt-${table}-${filter ?? "all"}-${instanceId}`;
 
     const channel: RealtimeChannel = supabase.channel(name).on(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,5 +64,5 @@ export function useRealtimeChannel<T extends Row = Row>(opts: UseRealtimeChannel
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [table, filter, channelName, enabled]);
+  }, [table, filter, channelName, enabled, instanceId]);
 }

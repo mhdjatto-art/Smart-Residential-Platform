@@ -178,6 +178,78 @@ export function billReminderEmail(d: BillReminderData): { subject: string; html:
   return { subject, html: shell(subject, body), text };
 }
 
+// ─── 4. Resident invitation ─────────────────────────────────────────────────
+
+export interface InvitationData {
+  organization_name: string;
+  compound_name: string | null;
+  building_name: string | null;
+  unit_number: string;
+  tenancy_type: string;
+  invite_code: string;
+  invite_url: string;
+  expires_at: string;
+  inviter_name?: string;
+}
+
+export function invitationEmail(d: InvitationData): { subject: string; html: string; text: string } {
+  const subject = `You're invited to join ${d.organization_name} — Unit ${d.unit_number}`;
+  const body = `
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="display:inline-block;background:#dbeafe;color:#1e40af;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;">
+        🏠 Resident invitation
+      </div>
+    </div>
+    <h1 style="margin:0 0 8px;font-size:22px;color:#0f172a;">Welcome to ${escape(d.organization_name)}</h1>
+    <p style="color:#64748b;font-size:14px;line-height:1.5;margin:0 0 24px;">
+      ${d.inviter_name ? `${escape(d.inviter_name)} has` : "You've been"} invited to set up your resident account.
+    </p>
+
+    <table role="presentation" width="100%" style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:24px;">
+      ${d.compound_name ? `
+      <tr><td style="padding:12px 16px;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;font-size:12px;">Compound</span><br>
+        <span style="font-weight:600;">${escape(d.compound_name)}</span>
+      </td></tr>` : ""}
+      <tr><td style="padding:12px 16px;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;font-size:12px;">Unit</span><br>
+        <span style="font-weight:600;">${d.building_name ? `${escape(d.building_name)} · ` : ""}${escape(d.unit_number)}</span>
+      </td></tr>
+      <tr><td style="padding:12px 16px;border-bottom:1px solid #f1f5f9;">
+        <span style="color:#64748b;font-size:12px;">Role</span><br>
+        <span style="text-transform:capitalize;">${escape(d.tenancy_type.replace(/_/g, " "))}</span>
+      </td></tr>
+      <tr><td style="padding:12px 16px;background:#eff6ff;">
+        <span style="color:#1e40af;font-size:12px;font-weight:600;">YOUR INVITE CODE</span><br>
+        <span style="font-family:monospace;font-size:20px;font-weight:700;color:#1e40af;letter-spacing:2px;">
+          ${escape(d.invite_code)}
+        </span>
+      </td></tr>
+    </table>
+
+    <div style="text-align:center;">
+      <a href="${escape(d.invite_url)}" style="display:inline-block;background:#10b981;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;">
+        Set up my account
+      </a>
+    </div>
+
+    <p style="color:#94a3b8;font-size:11px;text-align:center;margin-top:24px;">
+      Or paste your code at ${escape(new URL(d.invite_url).origin)}/signup
+      <br>This invitation expires on ${escape(new Date(d.expires_at).toLocaleDateString())}
+    </p>
+  `;
+  const text =
+    `You're invited to ${d.organization_name}\n\n` +
+    `${d.inviter_name ? `${d.inviter_name} has` : "You've been"} invited to set up your resident account.\n\n` +
+    (d.compound_name ? `Compound: ${d.compound_name}\n` : "") +
+    `Unit:     ${d.building_name ? `${d.building_name} · ` : ""}${d.unit_number}\n` +
+    `Role:     ${d.tenancy_type}\n\n` +
+    `Your invite code: ${d.invite_code}\n\n` +
+    `Set up your account: ${d.invite_url}\n` +
+    `Expires: ${new Date(d.expires_at).toLocaleDateString()}\n`;
+  return { subject, html: shell(subject, body), text };
+}
+
 // ─── 3. Late penalty applied ────────────────────────────────────────────────
 
 export interface PenaltyNoticeData {
