@@ -42,7 +42,7 @@ export default async function WalletDetailPage({ params }: { params: Promise<{ i
         <StatCard
           label="Current balance"
           value={formatCurrency(wallet.balance, { currency: wallet.currency })}
-          tone={isZero ? "rose" : isLow ? "amber" : "emerald"}
+          className={isZero ? "border-rose-300 bg-rose-50" : isLow ? "border-amber-300 bg-amber-50" : ""}
         />
         <StatCard label="Threshold" value={formatCurrency(wallet.low_balance_threshold, { currency: wallet.currency })} />
         <StatCard label="Total topped up" value={formatCurrency(wallet.total_topped_up, { currency: wallet.currency })} />

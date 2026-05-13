@@ -246,7 +246,7 @@ export async function runMeterSync(): Promise<SyncSummary> {
     .select("id, api_provider")
     .not("api_provider", "is", null)
     .eq("status", "active")
-    .order("last_sync_at", { ascending: true, nullsFirst: true })
+    .order("last_sync_at", { ascending: true })
     .limit(MAX_BATCH);
 
   if (error) {

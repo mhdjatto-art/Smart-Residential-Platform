@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertTriangle, ArrowDownCircle, ArrowUpCircle, CheckCircle2, Wallet, Zap, Droplet, Flame, Wifi } from "lucide-react";
+import { AlertTriangle, ArrowUpCircle, CheckCircle2, Wallet, Zap, Droplet, Flame, Wifi } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { getMyWalletSummary } from "@/lib/api/wallets";
