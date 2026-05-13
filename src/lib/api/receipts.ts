@@ -57,23 +57,62 @@ export async function getReceipt(billId: string): Promise<ReceiptData | null> {
   const user = await requireUser();
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  // 1) Fetch the bill alone — no joins (most likely to succeed under RLS)
+  const { data: billRow, error: billErr } = await supabase
     .from("utility_bills")
-    .select(`
-      id, bill_number, utility_type, billing_period_start, billing_period_end, due_date,
-      subtotal, tax_amount, penalty_amount, total_amount, paid_amount, currency, status, paid_at, metadata,
-      organization_id, resident_id, unit_id,
-      unit:units(unit_number, building:buildings(name)),
-      provider:utility_providers(provider_name, adapter_kind),
-      resident:residents(first_name, last_name, email, phone),
-      compound:compounds(name, city)
-    `)
+    .select("id, bill_number, utility_type, billing_period_start, billing_period_end, due_date, subtotal, tax_amount, penalty_amount, total_amount, paid_amount, currency, status, paid_at, metadata, organization_id, compound_id, resident_id, unit_id, provider_id")
     .eq("id", billId)
     .maybeSingle();
 
-  if (error) throw new Error(error.message);
-  if (!data) return null;
+  if (billErr) throw new Error(billErr.message);
+  if (!billRow) return null;
 
+  type BillRaw = {
+    id: string; bill_number: string; utility_type: string;
+    billing_period_start: string; billing_period_end: string; due_date: string;
+    subtotal: number; tax_amount: number; penalty_amount: number;
+    total_amount: number; paid_amount: number; currency: string;
+    status: string; paid_at: string | null;
+    metadata: Record<string, unknown> | null;
+    organization_id: string;
+    compound_id: string | null;
+    resident_id: string | null;
+    unit_id: string | null;
+    provider_id: string | null;
+  };
+  const bill = billRow as unknown as BillRaw;
+
+  // 2) Fan-out to the side tables — each best-effort, never fatal
+  async function safeOne<T>(promise: Promise<{ data: unknown; error: { message: string } | null }>): Promise<T | null> {
+    try {
+      const { data, error } = await promise;
+      if (error) {
+        console.error("[getReceipt] side query failed:", error.message);
+        return null;
+      }
+      return (data ?? null) as T | null;
+    } catch (e) {
+      console.error("[getReceipt] side query threw:", e instanceof Error ? e.message : String(e));
+      return null;
+    }
+  }
+
+  const [unitRow, providerRow, residentRow, compoundRow] = await Promise.all([
+    bill.unit_id     ? safeOne<{ unit_number: string | null; building_id: string | null }>(
+      supabase.from("units").select("unit_number, building_id").eq("id", bill.unit_id).maybeSingle()) : null,
+    bill.provider_id ? safeOne<{ provider_name: string | null; adapter_kind: string | null }>(
+      supabase.from("utility_providers").select("provider_name, adapter_kind").eq("id", bill.provider_id).maybeSingle()) : null,
+    bill.resident_id ? safeOne<{ first_name: string | null; last_name: string | null; email: string | null; phone: string | null }>(
+      supabase.from("residents").select("first_name, last_name, email, phone").eq("id", bill.resident_id).maybeSingle()) : null,
+    bill.compound_id ? safeOne<{ name: string | null; city: string | null }>(
+      supabase.from("compounds").select("name, city").eq("id", bill.compound_id).maybeSingle()) : null,
+  ]);
+
+  const buildingRow = unitRow?.building_id
+    ? await safeOne<{ name: string | null }>(supabase.from("buildings").select("name").eq("id", unitRow.building_id).maybeSingle())
+    : null;
+
+  // Rebuild a Raw row that the rest of the function expects
   type Raw = {
     id: string; bill_number: string; utility_type: string;
     billing_period_start: string; billing_period_end: string; due_date: string;
@@ -89,7 +128,13 @@ export async function getReceipt(billId: string): Promise<ReceiptData | null> {
     resident: { first_name: string | null; last_name: string | null; email: string | null; phone: string | null } | null;
     compound: { name: string | null; city: string | null } | null;
   };
-  const r = data as unknown as Raw;
+  const r: Raw = {
+    ...bill,
+    unit: unitRow ? { unit_number: unitRow.unit_number, building: buildingRow ? { name: buildingRow.name } : null } : null,
+    provider: providerRow,
+    resident: residentRow,
+    compound: compoundRow,
+  };
 
   // Ownership check (residents see only their own; staff sees all)
   const isStaff = user.isSuperAdmin || user.roles.some((role) =>
@@ -169,45 +214,83 @@ export async function listMyPaidBills(): Promise<Array<{
   paid_at: string | null;
   provider_name: string | null;
 }>> {
-  const user = await requireUser();
-  const supabase = await createClient();
-  const { data: mine } = await supabase
-    .from("residents").select("id, unit_id").eq("user_id", user.id);
+  try {
+    const user = await requireUser();
+    const supabase = await createClient();
+    const { data: mine, error: mineErr } = await supabase
+      .from("residents").select("id, unit_id").eq("user_id", user.id);
 
-  const residentIds = ((mine ?? []) as Array<{ id: string; unit_id: string | null }>).map((x) => x.id);
-  const unitIds     = ((mine ?? []) as Array<{ id: string; unit_id: string | null }>).map((x) => x.unit_id).filter(Boolean) as string[];
-  if (residentIds.length === 0 && unitIds.length === 0) return [];
+    if (mineErr) {
+      console.error("[listMyPaidBills] residents lookup failed:", mineErr.message);
+      return [];
+    }
 
-  const q = supabase
-    .from("utility_bills")
-    .select("id, bill_number, utility_type, total_amount, currency, paid_at, provider:utility_providers(provider_name)")
-    .eq("status", "paid")
-    .order("paid_at", { ascending: false })
-    .limit(50);
+    const rows = (mine ?? []) as Array<{ id: string; unit_id: string | null }>;
+    const residentIds = rows.map((x) => x.id).filter(Boolean);
+    const unitIds     = rows.map((x) => x.unit_id).filter((v): v is string => !!v);
+    if (residentIds.length === 0 && unitIds.length === 0) return [];
 
-  if (residentIds.length > 0 && unitIds.length > 0) {
-    q.or(`resident_id.in.(${residentIds.join(",")}),unit_id.in.(${unitIds.join(",")})`);
-  } else if (residentIds.length > 0) {
-    q.in("resident_id", residentIds);
-  } else {
-    q.in("unit_id", unitIds);
+    // Avoid the tricky .or() syntax — fetch by resident_id and unit_id separately
+    // and merge in memory. RLS still applies.
+    const queries: Array<Promise<{ data: unknown; error: { message: string } | null }>> = [];
+
+    if (residentIds.length > 0) {
+      queries.push(
+        supabase
+          .from("utility_bills")
+          .select("id, bill_number, utility_type, total_amount, currency, paid_at, provider:utility_providers(provider_name)")
+          .eq("status", "paid")
+          .in("resident_id", residentIds)
+          .order("paid_at", { ascending: false })
+          .limit(50),
+      );
+    }
+    if (unitIds.length > 0) {
+      queries.push(
+        supabase
+          .from("utility_bills")
+          .select("id, bill_number, utility_type, total_amount, currency, paid_at, provider:utility_providers(provider_name)")
+          .eq("status", "paid")
+          .is("resident_id", null)
+          .in("unit_id", unitIds)
+          .order("paid_at", { ascending: false })
+          .limit(50),
+      );
+    }
+
+    const results = await Promise.all(queries);
+    type Raw = {
+      id: string; bill_number: string; utility_type: string;
+      total_amount: number; currency: string; paid_at: string | null;
+      provider: { provider_name: string | null } | null;
+    };
+    const seen = new Set<string>();
+    const merged: Raw[] = [];
+    for (const r of results) {
+      if (r.error) {
+        console.error("[listMyPaidBills] query failed:", r.error.message);
+        continue;
+      }
+      for (const row of (r.data as Raw[] | null) ?? []) {
+        if (!seen.has(row.id)) {
+          seen.add(row.id);
+          merged.push(row);
+        }
+      }
+    }
+    merged.sort((a, b) => (b.paid_at ?? "").localeCompare(a.paid_at ?? ""));
+
+    return merged.slice(0, 50).map((r) => ({
+      id: r.id,
+      bill_number: r.bill_number,
+      utility_type: r.utility_type,
+      total_amount: r.total_amount,
+      currency: r.currency,
+      paid_at: r.paid_at,
+      provider_name: r.provider?.provider_name ?? null,
+    }));
+  } catch (e) {
+    console.error("[listMyPaidBills] threw:", e instanceof Error ? e.message : String(e));
+    return [];
   }
-
-  const { data, error } = await q;
-  if (error) throw new Error(error.message);
-
-  type Raw = {
-    id: string; bill_number: string; utility_type: string;
-    total_amount: number; currency: string; paid_at: string | null;
-    provider: { provider_name: string | null } | null;
-  };
-  return ((data ?? []) as unknown as Raw[]).map((r) => ({
-    id: r.id,
-    bill_number: r.bill_number,
-    utility_type: r.utility_type,
-    total_amount: r.total_amount,
-    currency: r.currency,
-    paid_at: r.paid_at,
-    provider_name: r.provider?.provider_name ?? null,
-  }));
 }
