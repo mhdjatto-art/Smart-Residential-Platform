@@ -60,7 +60,7 @@ export default async function ResidentDetailPage({
         <div className="flex flex-col gap-1">
           <p className="font-semibold">{fullName}</p>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="capitalize">{resident.tenancy_type.replace("_", " ")}</span>
+            <span className="capitalize">{(resident.tenancy_type ?? "").toString().replace(/_/g, " ") || "—"}</span>
             ·
             <StatusBadge status={resident.status} />
           </div>
