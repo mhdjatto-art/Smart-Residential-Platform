@@ -26,6 +26,7 @@ export interface ProviderRow {
   contact_email: string | null;
   contact_phone: string | null;
   adapter_kind: string | null;
+  metadata: Record<string, unknown> | null;
   created_at: string;
 }
 
