@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CreditCard, Banknote, Loader2, Smartphone, Building2 } from "lucide-react";
+import { CreditCard, Banknote, Loader2, Smartphone, Building2, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,8 @@ import { topupWalletAction } from "@/lib/api/wallets";
 import { formatCurrency } from "@/lib/utils";
 
 const QUICK_AMOUNTS = [10000, 25000, 50000, 100000, 250000, 500000];
+
+type Method = "stripe" | "fastpay" | "zaincash" | "asiapay" | "nass" | "qicard" | "cash";
 
 interface TopupFormProps {
   walletId: string;
@@ -24,7 +26,7 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
   const router = useRouter();
   const [amount, setAmount] = useState<number>(50000);
   const [customAmount, setCustomAmount] = useState<string>("");
-  const [method, setMethod] = useState<"stripe" | "fastpay" | "zaincash" | "asiapay" | "cash">("stripe");
+  const [method, setMethod] = useState<Method>("stripe");
   const [pending, startTransition] = useTransition();
 
   const utilityLabelAr =
@@ -45,11 +47,11 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
           return;
         }
 
-        // For online methods, we'd normally redirect to Stripe/FastPay first
+        // For online methods, we'd normally redirect to the gateway first
         // and the webhook calls topup_wallet. For now we call directly with
-        // method='stripe' as a placeholder — the resident still needs to
-        // complete payment through Stripe Checkout. Wire that flow in a
-        // separate step.
+        // the method as a placeholder — the resident still needs to complete
+        // payment through the gateway checkout. Wire each provider's flow in
+        // a separate step once credentials are available.
         const topupId = await topupWalletAction({
           walletId,
           amount: a,
@@ -66,6 +68,17 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
       }
     });
   }
+
+  // Helper: dynamic notice for the picked gateway
+  const methodNotice: Record<Method, string | null> = {
+    stripe:   "سيتم تحويلك إلى بوابة Stripe لإتمام الدفع.",
+    fastpay:  "سيتم تحويلك إلى تطبيق FastPay لإتمام الدفع.",
+    zaincash: "سيتم تحويلك إلى تطبيق ZainCash لإتمام الدفع.",
+    asiapay:  "سيتم تحويلك إلى AsiaHawala لإتمام الدفع.",
+    nass:     "سيتم تحويلك إلى تطبيق NASS Pay لإتمام الدفع. سيُحدّث رصيدك تلقائياً بعد الإتمام.",
+    qicard:   "أدخل رقم بطاقة Qi Card في الشاشة التالية لإتمام الدفع.",
+    cash:     null,
+  };
 
   return (
     <div className="space-y-4">
@@ -117,12 +130,20 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
       <div>
         <Label className="text-xs uppercase tracking-wider text-muted-foreground">طريقة الدفع</Label>
         <div className="mt-2 grid grid-cols-2 gap-2">
-          <MethodTile name="stripe"   icon={CreditCard}  label="بطاقة ائتمان" sub="Stripe" selected={method==="stripe"}   onClick={() => setMethod("stripe")} />
-          <MethodTile name="fastpay"  icon={Smartphone}  label="FastPay"     sub="محفظة محلية" selected={method==="fastpay"}  onClick={() => setMethod("fastpay")} />
-          <MethodTile name="zaincash" icon={Smartphone}  label="ZainCash"    sub="محفظة محلية" selected={method==="zaincash"} onClick={() => setMethod("zaincash")} />
-          <MethodTile name="asiapay"  icon={Smartphone}  label="AsiaHawala"  sub="محفظة محلية" selected={method==="asiapay"}  onClick={() => setMethod("asiapay")} />
-          <MethodTile name="cash"     icon={Banknote}    label="نقداً"       sub="عبر الإدارة"  selected={method==="cash"}     onClick={() => setMethod("cash")} />
+          <MethodTile name="stripe"   icon={CreditCard} label="بطاقة ائتمان" sub="Stripe"      selected={method==="stripe"}   onClick={() => setMethod("stripe")} />
+          <MethodTile name="nass"     icon={Wallet}     label="NASS Pay"     sub="ناس باي"      selected={method==="nass"}     onClick={() => setMethod("nass")} accentClass="text-orange-500" />
+          <MethodTile name="qicard"   icon={CreditCard} label="Qi Card"      sub="كي كارد"      selected={method==="qicard"}   onClick={() => setMethod("qicard")} accentClass="text-blue-600" />
+          <MethodTile name="fastpay"  icon={Smartphone} label="FastPay"      sub="محفظة محلية"  selected={method==="fastpay"}  onClick={() => setMethod("fastpay")} />
+          <MethodTile name="zaincash" icon={Smartphone} label="ZainCash"     sub="محفظة محلية"  selected={method==="zaincash"} onClick={() => setMethod("zaincash")} />
+          <MethodTile name="asiapay"  icon={Smartphone} label="AsiaHawala"   sub="محفظة محلية"  selected={method==="asiapay"}  onClick={() => setMethod("asiapay")} />
+          <MethodTile name="cash"     icon={Banknote}   label="نقداً"        sub="عبر الإدارة"  selected={method==="cash"}     onClick={() => setMethod("cash")} />
         </div>
+
+        {methodNotice[method] && (
+          <p className="mt-2 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+            {methodNotice[method]}
+          </p>
+        )}
       </div>
 
       <Button onClick={submit} disabled={pending} className="w-full" size="lg">
@@ -137,8 +158,16 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
   );
 }
 
-function MethodTile({ icon: Icon, label, sub, selected, onClick }: {
-  name: string; icon: typeof CreditCard; label: string; sub: string; selected: boolean; onClick: () => void;
+function MethodTile({
+  icon: Icon, label, sub, selected, onClick, accentClass,
+}: {
+  name: string;
+  icon: typeof CreditCard;
+  label: string;
+  sub: string;
+  selected: boolean;
+  onClick: () => void;
+  accentClass?: string;
 }) {
   return (
     <button
@@ -150,7 +179,7 @@ function MethodTile({ icon: Icon, label, sub, selected, onClick }: {
           : "border-border bg-card hover:bg-muted"
       }`}
     >
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" />
+      <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${accentClass ?? ""}`} />
       <div>
         <p className="text-sm font-medium">{label}</p>
         <p className="text-[10px] text-muted-foreground">{sub}</p>
