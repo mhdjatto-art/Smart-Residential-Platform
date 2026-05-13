@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { listContractTemplates, renderContract } from "@/lib/api/contract-templates";
 import { getContract } from "@/lib/api/contracts";
 import { ContractPrintClient } from "@/components/contracts/contract-print-client";
+import { getActiveBranding } from "@/components/layout/branding-provider";
 
 export const metadata: Metadata = { title: "Print contract" };
 export const dynamic = "force-dynamic";
@@ -53,6 +54,7 @@ export default async function PrintContractPage({
   if (!chosen) chosen = available.find((t) => t.is_default) ?? available[0];
 
   const { html } = await renderContract(id, chosen.id);
+  const branding = await getActiveBranding(contract.organization_id);
 
   return (
     <ContractPrintClient
@@ -61,6 +63,9 @@ export default async function PrintContractPage({
       html={html}
       templates={available.map((t) => ({ id: t.id, name: t.name, locale: t.locale }))}
       currentTemplateId={chosen.id}
+      logoUrl={branding?.logo_path ?? null}
+      primaryColor={branding?.primary_color ?? null}
+      emailFooter={branding?.email_footer ?? null}
     />
   );
 }

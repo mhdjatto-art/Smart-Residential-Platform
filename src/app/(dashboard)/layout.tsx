@@ -2,6 +2,7 @@ import { requireUser } from "@/lib/auth/guards";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { BrandingProvider, getActiveBranding } from "@/components/layout/branding-provider";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveLocale } from "@/lib/i18n/server";
 
@@ -49,24 +50,28 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const roleNames = user.roles.map((r) => r.role);
+  const branding = await getActiveBranding(primaryOrgId);
+  const logoUrl = branding?.logo_path ?? null;
 
   return (
-    <div className="flex min-h-screen bg-muted/30">
-      <Sidebar roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-center lg:hidden">
-          <div className="px-2">
-            <MobileNav roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
+    <BrandingProvider orgId={primaryOrgId}>
+      <div className="flex min-h-screen bg-muted/30">
+        <Sidebar roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center lg:hidden">
+            <div className="px-2">
+              <MobileNav roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
+            </div>
+            <div className="flex-1">
+              <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} logoUrl={logoUrl} />
+            </div>
           </div>
-          <div className="flex-1">
-            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} />
+          <div className="hidden lg:block">
+            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} logoUrl={logoUrl} />
           </div>
+          <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
         </div>
-        <div className="hidden lg:block">
-          <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} />
-        </div>
-        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
-    </div>
+    </BrandingProvider>
   );
 }

@@ -30,9 +30,10 @@ interface TopbarProps {
   locale: LocaleCode;
   userId?: string;
   initialUnread?: number;
+  logoUrl?: string | null;
 }
 
-export function Topbar({ email, primaryRole, orgName, locale, userId, initialUnread = 0 }: TopbarProps) {
+export function Topbar({ email, primaryRole, orgName, locale, userId, initialUnread = 0, logoUrl = null }: TopbarProps) {
   const router = useRouter();
   const supabase = createClient();
   const { t } = useT();
@@ -52,6 +53,10 @@ export function Topbar({ email, primaryRole, orgName, locale, userId, initialUnr
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur lg:px-8">
       <div className="flex items-center gap-3">
+        {logoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoUrl} alt={orgName ?? "Logo"} className="h-8 max-w-[140px] object-contain" />
+        )}
         {orgName && (
           <Badge variant="muted" className="font-medium">
             {orgName}

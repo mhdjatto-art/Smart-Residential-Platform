@@ -20,6 +20,9 @@ interface Props {
   html: string;
   templates: TemplateOption[];
   currentTemplateId: string;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
+  emailFooter?: string | null;
 }
 
 /**
@@ -37,6 +40,9 @@ export function ContractPrintClient({
   html,
   templates,
   currentTemplateId,
+  logoUrl = null,
+  primaryColor = null,
+  emailFooter = null,
 }: Props) {
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(html);
@@ -78,11 +84,14 @@ export function ContractPrintClient({
           }
           body { background: white !important; }
         }
-        .print-paper h1 { font-size: 28px; }
-        .print-paper h2 { font-size: 18px; margin-top: 18px; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+        .print-paper h1 { font-size: 28px; ${primaryColor ? `color: ${primaryColor};` : ""} }
+        .print-paper h2 { font-size: 18px; margin-top: 18px; margin-bottom: 8px; border-bottom: 1px solid ${primaryColor ?? "#e5e7eb"}; padding-bottom: 4px; ${primaryColor ? `color: ${primaryColor};` : ""} }
         .print-paper ul { padding-inline-start: 24px; }
         .print-paper li { margin-bottom: 4px; }
         .print-paper p { margin: 6px 0; line-height: 1.5; }
+        .brand-banner { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid ${primaryColor ?? "#0B1F3A"}; padding-bottom: 12px; margin-bottom: 24px; }
+        .brand-banner img { max-height: 48px; max-width: 200px; object-fit: contain; }
+        .brand-footer { margin-top: 32px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #6b7280; white-space: pre-line; }
       `}</style>
 
       {/* Toolbar */}
@@ -134,12 +143,27 @@ export function ContractPrintClient({
       {/* Paper */}
       <div className="mx-auto my-6 max-w-[800px] px-4">
         <div
-          ref={ref}
-          contentEditable={editing}
-          suppressContentEditableWarning
           className={`print-paper rounded-lg border bg-white p-12 text-[14px] text-black shadow-lg outline-none ${editing ? "ring-2 ring-primary/50" : ""}`}
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
+        >
+          {/* Branded banner */}
+          {(logoUrl || primaryColor) && (
+            <div className="brand-banner">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {logoUrl ? <img src={logoUrl} alt="Logo" /> : <span style={{ color: primaryColor ?? undefined, fontWeight: 700 }}>SRP</span>}
+              <span style={{ fontSize: 11, color: "#6b7280" }}>Contract #{contractNumber}</span>
+            </div>
+          )}
+
+          <div
+            ref={ref}
+            contentEditable={editing}
+            suppressContentEditableWarning
+            dangerouslySetInnerHTML={{ __html: body }}
+          />
+
+          {/* Branded footer */}
+          {emailFooter && <div className="brand-footer">{emailFooter}</div>}
+        </div>
       </div>
     </div>
   );
