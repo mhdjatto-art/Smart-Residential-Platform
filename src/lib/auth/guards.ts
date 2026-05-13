@@ -86,13 +86,23 @@ export async function requireSession(): Promise<{ id: string; email: string | nu
  * Require that the current user holds at least one of the given roles.
  * Used in dashboard pages to gate access (e.g. only `developer_admin` can
  * see the organizations management page).
+ *
+ * In Server Components: redirects to a friendly landing page when the user
+ * lacks the role (residents → /m, others → /dashboard).
+ *
+ * In API routes / Server Actions: callers that want a 403 JSON response
+ * should check `user.roles` and `user.isSuperAdmin` directly instead of
+ * relying on a thrown AuthorizationError.
  */
 export async function requireRole(allowed: AppRole[]): Promise<CurrentUser> {
   const user = await requireUser();
   if (user.isSuperAdmin) return user;
   const has = user.roles.some((r) => allowed.includes(r.role));
   if (!has) {
-    throw new AuthorizationError(`Requires one of: ${allowed.join(", ")}`);
+    // Redirect rather than throw — avoids "Something went wrong" page.
+    // Residents go to the mobile portal, everyone else lands on /dashboard.
+    const isResident = user.roles.some((r) => r.role === "resident");
+    redirect(isResident ? "/m" : "/dashboard");
   }
   return user;
 }
