@@ -214,7 +214,8 @@ export async function updateWalletSettings(walletId: string, input: {
   if (input.auto_cutoff_at_zero    !== undefined) patch.auto_cutoff_at_zero    = input.auto_cutoff_at_zero;
   if (input.status                 !== undefined) patch.status                 = input.status;
   if (Object.keys(patch).length === 0) return;
-  const { error } = await supabase.from("utility_wallets").update(patch).eq("id", walletId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("utility_wallets").update(patch).eq("id", walletId);
   if (error) throw new Error(error.message);
   revalidatePath(`/wallets/${walletId}`);
 }

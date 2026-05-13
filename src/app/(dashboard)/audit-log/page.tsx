@@ -7,7 +7,8 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { FilterSelect } from "@/components/shared/filter-select";
 import { SearchBar } from "@/components/shared/search-bar";
 import { Pagination } from "@/components/shared/pagination";
-import { listAuditLog, diffKeys } from "@/lib/api/audit";
+import { listAuditLog } from "@/lib/api/audit";
+import { diffKeys } from "@/lib/audit/diff";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Audit log" };

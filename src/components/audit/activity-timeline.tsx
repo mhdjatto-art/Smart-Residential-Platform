@@ -1,6 +1,7 @@
 import { History, Pencil, Plus, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getRecordActivity, diffKeys, type AuditRow } from "@/lib/api/audit";
+import { getRecordActivity, type AuditRow } from "@/lib/api/audit";
+import { diffKeys } from "@/lib/audit/diff";
 import { formatDate } from "@/lib/utils";
 
 const TONE: Record<string, string> = {

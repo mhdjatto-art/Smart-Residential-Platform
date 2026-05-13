@@ -25,7 +25,10 @@ function prune(now: number) {
   // Drop the oldest 20% by resetAt
   const sorted = [...STORE.entries()].sort((a, b) => a[1].resetAt - b[1].resetAt);
   const drop = Math.floor(sorted.length * 0.2);
-  for (let i = 0; i < drop; i++) STORE.delete(sorted[i][0]);
+  for (let i = 0; i < drop; i++) {
+    const entry = sorted[i];
+    if (entry) STORE.delete(entry[0]);
+  }
   // Also drop anything already expired
   for (const [k, v] of STORE) if (v.resetAt <= now) STORE.delete(k);
 }

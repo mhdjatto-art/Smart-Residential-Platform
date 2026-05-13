@@ -89,22 +89,6 @@ export async function listAuditLog(opts: ListOpts = {}): Promise<{ data: AuditRo
 }
 
 /**
- * Returns the keys that changed on an UPDATE row, ignoring volatile metadata.
- */
-export function diffKeys(diff: AuditRow["diff"]): string[] {
-  if (!diff?.old || !diff?.new) return [];
-  const out: string[] = [];
-  const all = new Set([...Object.keys(diff.old), ...Object.keys(diff.new)]);
-  for (const k of all) {
-    if (k === "updated_at" || k === "created_at") continue;
-    const a = diff.old[k];
-    const b = diff.new[k];
-    if (JSON.stringify(a) !== JSON.stringify(b)) out.push(k);
-  }
-  return out;
-}
-
-/**
  * Activity timeline for a specific record. Used inline on entity detail pages.
  */
 export async function getRecordActivity(table: string, rowId: string, limit = 20): Promise<AuditRow[]> {

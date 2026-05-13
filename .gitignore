@@ -41,3 +41,11 @@ yarn-error.log*
 # supabase
 supabase/.branches
 supabase/.temp
+
+
+# build introspection artifacts
+.tsc-output.txt
+tsconfig.focus.json
+tsconfig.tinytest.json
+src/test-supabase.ts
+
