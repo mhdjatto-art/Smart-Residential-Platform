@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 interface BrandRow {
@@ -82,6 +83,35 @@ export async function getActiveBranding(orgId: string | null): Promise<BrandRow 
       .eq("organization_id", orgId)
       .maybeSingle();
     return (data as unknown as BrandRow) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Resolves the active org from the request host by looking up
+ * `organization_domains`. Used for unauthenticated pages (login, signup) where
+ * we can't pull the org from the user session yet.
+ *
+ * Returns null for the SRP root domain or any unrecognized host.
+ */
+export async function getBrandingByHost(): Promise<{ orgId: string; branding: BrandRow | null } | null> {
+  try {
+    const h = await headers();
+    const host = (h.get("host") ?? "").toLowerCase().split(":")[0];
+    if (!host) return null;
+    // Skip known platform hosts
+    if (host.endsWith(".vercel.app") || host === "localhost" || host.endsWith(".local")) return null;
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("organization_domains")
+      .select("organization_id")
+      .eq("host", host)
+      .maybeSingle();
+    const orgId = (data as { organization_id?: string } | null)?.organization_id;
+    if (!orgId) return null;
+    const branding = await getActiveBranding(orgId);
+    return { orgId, branding };
   } catch {
     return null;
   }

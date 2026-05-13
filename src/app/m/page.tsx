@@ -5,6 +5,7 @@ import {
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { LiveDashboardWidgets } from "@/components/mobile/live-dashboard-widgets";
 import { getMobileDashboard } from "@/lib/api/resident-mobile";
+import { getActiveBranding } from "@/components/layout/branding-provider";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
 
@@ -15,14 +16,21 @@ export default async function MobileHome() {
   const { ctx } = dash;
   const { t } = await getT();
   const firstName = ctx.full_name?.split(" ")[0] ?? "";
+  const branding = await getActiveBranding(ctx.organization_id);
+  const heroStyle = branding?.primary_color
+    ? { backgroundImage: `linear-gradient(135deg, ${branding.primary_color}, ${branding.accent_color ?? branding.primary_color})` }
+    : undefined;
 
   return (
     <div>
       <MobileTopbar title={t("mobile.hi", { name: firstName })} userId={ctx.user_id} unread={dash.unread_notifications} />
 
       <div className="p-4 space-y-4">
-        {/* Hero balance card */}
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 p-5 text-white shadow-lg">
+        {/* Hero balance card — branded gradient overrides default emerald */}
+        <div
+          className={`rounded-2xl p-5 text-white shadow-lg ${heroStyle ? "" : "bg-gradient-to-br from-emerald-500 to-emerald-700"}`}
+          style={heroStyle}
+        >
           <p className="text-xs uppercase tracking-wider opacity-90">{t("mobile.outstanding_balance")}</p>
           <p className="mt-1 text-3xl font-bold">{formatCurrency(dash.outstanding_balance, { currency: ctx.currency })}</p>
           {dash.upcoming_installment_due_date && (
