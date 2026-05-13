@@ -10,6 +10,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { ContractActions } from "@/components/contracts/contract-actions";
 import { getContract, listSchedule } from "@/lib/api/contracts";
 import { listPaymentsPaged } from "@/lib/api/payments";
+import { getLatestSignature } from "@/lib/api/contract-signatures";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -21,12 +22,13 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
   if (!contract) notFound();
 
   const supabase = await createClient();
-  const [schedule, paymentsResult, unitRes, residentRes, orgRes] = await Promise.all([
+  const [schedule, paymentsResult, unitRes, residentRes, orgRes, signature] = await Promise.all([
     listSchedule(id),
     listPaymentsPaged({ contractId: id, pageSize: 50 }),
     supabase.from("units").select("id, unit_number").eq("id", contract.unit_id).maybeSingle(),
     supabase.from("residents").select("id, first_name, last_name").eq("id", contract.resident_id).maybeSingle(),
     supabase.from("organizations").select("currency").eq("id", contract.organization_id).maybeSingle(),
+    getLatestSignature(id),
   ]);
 
   const unitNumber = (unitRes.data as { unit_number?: string } | null)?.unit_number ?? "—";
@@ -186,6 +188,21 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
           </CardContent>
         </Card>
       </div>
+
+      {signature && (
+        <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">
+          <div className="flex items-start gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={signature.signature_png} alt="Signature" className="h-20 rounded border bg-white p-1" />
+            <div className="text-sm">
+              <p className="font-medium">Signed by {signature.full_name_typed ?? residentName}</p>
+              <p className="text-xs text-muted-foreground">
+                {formatDate(signature.signed_at)} {signature.ip_address ? `· ${signature.ip_address}` : ""}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {nextDue && (
         <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">

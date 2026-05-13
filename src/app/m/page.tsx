@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  AlertOctagon, CalendarClock, ClipboardList, ShoppingBag, UserPlus, Wallet, Wifi, Zap,
+  AlertOctagon, CalendarClock, ClipboardList, FileSignature, ShoppingBag, UserPlus, Wallet, Wifi, Zap,
 } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { LiveDashboardWidgets } from "@/components/mobile/live-dashboard-widgets";
@@ -52,6 +52,7 @@ export default async function MobileHome() {
           <ModTile href="/m/visitors"   icon={UserPlus} label="Visitor" />
           <ModTile href="/m/bookings"   icon={CalendarClock} label="Book" />
           <ModTile href="/m/marketplace" icon={ShoppingBag} label="Shop" />
+          <ModTile href="/m/contracts" icon={FileSignature} label="Contracts" />
           <ModTile href="/m/notifications" icon={AlertOctagon} label="Alerts" />
         </div>
       </div>
