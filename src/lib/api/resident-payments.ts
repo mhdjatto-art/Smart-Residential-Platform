@@ -17,6 +17,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { sendPaymentReceiptEmail } from "@/lib/email/notify";
 
 export interface ResidentPayInput {
   bill_id: string;
@@ -71,15 +72,21 @@ export async function payMyUtilityBill(input: ResidentPayInput): Promise<{ ok: t
   if (input.amount > owed + 0.01) throw new Error(`Cannot pay more than ${owed.toFixed(2)}`);
 
   // 4. Record via the SQL function (same one admins use)
+  const ref = input.reference ?? `SELF-${Date.now().toString(36).toUpperCase()}`;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any).rpc("record_utility_bill_payment", {
     p_bill_id:   input.bill_id,
     p_amount:    input.amount,
     p_method:    input.method,
-    p_reference: input.reference ?? `SELF-${Date.now().toString(36).toUpperCase()}`,
+    p_reference: ref,
     p_notes:     "Paid by resident via mobile portal",
   });
   if (error) throw new Error(`record_utility_bill_payment: ${error.message}`);
+
+  // 5. Fire-and-forget receipt email (best-effort, never throws)
+  sendPaymentReceiptEmail(input.bill_id, input.amount, input.method, ref).catch((e) => {
+    console.error("[resident-pay] receipt email failed:", e instanceof Error ? e.message : String(e));
+  });
 
   revalidatePath("/m");
   revalidatePath("/m/payments");
