@@ -105,21 +105,29 @@ export async function listOverdueRisk(): Promise<OverdueRiskRow[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("ai_predictions")
-    .select("id,subject_id,score,band,rationale,predicted_at,subject:residents(full_name)")
+    .select("id,subject_id,score,band,rationale,predicted_at,subject:residents(first_name,last_name)")
     .eq("prediction_kind", "overdue_risk")
     .order("score", { ascending: false })
     .limit(50);
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("[listOverdueRisk] failed:", error.message);
+    return [];
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return ((data ?? []) as any[]).map((r) => ({
-    id: r.id,
-    subject_id: r.subject_id,
-    resident_name: r.subject?.full_name ?? null,
-    score: Number(r.score),
-    band: r.band,
-    rationale: r.rationale ?? {},
-    predicted_at: r.predicted_at,
-  }));
+  return ((data ?? []) as any[]).map((r) => {
+    const composed = r.subject
+      ? [r.subject.first_name, r.subject.last_name].filter(Boolean).join(" ") || null
+      : null;
+    return {
+      id: r.id,
+      subject_id: r.subject_id,
+      resident_name: composed,
+      score: Number(r.score),
+      band: r.band,
+      rationale: r.rationale ?? {},
+      predicted_at: r.predicted_at,
+    };
+  });
 }
 
 export async function recomputeOverdueRisk(): Promise<number> {
