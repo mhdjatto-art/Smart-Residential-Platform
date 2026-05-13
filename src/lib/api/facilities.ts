@@ -89,7 +89,13 @@ interface BookingListOpts {
   pageSize?: number;
 }
 
-export async function listBookings(opts: BookingListOpts = {}): Promise<{ data: BookingRow[]; total: number }> {
+export interface EnrichedBookingRow extends BookingRow {
+  facility_name: string | null;
+  facility_type: string | null;
+  resident_name: string | null;
+}
+
+export async function listBookings(opts: BookingListOpts = {}): Promise<{ data: EnrichedBookingRow[]; total: number }> {
   await requireUser();
   const supabase = await createClient();
   const page = Math.max(1, opts.page ?? 1);
@@ -97,14 +103,34 @@ export async function listBookings(opts: BookingListOpts = {}): Promise<{ data: 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  let q = supabase.from("facility_bookings").select("*", { count: "exact" }).order("start_time", { ascending: false }).range(from, to);
+  let q = supabase
+    .from("facility_bookings")
+    .select("*, facility:facilities(name, facility_type), resident:residents(first_name, last_name)", { count: "exact" })
+    .order("start_time", { ascending: false })
+    .range(from, to);
   if (opts.facilityId) q = q.eq("facility_id", opts.facilityId);
   if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
   if (opts.fromDate) q = q.gte("start_time", opts.fromDate);
 
   const { data, count, error } = await q;
-  if (error) throw new Error(error.message);
-  return { data: (data ?? []) as unknown as BookingRow[], total: count ?? 0 };
+  if (error) {
+    console.error("[listBookings] failed:", error.message);
+    return { data: [], total: 0 };
+  }
+
+  type Raw = BookingRow & {
+    facility: { name: string | null; facility_type: string | null } | null;
+    resident: { first_name: string | null; last_name: string | null } | null;
+  };
+  const rows = ((data ?? []) as unknown as Raw[]).map((r) => ({
+    ...r,
+    facility_name: r.facility?.name ?? null,
+    facility_type: r.facility?.facility_type ?? null,
+    resident_name: r.resident
+      ? [r.resident.first_name, r.resident.last_name].filter(Boolean).join(" ") || null
+      : null,
+  }));
+  return { data: rows, total: count ?? 0 };
 }
 
 export async function createBooking(input: BookingInput): Promise<BookingRow> {
