@@ -20,6 +20,7 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 const PUBLIC_PATHS = [
   "/login",
+  "/signup",
   "/verify-otp",
   "/auth/callback",
 ];

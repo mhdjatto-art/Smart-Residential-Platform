@@ -112,6 +112,10 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? `${t("actions.sign_in")}…` : t("actions.sign_in")}
       </Button>
+
+      <p className="text-center text-xs text-muted-foreground">
+        Have an invite code? <a href="/signup" className="underline">Sign up</a>
+      </p>
     </form>
   );
 }
