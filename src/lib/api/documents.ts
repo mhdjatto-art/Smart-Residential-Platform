@@ -36,6 +36,36 @@ export async function listDocuments(opts: {
   return (data ?? []) as unknown as DocumentRow[];
 }
 
+export interface AllDocumentsOpts {
+  entityType?: string;
+  kind?: string;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export async function listAllDocuments(opts: AllDocumentsOpts = {}): Promise<{ data: DocumentRow[]; total: number }> {
+  await requireUser();
+  const supabase = await createClient();
+  const page = Math.max(1, opts.page ?? 1);
+  const pageSize = Math.min(100, opts.pageSize ?? 25);
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let q = supabase.from("documents").select("*", { count: "exact" })
+    .order("created_at", { ascending: false }).range(from, to);
+  if (opts.entityType) q = q.eq("entity_type", opts.entityType);
+  if (opts.kind)       q = q.eq("kind", opts.kind);
+  if (opts.search?.trim()) q = q.ilike("file_name", `%${opts.search.trim()}%`);
+
+  const { data, count, error } = await q;
+  if (error) {
+    console.error("[listAllDocuments] failed:", error.message);
+    return { data: [], total: 0 };
+  }
+  return { data: (data ?? []) as unknown as DocumentRow[], total: count ?? 0 };
+}
+
 /**
  * Server action that uploads a file to Supabase Storage AND inserts a row
  * into public.documents in a single round-trip from the client.
