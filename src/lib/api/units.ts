@@ -149,3 +149,35 @@ export async function deleteUnit(id: string): Promise<void> {
   if (error) throw new Error(error.message);
   revalidatePath("/units");
 }
+
+export interface UnitOption {
+  id: string;
+  unit_number: string;
+  compound_id: string;
+  building_id: string;
+  building_name: string | null;
+}
+
+/** Lightweight unit list for dropdowns. Joins building name for the label. */
+export async function listUnitOptions(compoundId?: string): Promise<UnitOption[]> {
+  await requireUser();
+  const supabase = await createClient();
+  let q = supabase
+    .from("units")
+    .select("id, unit_number, compound_id, building_id, building:buildings(name)")
+    .order("unit_number");
+  if (compoundId) q = q.eq("compound_id", compoundId);
+  const { data, error } = await q;
+  if (error) throw new Error(error.message);
+  type RawRow = {
+    id: string; unit_number: string; compound_id: string; building_id: string;
+    building: { name: string | null } | null;
+  };
+  return ((data ?? []) as unknown as RawRow[]).map((r) => ({
+    id: r.id,
+    unit_number: r.unit_number,
+    compound_id: r.compound_id,
+    building_id: r.building_id,
+    building_name: r.building?.name ?? null,
+  }));
+}

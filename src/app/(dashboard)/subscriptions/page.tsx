@@ -27,7 +27,7 @@ export default async function SubscriptionsPage({
     <div>
       <PageHeader
         title="Utility subscriptions"
-        description="Recurring services: electricity, internet, gas, water, maintenance."
+        description="Recurring services that auto-generate bills: electricity, internet, gas, water, maintenance."
         actions={
           <Button asChild>
             <Link href="/subscriptions/new"><Plus className="h-4 w-4" />New subscription</Link>
@@ -49,29 +49,42 @@ export default async function SubscriptionsPage({
       </div>
 
       {data.length === 0 ? (
-        <EmptyState icon={Repeat} title="No subscriptions yet" description="Connect units to recurring utility services."
-          action={<Button asChild><Link href="/subscriptions/new">New subscription</Link></Button>} />
+        <EmptyState
+          icon={Repeat}
+          title="No subscriptions yet"
+          description="Connect a unit to a utility provider so the system auto-generates monthly bills."
+          action={<Button asChild><Link href="/subscriptions/new">New subscription</Link></Button>}
+        />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Type</TableHead>
+                <TableHead>Unit</TableHead>
+                <TableHead>Service</TableHead>
+                <TableHead>Provider</TableHead>
+                <TableHead className="hidden md:table-cell">Resident</TableHead>
                 <TableHead>Cycle</TableHead>
-                <TableHead className="text-right">Monthly</TableHead>
-                <TableHead>Start</TableHead>
-                <TableHead>Next bill</TableHead>
+                <TableHead className="text-right">Fee</TableHead>
+                <TableHead className="hidden lg:table-cell">Next bill</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.map((s) => (
                 <TableRow key={s.id}>
+                  <TableCell>
+                    <p className="font-medium">{s.unit_number ?? "—"}</p>
+                    {s.building_name && (
+                      <p className="text-[11px] text-muted-foreground">{s.building_name}</p>
+                    )}
+                  </TableCell>
                   <TableCell className="capitalize">{s.subscription_type}</TableCell>
+                  <TableCell className="text-muted-foreground">{s.provider_name ?? "—"}</TableCell>
+                  <TableCell className="hidden text-muted-foreground md:table-cell">{s.resident_full_name ?? "Unit-level"}</TableCell>
                   <TableCell className="capitalize text-muted-foreground">{s.billing_cycle}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatCurrency(s.monthly_fee, { currency: s.currency })}</TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(s.start_date)}</TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(s.next_billing_date)}</TableCell>
+                  <TableCell className="hidden text-muted-foreground lg:table-cell">{formatDate(s.next_billing_date)}</TableCell>
                   <TableCell><StatusBadge status={s.status} /></TableCell>
                 </TableRow>
               ))}

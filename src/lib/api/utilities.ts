@@ -163,19 +163,49 @@ interface SubListOpts {
   pageSize?: number;
 }
 
-export async function listSubscriptions(opts: SubListOpts = {}): Promise<{ data: SubscriptionRow[]; total: number }> {
+export interface EnrichedSubscriptionRow extends SubscriptionRow {
+  unit_number: string | null;
+  building_name: string | null;
+  provider_name: string | null;
+  resident_full_name: string | null;
+}
+
+export async function listSubscriptions(opts: SubListOpts = {}): Promise<{ data: EnrichedSubscriptionRow[]; total: number }> {
   await requireUser();
   const supabase = await createClient();
   const page = Math.max(1, opts.page ?? 1);
   const pageSize = Math.min(100, opts.pageSize ?? 25);
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
-  let q = supabase.from("utility_subscriptions").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
+  let q = supabase.from("utility_subscriptions")
+    .select(
+      "*, unit:units(unit_number, building:buildings(name)), provider:utility_providers(provider_name), resident:residents(first_name, last_name)",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(from, to);
   if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
   if (opts.utilityType && opts.utilityType !== "all") q = q.eq("subscription_type", opts.utilityType);
   const { data, count, error } = await q;
   if (error) throw new Error(error.message);
-  return { data: (data ?? []) as unknown as SubscriptionRow[], total: count ?? 0 };
+
+  type RawRow = SubscriptionRow & {
+    unit: { unit_number: string | null; building: { name: string | null } | null } | null;
+    provider: { provider_name: string | null } | null;
+    resident: { first_name: string | null; last_name: string | null } | null;
+  };
+
+  const rows = ((data ?? []) as unknown as RawRow[]).map((r) => ({
+    ...r,
+    unit_number:        r.unit?.unit_number ?? null,
+    building_name:      r.unit?.building?.name ?? null,
+    provider_name:      r.provider?.provider_name ?? null,
+    resident_full_name: r.resident
+      ? [r.resident.first_name, r.resident.last_name].filter(Boolean).join(" ") || null
+      : null,
+  }));
+
+  return { data: rows, total: count ?? 0 };
 }
 
 export async function createSubscription(input: SubscriptionInput): Promise<SubscriptionRow> {
