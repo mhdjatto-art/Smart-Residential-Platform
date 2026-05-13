@@ -18,6 +18,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 import { sendPaymentReceiptEmail } from "@/lib/email/notify";
+import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
 
 export interface ResidentPayInput {
   bill_id: string;
@@ -83,9 +84,12 @@ export async function payMyUtilityBill(input: ResidentPayInput): Promise<{ ok: t
   });
   if (error) throw new Error(`record_utility_bill_payment: ${error.message}`);
 
-  // 5. Fire-and-forget receipt email (best-effort, never throws)
+  // 5. Fire-and-forget receipt email + in-app notification (best-effort)
   sendPaymentReceiptEmail(input.bill_id, input.amount, input.method, ref).catch((e) => {
     console.error("[resident-pay] receipt email failed:", e instanceof Error ? e.message : String(e));
+  });
+  notifyPaymentReceived(input.bill_id, input.amount).catch((e) => {
+    console.error("[resident-pay] in-app notification failed:", e instanceof Error ? e.message : String(e));
   });
 
   revalidatePath("/m");

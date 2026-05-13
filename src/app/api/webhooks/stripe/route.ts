@@ -16,6 +16,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature, type StripeEvent } from "@/lib/payments/stripe";
 import { sendPaymentReceiptEmail } from "@/lib/email/notify";
+import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -135,9 +136,12 @@ async function recordPayment(billId: string, amount: number, ref: string, source
   }
   console.log("[stripe-webhook] recorded payment:", billId, amount, ref);
 
-  // Fire-and-forget receipt email (best-effort)
+  // Fire-and-forget receipt email + in-app notification (best-effort)
   sendPaymentReceiptEmail(billId, amount, "online_payment", ref).catch((e) => {
     console.error("[stripe-webhook] receipt email failed:", e instanceof Error ? e.message : String(e));
+  });
+  notifyPaymentReceived(billId, amount).catch((e) => {
+    console.error("[stripe-webhook] in-app notification failed:", e instanceof Error ? e.message : String(e));
   });
 
   return NextResponse.json({ ok: true, bill_id: billId, amount });

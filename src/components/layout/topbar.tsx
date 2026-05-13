@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { LanguagePicker } from "@/components/i18n/language-picker";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { createClient } from "@/lib/supabase/client";
 import { ROLE_LABELS } from "@/lib/constants";
 import { initials } from "@/lib/utils";
@@ -27,9 +28,11 @@ interface TopbarProps {
   primaryRole: AppRole | null;
   orgName: string | null;
   locale: LocaleCode;
+  userId?: string;
+  initialUnread?: number;
 }
 
-export function Topbar({ email, primaryRole, orgName, locale }: TopbarProps) {
+export function Topbar({ email, primaryRole, orgName, locale, userId, initialUnread = 0 }: TopbarProps) {
   const router = useRouter();
   const supabase = createClient();
   const { t } = useT();
@@ -62,6 +65,7 @@ export function Topbar({ email, primaryRole, orgName, locale }: TopbarProps) {
       </div>
 
       <div className="flex items-center gap-2">
+      {userId && <NotificationBell userId={userId} initialUnread={initialUnread} />}
       <LanguagePicker current={locale} />
       <Button
         variant="outline"

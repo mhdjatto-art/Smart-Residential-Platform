@@ -10,6 +10,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
+import { notifyNewBill } from "@/lib/notifications/bill-events";
 
 export interface BillingRunDetail {
   sub_id: string;
@@ -40,13 +41,24 @@ export async function runAutoBilling(dryRun: boolean): Promise<BillingRunSummary
   const { data, error } = await (supabase as any).rpc("generate_due_utility_bills", { p_dry_run: dryRun });
   if (error) throw new Error(`generate_due_utility_bills: ${error.message}`);
 
+  const summary = data as BillingRunSummary;
+
   if (!dryRun) {
+    // Fire-and-forget in-app notifications for every freshly-generated bill
+    for (const d of summary.details ?? []) {
+      if (d.outcome === "generated" && d.bill_id) {
+        notifyNewBill(d.bill_id).catch((e) => {
+          console.error("[billing-run] notifyNewBill failed:", e instanceof Error ? e.message : String(e));
+        });
+      }
+    }
+
     revalidatePath("/utility-bills");
     revalidatePath("/subscriptions");
     revalidatePath("/admin/billing-run");
   }
 
-  return data as BillingRunSummary;
+  return summary;
 }
 
 export interface SubscriptionsDueRow {

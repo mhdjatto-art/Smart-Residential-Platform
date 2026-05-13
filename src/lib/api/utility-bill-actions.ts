@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
+import { notifyPenaltyApplied } from "@/lib/notifications/bill-events";
 
 export interface PaymentInput {
   bill_id: string;
@@ -52,6 +53,15 @@ export async function applyUtilityPenalties(
     p_grace_days: graceDays,
   });
   if (error) throw new Error(`apply_utility_bill_penalties_all: ${error.message}`);
+
+  const summary = data as PenaltyRunSummary;
+  // Fire-and-forget in-app notifications for every bill that got a penalty
+  for (const d of summary.details ?? []) {
+    notifyPenaltyApplied(d.bill_id, d.penalty).catch((e) => {
+      console.error("[apply-penalties] notifyPenaltyApplied failed:", e instanceof Error ? e.message : String(e));
+    });
+  }
+
   revalidatePath("/utility-bills");
-  return data as PenaltyRunSummary;
+  return summary;
 }

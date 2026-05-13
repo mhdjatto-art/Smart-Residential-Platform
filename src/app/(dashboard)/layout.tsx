@@ -34,6 +34,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
     orgName = data?.name ?? null;
   }
 
+  // Initial unread count for the bell — best-effort, falls back to 0
+  let initialUnread = 0;
+  try {
+    const supabase = await createClient();
+    const { count } = await supabase
+      .from("notifications")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .is("read_at", null);
+    initialUnread = count ?? 0;
+  } catch (e) {
+    console.error("[dashboard-layout] unread count failed:", e instanceof Error ? e.message : String(e));
+  }
+
   const roleNames = user.roles.map((r) => r.role);
 
   return (
@@ -45,11 +59,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <MobileNav roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
           </div>
           <div className="flex-1">
-            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} />
+            <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} />
           </div>
         </div>
         <div className="hidden lg:block">
-          <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} />
+          <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} />
         </div>
         <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
