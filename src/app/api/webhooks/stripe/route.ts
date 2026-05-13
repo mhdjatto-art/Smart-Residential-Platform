@@ -18,6 +18,7 @@ import { verifyWebhookSignature, type StripeEvent } from "@/lib/payments/stripe"
 import { sendPaymentReceiptEmail } from "@/lib/email/notify";
 import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
 import { enforceRateLimit } from "@/lib/rate-limit";
+import { reportError, reportEvent } from "@/lib/observability/report";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,7 +33,10 @@ export async function POST(req: Request) {
   const body = await req.text();
 
   if (!verifyWebhookSignature(body, sig)) {
-    console.error("[stripe-webhook] invalid signature");
+    reportEvent("Stripe webhook signature invalid (possible attack or rotated secret)", {
+      module: "stripe-webhook",
+      severity: "critical",
+    });
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 

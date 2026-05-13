@@ -20,8 +20,11 @@ import type { AppRole } from "@/types";
 export interface AdminUserRow {
   id: string;
   email: string | null;
+  phone: string | null;
   created_at: string;
   last_sign_in_at: string | null;
+  email_confirmed_at: string | null;
+  banned_until: string | null;
   full_name: string | null;
   roles: Array<{
     id: string;
@@ -74,14 +77,22 @@ export async function listAdminUsers(): Promise<AdminUserRow[]> {
   }
 
   return list.users
-    .map((u) => ({
-      id: u.id,
-      email: u.email ?? null,
-      created_at: u.created_at,
-      last_sign_in_at: u.last_sign_in_at ?? null,
-      full_name: (u.user_metadata as { full_name?: string } | undefined)?.full_name ?? null,
-      roles: byUser.get(u.id) ?? [],
-    }))
+    .map((u) => {
+      // banned_until is exposed on the GoTrue user record; some SDK versions
+      // type it loosely so we read through unknown.
+      const raw = u as unknown as { banned_until?: string | null; email_confirmed_at?: string | null };
+      return {
+        id: u.id,
+        email: u.email ?? null,
+        phone: u.phone ?? null,
+        created_at: u.created_at,
+        last_sign_in_at: u.last_sign_in_at ?? null,
+        email_confirmed_at: raw.email_confirmed_at ?? null,
+        banned_until: raw.banned_until ?? null,
+        full_name: (u.user_metadata as { full_name?: string } | undefined)?.full_name ?? null,
+        roles: byUser.get(u.id) ?? [],
+      };
+    })
     .sort((a, b) => (a.email ?? "").localeCompare(b.email ?? ""));
 }
 
@@ -192,4 +203,113 @@ export async function deleteAuthUser(user_id: string): Promise<void> {
   const { error } = await admin.auth.admin.deleteUser(user_id);
   if (error) throw new Error(error.message);
   revalidatePath("/admin/users");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Advanced user controls
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Generate a strong random password. 16 chars from a curated set that avoids
+ * visually-similar glyphs (no 0/O, 1/l/I) for safer hand-off via paper or chat.
+ */
+export async function generateStrongPassword(): Promise<string> {
+  // Server action — must be async to be callable from client components.
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%^&*";
+  const arr = new Uint32Array(16);
+  crypto.getRandomValues(arr);
+  let out = "";
+  for (let i = 0; i < arr.length; i++) out += alphabet[arr[i]! % alphabet.length];
+  return out;
+}
+
+/**
+ * Lock a user out of the application for a duration.
+ *
+ * Supabase Auth supports a `ban_duration` field on updateUserById. Pass a
+ * value like "24h" or "365d" — use "none" to unban.
+ */
+export async function setUserBan(user_id: string, ban_duration: string): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin.auth.admin as any).updateUserById(user_id, { ban_duration });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/users");
+}
+
+export async function lockUser(user_id: string, durationHours = 24 * 365): Promise<void> {
+  await setUserBan(user_id, `${durationHours}h`);
+}
+
+export async function unlockUser(user_id: string): Promise<void> {
+  await setUserBan(user_id, "none");
+}
+
+/**
+ * Set a flag in user_metadata that the login flow can read to force a
+ * password change on next sign-in. The middleware/login page should redirect
+ * to /change-password when this is true.
+ */
+export async function forcePasswordChange(user_id: string, value = true): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  const { data: existing } = await admin.auth.admin.getUserById(user_id);
+  const meta = (existing?.user?.user_metadata ?? {}) as Record<string, unknown>;
+  const { error } = await admin.auth.admin.updateUserById(user_id, {
+    user_metadata: { ...meta, must_change_password: value },
+  });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/users");
+}
+
+/**
+ * Send Supabase's built-in password-reset email. Uses the recovery flow so
+ * the user clicks a magic link and sets a new password themselves —
+ * preferable to handing them a temp password in plaintext.
+ *
+ * Requires SUPABASE_URL and a configured email provider in the project.
+ */
+export async function sendPasswordResetEmail(email: string): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result = await (admin.auth as any).resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/auth/reset-password`,
+  });
+  if (result?.error) throw new Error(result.error.message);
+}
+
+/** Change a user's email. The new address is set immediately + confirmed. */
+export async function updateUserEmail(user_id: string, email: string): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  const { error } = await admin.auth.admin.updateUserById(user_id, { email, email_confirm: true });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/users");
+}
+
+/** Update arbitrary user_metadata (full_name, locale preferences, etc.) */
+export async function updateUserMetadata(user_id: string, metadata: Record<string, unknown>): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  const { data: existing } = await admin.auth.admin.getUserById(user_id);
+  const existingMeta = (existing?.user?.user_metadata ?? {}) as Record<string, unknown>;
+  const { error } = await admin.auth.admin.updateUserById(user_id, {
+    user_metadata: { ...existingMeta, ...metadata },
+  });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin/users");
+}
+
+/**
+ * Sign out a user from every device. Useful after a suspicious login,
+ * password rotation, or role change that needs immediate effect.
+ */
+export async function revokeAllSessions(user_id: string): Promise<void> {
+  await requireRole(["super_admin"]);
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin.auth.admin as any).signOut(user_id, "global");
+  if (error) throw new Error(error.message);
 }

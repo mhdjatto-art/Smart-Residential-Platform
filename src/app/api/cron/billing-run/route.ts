@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireCronAuth } from "@/lib/cron/auth";
+import { reportError } from "@/lib/observability/report";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,14 +27,14 @@ export async function GET(request: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (admin as any).rpc("generate_due_utility_bills", { p_dry_run: false });
     if (error) {
-      console.error("[cron/billing-run] failed:", error.message);
+      reportError(new Error(error.message), { module: "cron/billing-run", severity: "critical" });
       return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
     }
     console.log("[cron/billing-run] summary:", JSON.stringify(data));
     return NextResponse.json({ ok: true, summary: data });
   } catch (err) {
+    reportError(err, { module: "cron/billing-run", severity: "critical" });
     const msg = err instanceof Error ? err.message : "Unknown error";
-    console.error("[cron/billing-run] threw:", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
