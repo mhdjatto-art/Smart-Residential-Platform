@@ -18,7 +18,7 @@ import { verifyWebhookSignature, type StripeEvent } from "@/lib/payments/stripe"
 import { sendPaymentReceiptEmail } from "@/lib/email/notify";
 import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
 import { enforceRateLimit } from "@/lib/rate-limit";
-import { reportError, reportEvent } from "@/lib/observability/report";
+import { reportEvent } from "@/lib/observability/report";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -115,7 +115,8 @@ async function recordPayment(billId: string, amount: number, ref: string, source
   const admin = createAdminClient();
 
   // Idempotency: skip if we've already recorded a payment with this Stripe ref
-  const { data: bill } = await admin
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: bill } = await (admin as any)
     .from("utility_bills")
     .select("metadata, status")
     .eq("id", billId)

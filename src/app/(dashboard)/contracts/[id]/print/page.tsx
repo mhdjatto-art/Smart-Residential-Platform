@@ -52,6 +52,10 @@ export default async function PrintContractPage({
   let chosen = wantId ? available.find((t) => t.id === wantId) : undefined;
   if (!chosen && wantLocale) chosen = available.find((t) => t.locale === wantLocale && t.is_default) ?? available.find((t) => t.locale === wantLocale);
   if (!chosen) chosen = available.find((t) => t.is_default) ?? available[0];
+  // `available` is non-empty (we early-returned above), so `chosen` is set.
+  if (!chosen) {
+    throw new Error("Unreachable: no contract template selected despite non-empty list");
+  }
 
   const { html } = await renderContract(id, chosen.id);
   const branding = await getActiveBranding(contract.organization_id);

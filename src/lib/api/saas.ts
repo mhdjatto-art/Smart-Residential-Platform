@@ -162,8 +162,8 @@ export async function provisionOrganization(input: ProvisionOrganizationInput): 
     p_name: parsed.name,
     p_slug: parsed.slug,
     p_plan_code: parsed.plan_code,
-    p_contact_email: parsed.contact_email ?? null,
-    p_country_code: parsed.country_code ?? null,
+    p_contact_email: parsed.contact_email ?? undefined,
+    p_country_code: parsed.country_code ?? undefined,
     p_default_locale: parsed.default_locale,
     p_timezone: parsed.timezone,
   });

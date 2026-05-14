@@ -184,8 +184,10 @@ export async function listSubscriptions(opts: SubListOpts = {}): Promise<{ data:
     )
     .order("created_at", { ascending: false })
     .range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.utilityType && opts.utilityType !== "all") q = q.eq("subscription_type", opts.utilityType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.utilityType && opts.utilityType !== "all") q = q.eq("subscription_type", opts.utilityType as any);
   const { data, count, error } = await q;
   if (error) throw new Error(error.message);
 
@@ -249,8 +251,9 @@ export async function suspendSubscription(id: string, reason: string, notes?: st
   const supabase = await createClient();
   const { error } = await supabase.rpc("suspend_subscription", {
     p_subscription_id: id,
-    p_reason: reason,
-    p_notes: notes ?? null,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- enum narrowing
+    p_reason: reason as any,
+    p_notes: notes ?? undefined,
   });
   if (error) throw new Error(error.message);
   revalidatePath("/subscriptions");
@@ -372,6 +375,7 @@ export async function recordReading(input: ReadingInput): Promise<ReadingRow> {
 
   const { data, error } = await supabase
     .from("meter_readings")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- meter_readings types out-of-sync with schema
     .insert({
       organization_id: m.organization_id,
       meter_id: parsed.meter_id,
@@ -381,7 +385,7 @@ export async function recordReading(input: ReadingInput): Promise<ReadingRow> {
       source: parsed.source,
       notes: parsed.notes ?? null,
       created_by: user.id,
-    })
+    } as any)
     .select("*")
     .single();
   if (error) throw new Error(error.message);
@@ -462,8 +466,10 @@ export async function listUtilityBills(opts: BillListOpts = {}): Promise<{ data:
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
   let q = supabase.from("utility_bills").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.utilityType && opts.utilityType !== "all") q = q.eq("utility_type", opts.utilityType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.utilityType && opts.utilityType !== "all") q = q.eq("utility_type", opts.utilityType as any);
   const { data, count, error } = await q;
   if (error) throw new Error(error.message);
   return { data: (data ?? []) as unknown as UtilityBillRow[], total: count ?? 0 };
@@ -511,6 +517,7 @@ export async function createGasOrder(input: GasOrderInput): Promise<GasOrderRow>
   if (!c) throw new Error("Compound not found");
   const { data, error } = await supabase
     .from("gas_orders")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gas_orders schema mismatch on optional fields
     .insert({
       organization_id: (c as { organization_id: string }).organization_id,
       compound_id: parsed.compound_id,

@@ -162,7 +162,8 @@ export async function listAlerts(statusFilter: string[] = ["open","acknowledged"
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("system_alerts").select("*")
-    .in("status", statusFilter)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- enum narrowing
+    .in("status", statusFilter as any)
     .order("severity", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(200);
@@ -182,7 +183,8 @@ export async function updateAlertStatus(id: string, status: "open"|"acknowledged
     patch.resolved_at = new Date().toISOString();
     patch.resolved_by = user.id;
   }
-  const { error } = await supabase.from("system_alerts").update(patch).eq("id", id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- partial update with dynamic shape
+  const { error } = await supabase.from("system_alerts").update(patch as any).eq("id", id);
   if (error) throw new Error(error.message);
 }
 
@@ -211,7 +213,8 @@ export async function listAuditEntries(filters: AuditFilters = {}): Promise<Audi
   const supabase = await createClient();
   let q = supabase.from("audit_log").select("*").order("created_at", { ascending: false }).limit(filters.limit ?? 200);
   if (filters.table)  q = q.eq("table_name", filters.table);
-  if (filters.action) q = q.eq("action", filters.action);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (filters.action) q = q.eq("action", filters.action as any);
   if (filters.search) q = q.ilike("table_name", `%${filters.search}%`);
   const { data, error } = await q;
   if (error) throw new Error(error.message);

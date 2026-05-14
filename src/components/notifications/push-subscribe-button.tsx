@@ -67,7 +67,8 @@ export function PushSubscribeButton() {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TS BufferSource type narrowness
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC) as any,
         });
 
         const res = await fetch("/api/push/subscribe", {
@@ -149,6 +150,6 @@ function arrayBufferToBase64(buf: ArrayBuffer | null): string {
   if (!buf) return "";
   const bytes = new Uint8Array(buf);
   let s = "";
-  for (let i = 0; i < bytes.byteLength; i++) s += String.fromCharCode(bytes[i]);
+  for (let i = 0; i < bytes.byteLength; i++) s += String.fromCharCode(bytes[i]!);
   return btoa(s);
 }

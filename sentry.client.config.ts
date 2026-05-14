@@ -1,36 +1,31 @@
-/**
- * Sentry — browser-side configuration.
- *
- * Loaded automatically by `@sentry/nextjs` on every page load. Without
- * `NEXT_PUBLIC_SENTRY_DSN` we initialize at zero cost and capture nothing,
- * so it's safe to ship even before the DSN is wired up.
- *
- * Required env var:
- *   NEXT_PUBLIC_SENTRY_DSN  — DSN from https://sentry.io/settings/.../projects/.../keys/
- *
- * Optional:
- *   NEXT_PUBLIC_SENTRY_ENVIRONMENT  — 'production' | 'preview' | 'development'
- *                                     (defaults to NODE_ENV)
- *   NEXT_PUBLIC_SENTRY_TRACES_RATE  — 0..1, request transactions to sample
- */
+// This file configures the initialization of Sentry on the client side.
+// The config you add here will be used whenever a users loads a page in their browser.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+
 import * as Sentry from "@sentry/nextjs";
 
-const DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+Sentry.init({
+  dsn: "https://74448a6c2c1d43a50e58f4c0e8ef4530@o4511388070576128.ingest.de.sentry.io/4511388072607824",
 
-if (DSN) {
-  Sentry.init({
-    dsn: DSN,
-    environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT ?? process.env.NODE_ENV,
-    tracesSampleRate: Number(process.env.NEXT_PUBLIC_SENTRY_TRACES_RATE ?? 0.1),
-    // Session replays are useful for UX bugs but cost more — keep low.
-    replaysSessionSampleRate: 0.0,
-    replaysOnErrorSampleRate: 0.1,
-    // Reduce noise from harmless browser quirks.
-    ignoreErrors: [
-      "ResizeObserver loop limit exceeded",
-      "ResizeObserver loop completed with undelivered notifications.",
-      "Network request failed",
-      // Add app-specific noise as you spot it
-    ],
-  });
-}
+  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
+  tracesSampleRate: 1,
+
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
+
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
+
+  // Session replays — useful for UX bugs but cost-aware. Keep session sampling at 0%
+  // and only sample replays when an error happens.
+  replaysSessionSampleRate: 0.0,
+  replaysOnErrorSampleRate: 0.1,
+
+  // Reduce noise from harmless browser quirks.
+  ignoreErrors: [
+    "ResizeObserver loop limit exceeded",
+    "ResizeObserver loop completed with undelivered notifications.",
+    "Network request failed",
+  ],
+});

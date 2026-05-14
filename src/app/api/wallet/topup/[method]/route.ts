@@ -107,7 +107,7 @@ export async function POST(
   // Authorisation: the wallet must belong to the same organization the user
   // is in. (Residents top up their own wallets; staff can top up any wallet
   // in their org.)
-  if (!user.isSuperAdmin && wallet.organization_id !== user.organizationId) {
+  if (!user.isSuperAdmin && !user.organizationIds.includes(wallet.organization_id)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

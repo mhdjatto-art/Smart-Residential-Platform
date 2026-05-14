@@ -50,9 +50,12 @@ export async function listUnitsPaged(opts: ListOpts = {}): Promise<{ data: UnitR
   let q = supabase.from("units").select("*", { count: "exact" }).order("unit_number").range(from, to);
   if (opts.compoundId)       q = q.eq("compound_id", opts.compoundId);
   if (opts.buildingId)       q = q.eq("building_id", opts.buildingId);
-  if (opts.status && opts.status !== "all")           q = q.eq("status", opts.status);
-  if (opts.unitType && opts.unitType !== "all")       q = q.eq("unit_type", opts.unitType);
-  if (opts.ownershipStatus && opts.ownershipStatus !== "all") q = q.eq("ownership_status", opts.ownershipStatus);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all")           q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.unitType && opts.unitType !== "all")       q = q.eq("unit_type", opts.unitType as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.ownershipStatus && opts.ownershipStatus !== "all") q = q.eq("ownership_status", opts.ownershipStatus as any);
   if (opts.search?.trim())   q = q.ilike("unit_number", `%${opts.search.trim()}%`);
 
   const { data, count, error } = await q;

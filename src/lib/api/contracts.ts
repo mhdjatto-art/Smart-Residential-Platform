@@ -49,8 +49,10 @@ export async function listContractsPaged(opts: ListOpts = {}): Promise<{ data: C
   const to = from + pageSize - 1;
 
   let q = supabase.from("installment_contracts").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("contract_status", opts.status);
-  if (opts.contractType && opts.contractType !== "all") q = q.eq("contract_type", opts.contractType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("contract_status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.contractType && opts.contractType !== "all") q = q.eq("contract_type", opts.contractType as any);
   if (opts.compoundId) q = q.eq("compound_id", opts.compoundId);
   if (opts.search?.trim()) q = q.ilike("contract_number", `%${opts.search.trim()}%`);
 

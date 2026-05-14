@@ -28,12 +28,13 @@ export default async function FinancePage() {
 
   // Pick the user's org default currency for chart display.
   let displayCurrency = "USD";
-  if (user.organizationIds.length > 0) {
+  const firstOrgId = user.organizationIds[0];
+  if (firstOrgId) {
     const supabase = await createClient();
     const { data } = await supabase
       .from("organizations")
       .select("currency")
-      .eq("id", user.organizationIds[0])
+      .eq("id", firstOrgId)
       .maybeSingle();
     displayCurrency = (data as { currency?: string } | null)?.currency ?? "USD";
   }

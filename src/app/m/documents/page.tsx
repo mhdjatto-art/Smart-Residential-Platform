@@ -58,7 +58,8 @@ export default async function MobileDocumentsPage() {
 
   return (
     <div>
-      <MobileTopbar title={t("nav.documents") || "My documents"} userId={ctx.user_id} unread={0} showBack />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <MobileTopbar title={(t as any)("nav.documents") || "My documents"} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4">
         {docs.length === 0 ? (
           <div className="rounded-2xl border bg-card p-8 text-center">

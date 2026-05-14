@@ -53,7 +53,8 @@ export async function createErpIntegration(input: ErpIntegrationInput): Promise<
       credentials_ref: parsed.credentials_ref ?? null,
       company_external_id: parsed.company_external_id ?? null,
       default_currency: parsed.default_currency,
-      config: parsed.config,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      config: parsed.config as any,
       is_active: parsed.is_active,
       auto_push: parsed.auto_push,
       csv_export_path: parsed.csv_export_path ?? null,
@@ -169,7 +170,8 @@ export async function listJournalEntries(filter?: { status?: string }): Promise<
   await requireRole(["super_admin","developer_admin","finance_officer","compound_manager"]);
   const supabase = await createClient();
   let q = supabase.from("journal_entries").select("*").order("entry_date", { ascending: false }).limit(200);
-  if (filter?.status) q = q.eq("status", filter.status);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (filter?.status) q = q.eq("status", filter.status as any);
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as JournalEntryRow[];

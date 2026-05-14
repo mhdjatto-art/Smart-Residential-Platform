@@ -224,7 +224,8 @@ export async function redeemInvite(input: RedeemInput): Promise<RedeemResult> {
       last_name:       input.last_name.trim(),
       email:           input.email.trim(),
       phone:           input.phone?.trim() || null,
-      tenancy_type:    invite.tenancy_type,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- enum narrowing
+      tenancy_type:    invite.tenancy_type as any,
       status:          "active",
       move_in_date:    new Date().toISOString().slice(0, 10),
     });

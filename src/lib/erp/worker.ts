@@ -182,7 +182,8 @@ export async function pushQueuedJournalEntries(): Promise<PushRunSummary> {
       outcome:         result.success ? "success" : "failure",
       http_status:     result.http_status ?? null,
       duration_ms:     result.duration_ms ?? duration,
-      response_payload: result.response as object | null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- object not assignable to Json
+      response_payload: result.response as any,
       error_message:   result.error ?? null,
       external_id_returned: result.external_id ?? null,
     });

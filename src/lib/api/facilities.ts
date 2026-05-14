@@ -109,7 +109,8 @@ export async function listBookings(opts: BookingListOpts = {}): Promise<{ data: 
     .order("start_time", { ascending: false })
     .range(from, to);
   if (opts.facilityId) q = q.eq("facility_id", opts.facilityId);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
   if (opts.fromDate) q = q.gte("start_time", opts.fromDate);
 
   const { data, count, error } = await q;

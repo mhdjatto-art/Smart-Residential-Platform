@@ -155,7 +155,8 @@ export async function syncSingleMeter(meterId: string): Promise<SyncSummary["det
           .from("unit_assignments")
           .select("resident_id")
           .eq("unit_id", meter.unit_id)
-          .eq("is_current", true)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- is_current column not in typed schema
+          .eq("is_current" as any, true)
           .maybeSingle();
         const residentId = (ua as { resident_id?: string } | null)?.resident_id;
         if (residentId) {
@@ -163,7 +164,8 @@ export async function syncSingleMeter(meterId: string): Promise<SyncSummary["det
             .from("utility_wallets")
             .select("*")
             .eq("resident_id", residentId)
-            .eq("utility_type", meter.utility_type)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- enum narrowing
+            .eq("utility_type", meter.utility_type as any)
             .is("meter_id", null)
             .eq("status", "active")
             .maybeSingle();

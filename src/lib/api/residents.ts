@@ -48,8 +48,10 @@ export async function listResidentsPaged(opts: ListOpts = {}): Promise<{ data: R
 
   let q = supabase.from("residents").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
   if (opts.compoundId)   q = q.eq("compound_id", opts.compoundId);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.tenancyType && opts.tenancyType !== "all") q = q.eq("tenancy_type", opts.tenancyType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.tenancyType && opts.tenancyType !== "all") q = q.eq("tenancy_type", opts.tenancyType as any);
   if (opts.search?.trim()) {
     const term = `%${opts.search.trim()}%`;
     q = q.or(`first_name.ilike.${term},last_name.ilike.${term},email.ilike.${term},national_id.ilike.${term},mobile.ilike.${term}`);

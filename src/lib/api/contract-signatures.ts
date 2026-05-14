@@ -27,7 +27,8 @@ export interface SignatureRow {
 export async function getLatestSignature(contractId: string): Promise<SignatureRow | null> {
   await requireUser();
   const supabase = await createClient();
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contract_signatures missing in Database types
+  const { data, error } = await (supabase as any)
     .from("contract_signatures")
     .select("*")
     .eq("contract_id", contractId)
@@ -85,7 +86,8 @@ export async function signContract(input: SignContractInput): Promise<SignatureR
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
   const userAgent = h.get("user-agent") ?? null;
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contract_signatures missing in Database types
+  const { data, error } = await (supabase as any)
     .from("contract_signatures")
     .insert({
       contract_id: input.contractId,
@@ -147,7 +149,8 @@ export async function listResidentContracts(): Promise<Array<{
   if (list.length === 0) return [];
 
   // Bulk-fetch signature presence
-  const { data: sigs } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contract_signatures missing in Database types
+  const { data: sigs } = await (supabase as any)
     .from("contract_signatures")
     .select("contract_id")
     .in("contract_id", list.map((c) => c.id));

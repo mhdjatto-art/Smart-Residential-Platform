@@ -48,9 +48,12 @@ export async function listTicketsPaged(opts: ListOpts = {}): Promise<{ data: Tic
   const to = from + pageSize - 1;
 
   let q = supabase.from("tickets").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.priority && opts.priority !== "all") q = q.eq("priority", opts.priority);
-  if (opts.category && opts.category !== "all") q = q.eq("category", opts.category);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.priority && opts.priority !== "all") q = q.eq("priority", opts.priority as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.category && opts.category !== "all") q = q.eq("category", opts.category as any);
   if (opts.compoundId) q = q.eq("compound_id", opts.compoundId);
   if (opts.search?.trim()) {
     const term = `%${opts.search.trim()}%`;
@@ -161,7 +164,8 @@ export async function assignTicket(ticketId: string, assigneeUserId: string | nu
   const user = await requireUser();
   const updates: Record<string, unknown> = { assigned_to: assigneeUserId, updated_by: user.id };
   if (assigneeUserId) updates.status = "assigned";
-  const { error } = await supabase.from("tickets").update(updates).eq("id", ticketId);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- partial update with dynamic shape
+  const { error } = await supabase.from("tickets").update(updates as any).eq("id", ticketId);
   if (error) throw new Error(error.message);
   revalidatePath(`/tickets/${ticketId}`);
 }

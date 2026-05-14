@@ -1,33 +1,19 @@
-/**
- * Sentry — Node.js server-side configuration.
- *
- * Loaded for every server-rendered request, API route, and server action.
- * Without `SENTRY_DSN` we initialize at zero cost.
- *
- * Required env var:
- *   SENTRY_DSN  — same project DSN as the client (both writes go to the
- *                 same project — Sentry tags them with `runtime: node`).
- *
- * Optional:
- *   SENTRY_ENVIRONMENT  — 'production' | 'preview' | 'development'
- *   SENTRY_TRACES_RATE  — 0..1 (lower than client; server traffic is heavier)
- */
+// This file configures the initialization of Sentry on the server.
+// The config you add here will be used whenever the server handles a request.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+
 import * as Sentry from "@sentry/nextjs";
 
-const DSN = process.env.SENTRY_DSN ?? process.env.NEXT_PUBLIC_SENTRY_DSN;
+Sentry.init({
+  dsn: "https://74448a6c2c1d43a50e58f4c0e8ef4530@o4511388070576128.ingest.de.sentry.io/4511388072607824",
 
-if (DSN) {
-  Sentry.init({
-    dsn: DSN,
-    environment: process.env.SENTRY_ENVIRONMENT ?? process.env.NODE_ENV,
-    tracesSampleRate: Number(process.env.SENTRY_TRACES_RATE ?? 0.05),
-    // Don't send default PII (IPs, request bodies) — we set extras manually.
-    sendDefaultPii: false,
-    // Drop known-noise events
-    ignoreErrors: [
-      "AbortError",
-      "ECONNRESET",
-      // Add app-specific noise as you spot it
-    ],
-  });
-}
+  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
+  tracesSampleRate: 1,
+
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
+
+  // Enable sending user PII (Personally Identifiable Information)
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
+});

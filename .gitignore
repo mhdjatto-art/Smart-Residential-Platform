@@ -49,3 +49,6 @@ tsconfig.focus.json
 tsconfig.tinytest.json
 src/test-supabase.ts
 
+
+# Sentry Config File
+.env.sentry-build-plugin

@@ -60,7 +60,7 @@ export default async function DevicesPage() {
       ) : (
         <div className="space-y-6">
           {kinds.map((kind) => {
-            const items = byKind[kind];
+            const items = byKind[kind] ?? [];
             return (
               <Card key={kind} className="overflow-hidden">
                 <div className="flex items-center justify-between border-b bg-muted/40 px-4 py-2">

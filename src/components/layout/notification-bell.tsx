@@ -19,7 +19,7 @@ interface NotificationBellProps {
   initialUnread: number;
 }
 
-interface NotifRow {
+interface NotifRow extends Record<string, unknown> {
   id: string;
   read_at: string | null;
   title?: string | null;

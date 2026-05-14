@@ -46,8 +46,10 @@ export async function listVisitorsPaged(opts: ListOpts = {}): Promise<{ data: Vi
   const to = from + pageSize - 1;
 
   let q = supabase.from("visitors").select("*", { count: "exact" }).order("scheduled_date", { ascending: false }).range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.visitorType && opts.visitorType !== "all") q = q.eq("visitor_type", opts.visitorType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.visitorType && opts.visitorType !== "all") q = q.eq("visitor_type", opts.visitorType as any);
   if (opts.search?.trim()) {
     const term = `%${opts.search.trim()}%`;
     q = q.or(`full_name.ilike.${term},pass_code.ilike.${term},mobile.ilike.${term}`);

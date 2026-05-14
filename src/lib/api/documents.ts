@@ -54,8 +54,10 @@ export async function listAllDocuments(opts: AllDocumentsOpts = {}): Promise<{ d
 
   let q = supabase.from("documents").select("*", { count: "exact" })
     .order("created_at", { ascending: false }).range(from, to);
-  if (opts.entityType) q = q.eq("entity_type", opts.entityType);
-  if (opts.kind)       q = q.eq("kind", opts.kind);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.entityType) q = q.eq("entity_type", opts.entityType as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.kind)       q = q.eq("kind", opts.kind as any);
   if (opts.search?.trim()) q = q.ilike("file_name", `%${opts.search.trim()}%`);
 
   const { data, count, error } = await q;
@@ -130,7 +132,8 @@ export async function uploadDocument(formData: FormData): Promise<DocumentRow> {
       compound_id: compoundId,
       entity_type: entityType,
       entity_id: entityId,
-      kind,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- enum narrowing
+      kind: kind as any,
       storage_path: storagePath,
       file_name: file.name,
       file_size: file.size,

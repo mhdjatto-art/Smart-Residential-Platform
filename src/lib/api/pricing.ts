@@ -60,7 +60,8 @@ export async function createPricingRule(input: PricingRuleInput): Promise<Pricin
       min_amount: parsed.min_amount ?? null,
       max_amount: parsed.max_amount ?? null,
       currency: parsed.currency,
-      tiers: parsed.tiers,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      tiers: parsed.tiers as any,
       formula: parsed.formula ?? null,
       schedule: parsed.schedule,
       is_active: parsed.is_active,
@@ -94,9 +95,9 @@ export async function previewFee(args: {
   const { data, error } = await supabase.rpc("compute_dynamic_fee", {
     p_org_id: args.org_id,
     p_service_kind: args.service_kind,
-    p_unit_id: args.unit_id ?? null,
+    p_unit_id: args.unit_id ?? undefined,
     p_consumption: args.consumption ?? 0,
-    p_residents: args.residents ?? null,
+    p_residents: args.residents ?? undefined,
     p_when_at: args.when_at ?? new Date().toISOString(),
   });
   if (error) throw new Error(error.message);
@@ -179,7 +180,8 @@ export async function createIntegration(input: IntegrationInput): Promise<Integr
       adapter_kind: parsed.adapter_kind,
       name: parsed.name,
       endpoint_url: parsed.endpoint_url ?? null,
-      config: parsed.config,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      config: parsed.config as any,
       status: parsed.status,
       is_active: parsed.is_active,
       health_check_url: parsed.health_check_url ?? null,

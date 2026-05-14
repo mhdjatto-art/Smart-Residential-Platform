@@ -41,8 +41,10 @@ export async function listReminders(opts: ListOpts = {}): Promise<{ data: Remind
     .order("scheduled_for", { ascending: false })
     .range(from, to);
 
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.kind && opts.kind !== "all") q = q.eq("kind", opts.kind);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.kind && opts.kind !== "all") q = q.eq("kind", opts.kind as any);
 
   const { data, count, error } = await q;
   if (error) throw new Error(error.message);

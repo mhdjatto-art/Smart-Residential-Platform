@@ -18,7 +18,8 @@ export default async function PaymentHistoryPage() {
 
   return (
     <div>
-      <MobileTopbar title={t("mobile.payment_history") || "Payment history"} userId={ctx.user_id} unread={0} showBack />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <MobileTopbar title={(t as any)("mobile.payment_history") || "Payment history"} userId={ctx.user_id} unread={0} showBack />
 
       <div className="p-4">
         {bills.length === 0 ? (

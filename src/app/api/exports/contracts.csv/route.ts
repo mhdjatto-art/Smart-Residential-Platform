@@ -56,7 +56,10 @@ export async function GET(request: NextRequest) {
         .select("*")
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
-      if (status && status !== "all") q = q.eq("contract_status", status);
+      if (status && status !== "all") {
+        // contract_status is an enum — cast to satisfy strict typing.
+        q = q.eq("contract_status", status as "active" | "cancelled" | "completed" | "draft" | "defaulted");
+      }
       if (compound) q = q.eq("compound_id", compound);
       const { data, error } = await q;
       if (error) throw new Error(error.message);

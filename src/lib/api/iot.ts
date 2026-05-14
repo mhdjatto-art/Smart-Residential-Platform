@@ -73,7 +73,8 @@ export async function issueDeviceCommand(deviceId: string, command: string, payl
   const { data, error } = await supabase.rpc("issue_device_command", {
     p_device_id: deviceId,
     p_command: command,
-    p_payload: payload as unknown as object,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+    p_payload: payload as any,
     p_scheduled_for: new Date().toISOString(),
   });
   if (error) throw new Error(error.message);
@@ -141,7 +142,8 @@ export async function listAccessLogs(filter?: { zoneId?: string; outcome?: strin
   const supabase = await createClient();
   let q = supabase.from("access_logs").select("*").order("occurred_at", { ascending: false }).limit(200);
   if (filter?.zoneId) q = q.eq("zone_id", filter.zoneId);
-  if (filter?.outcome) q = q.eq("outcome", filter.outcome);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (filter?.outcome) q = q.eq("outcome", filter.outcome as any);
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as AccessLogRow[];

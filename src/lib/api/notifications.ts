@@ -100,7 +100,8 @@ export async function createNotification(input: CreateNotificationInput): Promis
       .insert({
         user_id: input.user_id,
         organization_id: input.organization_id,
-        kind: input.kind,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- kind enum mismatch between code and DB
+        kind: input.kind as any,
         title: input.title,
         body: input.body ?? null,
         entity_type: input.entity_type ?? null,

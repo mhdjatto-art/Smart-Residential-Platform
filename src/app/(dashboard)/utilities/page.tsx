@@ -17,9 +17,10 @@ export default async function UtilitiesPage() {
   const stats = await getUtilityStats();
 
   let currency = "USD";
-  if (user.organizationIds.length > 0) {
+  const firstOrgId = user.organizationIds[0];
+  if (firstOrgId) {
     const supabase = await createClient();
-    const { data } = await supabase.from("organizations").select("currency").eq("id", user.organizationIds[0]).maybeSingle();
+    const { data } = await supabase.from("organizations").select("currency").eq("id", firstOrgId).maybeSingle();
     currency = (data as { currency?: string } | null)?.currency ?? "USD";
   }
 

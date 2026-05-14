@@ -274,7 +274,8 @@ export async function listMarketplaceOrders(filters?: { status?: string }): Prom
   await requireUser();
   const supabase = await createClient();
   let q = supabase.from("marketplace_orders").select("*").order("created_at", { ascending: false }).limit(200);
-  if (filters?.status) q = q.eq("order_status", filters.status);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (filters?.status) q = q.eq("order_status", filters.status as any);
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as MarketplaceOrderRow[];
@@ -303,17 +304,18 @@ export async function placeOrder(input: PlaceOrderInput): Promise<string> {
   const { data, error } = await supabase.rpc("place_order", {
     p_provider_id: parsed.provider_id,
     p_resident_id: parsed.resident_id,
-    p_items: parsed.items as unknown as object,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+    p_items: parsed.items as any,
     p_service_fee: parsed.service_fee,
     p_delivery_fee: parsed.delivery_fee,
     p_tax_amount: parsed.tax_amount,
     p_currency: parsed.currency,
-    p_scheduled_for: parsed.scheduled_for ?? null,
-    p_delivery_address: parsed.delivery_address ?? null,
-    p_delivery_notes: parsed.delivery_notes ?? null,
-    p_notes: parsed.notes ?? null,
-    p_compound_id: parsed.compound_id ?? null,
-    p_unit_id: parsed.unit_id ?? null,
+    p_scheduled_for: parsed.scheduled_for ?? undefined,
+    p_delivery_address: parsed.delivery_address ?? undefined,
+    p_delivery_notes: parsed.delivery_notes ?? undefined,
+    p_notes: parsed.notes ?? undefined,
+    p_compound_id: parsed.compound_id ?? undefined,
+    p_unit_id: parsed.unit_id ?? undefined,
   });
   if (error) throw new Error(error.message);
   revalidatePath("/orders");
@@ -329,7 +331,7 @@ export async function updateOrderStatus(id: string, input: OrderStatusUpdateInpu
   if (parsed.order_status === "cancelled") {
     const { error } = await supabase.rpc("cancel_marketplace_order", {
       p_order_id: id,
-      p_reason: parsed.cancellation_reason ?? null,
+      p_reason: parsed.cancellation_reason ?? undefined,
     });
     if (error) throw new Error(error.message);
   } else if (parsed.order_status === "completed") {

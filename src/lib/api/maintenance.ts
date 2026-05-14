@@ -44,8 +44,10 @@ export async function listMaintenanceJobs(opts: ListOpts = {}): Promise<{ data: 
   const to = from + pageSize - 1;
 
   let q = supabase.from("maintenance_jobs").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(from, to);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
-  if (opts.jobType && opts.jobType !== "all") q = q.eq("job_type", opts.jobType);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.jobType && opts.jobType !== "all") q = q.eq("job_type", opts.jobType as any);
   if (opts.technicianId) q = q.eq("assigned_technician_id", opts.technicianId);
 
   const { data, count, error } = await q;
@@ -99,7 +101,8 @@ export async function updateJobStatus(
     updates.completed_at = new Date().toISOString();
     if (notes) updates.completion_notes = notes;
   }
-  const { error } = await supabase.from("maintenance_jobs").update(updates).eq("id", id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- partial update with dynamic shape
+  const { error } = await supabase.from("maintenance_jobs").update(updates as any).eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/maintenance");
   revalidatePath(`/maintenance/${id}`);

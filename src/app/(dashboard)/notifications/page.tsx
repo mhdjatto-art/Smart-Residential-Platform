@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Bell, Check } from "lucide-react";
+import Link, { type LinkProps } from "next/link";
+import { Bell } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,8 @@ export default async function NotificationsPage() {
                     {n.body && <p className="mt-1 text-sm text-muted-foreground">{n.body}</p>}
                     {n.href && (
                       <Button asChild variant="link" className="px-0 mt-1 h-auto">
-                        <Link href={n.href}>Open →</Link>
+                        {/* href is user-generated content from notifications.href column — typedRoutes can't statically verify it */}
+                        <Link href={n.href as LinkProps["href"]}>Open →</Link>
                       </Button>
                     )}
                   </div>
@@ -58,5 +59,3 @@ export default async function NotificationsPage() {
     </div>
   );
 }
-
-export { Check };

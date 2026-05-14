@@ -68,7 +68,7 @@ export function BookingForm({ facilities, residents }: Props) {
               {facilities.filter((f) => f.is_active).map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name} · {f.facility_type.replace(/_/g, " ")}
-                  {f.booking_fee > 0 ? ` · ${formatCurrency(f.booking_fee, { currency: f.fee_currency })}` : " · Free"}
+                  {f.booking_fee > 0 ? ` · ${formatCurrency(f.booking_fee, { currency: f.fee_currency ?? undefined })}` : " · Free"}
                 </option>
               ))}
             </select>

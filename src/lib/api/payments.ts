@@ -43,8 +43,10 @@ export async function listPaymentsPaged(opts: ListOpts = {}): Promise<{ data: Pa
 
   let q = supabase.from("payments").select("*", { count: "exact" }).order("payment_date", { ascending: false }).range(from, to);
   if (opts.contractId) q = q.eq("contract_id", opts.contractId);
-  if (opts.status && opts.status !== "all") q = q.eq("payment_status", opts.status);
-  if (opts.method && opts.method !== "all") q = q.eq("payment_method", opts.method);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("payment_status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.method && opts.method !== "all") q = q.eq("payment_method", opts.method as any);
   if (opts.search?.trim()) q = q.ilike("payment_reference", `%${opts.search.trim()}%`);
 
   const { data, count, error } = await q;
@@ -70,8 +72,8 @@ export async function recordPayment(input: PaymentInput): Promise<string> {
     p_amount: parsed.amount,
     p_payment_method: parsed.payment_method,
     p_payment_date: parsed.payment_date,
-    p_external_ref: parsed.external_reference ?? null,
-    p_notes: parsed.notes ?? null,
+    p_external_ref: parsed.external_reference ?? undefined,
+    p_notes: parsed.notes ?? undefined,
   });
 
   if (error) throw new Error(error.message);

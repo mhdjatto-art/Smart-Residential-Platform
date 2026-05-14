@@ -79,7 +79,7 @@ export function AccessLogsFeed({ initial }: { initial: AccessLog[] }) {
         </thead>
         <tbody>
           {logs.map((l) => {
-            const sty = OUTCOME_STYLE[l.outcome] ?? OUTCOME_STYLE.denied;
+            const sty = OUTCOME_STYLE[l.outcome] ?? OUTCOME_STYLE.denied!;
             const Icon = sty.Icon;
             return (
               <tr key={l.id} className="border-t">

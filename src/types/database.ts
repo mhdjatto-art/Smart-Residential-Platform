@@ -464,36 +464,54 @@ export type Database = {
       audit_log: {
         Row: {
           action: string
+          actor_email: string | null
           actor_id: string | null
+          actor_role: string | null
+          business_action: string | null
+          client_ip: string | null
           compound_id: string | null
           created_at: string
           diff: Json | null
           id: number
           organization_id: string | null
+          request_id: string | null
           row_id: string | null
           table_name: string
+          user_agent: string | null
         }
         Insert: {
           action: string
+          actor_email?: string | null
           actor_id?: string | null
+          actor_role?: string | null
+          business_action?: string | null
+          client_ip?: string | null
           compound_id?: string | null
           created_at?: string
           diff?: Json | null
           id?: number
           organization_id?: string | null
+          request_id?: string | null
           row_id?: string | null
           table_name: string
+          user_agent?: string | null
         }
         Update: {
           action?: string
+          actor_email?: string | null
           actor_id?: string | null
+          actor_role?: string | null
+          business_action?: string | null
+          client_ip?: string | null
           compound_id?: string | null
           created_at?: string
           diff?: Json | null
           id?: number
           organization_id?: string | null
+          request_id?: string | null
           row_id?: string | null
           table_name?: string
+          user_agent?: string | null
         }
         Relationships: []
       }
@@ -835,6 +853,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "compounds_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_templates: {
+        Row: {
+          body_html: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_default: boolean
+          kind: string
+          locale: string
+          name: string
+          organization_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          body_html: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          kind: string
+          locale?: string
+          name: string
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          kind?: string
+          locale?: string
+          name?: string
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_templates_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1228,68 +1293,98 @@ export type Database = {
         Row: {
           adapter_config: Json
           adapter_kind: string | null
+          api_provider: string | null
           brand: string | null
           compound_id: string
           created_at: string
           created_by: string | null
           current_reading: number
+          external_meter_id: string | null
           id: string
+          installation_date: string | null
           installed_at: string | null
+          last_reading: number
+          last_sync_at: string | null
           meter_number: string
+          meter_type: string
           model: string | null
           notes: string | null
           organization_id: string
+          provider_id: string | null
+          reading_unit: string
           serial_number: string | null
           smart_enabled: boolean
           status: Database["public"]["Enums"]["meter_status"]
+          sync_status: string
           unit_id: string | null
           unit_of_measure: string
           updated_at: string
           updated_by: string | null
+          utility_type: Database["public"]["Enums"]["utility_type"]
         }
         Insert: {
           adapter_config?: Json
           adapter_kind?: string | null
+          api_provider?: string | null
           brand?: string | null
           compound_id: string
           created_at?: string
           created_by?: string | null
           current_reading?: number
+          external_meter_id?: string | null
           id?: string
+          installation_date?: string | null
           installed_at?: string | null
+          last_reading?: number
+          last_sync_at?: string | null
           meter_number: string
+          meter_type?: string
           model?: string | null
           notes?: string | null
           organization_id: string
+          provider_id?: string | null
+          reading_unit?: string
           serial_number?: string | null
           smart_enabled?: boolean
           status?: Database["public"]["Enums"]["meter_status"]
+          sync_status?: string
           unit_id?: string | null
           unit_of_measure?: string
           updated_at?: string
           updated_by?: string | null
+          utility_type?: Database["public"]["Enums"]["utility_type"]
         }
         Update: {
           adapter_config?: Json
           adapter_kind?: string | null
+          api_provider?: string | null
           brand?: string | null
           compound_id?: string
           created_at?: string
           created_by?: string | null
           current_reading?: number
+          external_meter_id?: string | null
           id?: string
+          installation_date?: string | null
           installed_at?: string | null
+          last_reading?: number
+          last_sync_at?: string | null
           meter_number?: string
+          meter_type?: string
           model?: string | null
           notes?: string | null
           organization_id?: string
+          provider_id?: string | null
+          reading_unit?: string
           serial_number?: string | null
           smart_enabled?: boolean
           status?: Database["public"]["Enums"]["meter_status"]
+          sync_status?: string
           unit_id?: string | null
           unit_of_measure?: string
           updated_at?: string
           updated_by?: string | null
+          utility_type?: Database["public"]["Enums"]["utility_type"]
         }
         Relationships: [
           {
@@ -1304,6 +1399,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "electricity_meters_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
             referencedColumns: ["id"]
           },
           {
@@ -1581,6 +1683,47 @@ export type Database = {
           },
           {
             foreignKeyName: "erp_sync_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_reference_mapping: {
+        Row: {
+          created_at: string
+          external_id: string
+          id: string
+          notes: string | null
+          organization_id: string
+          provider: string
+          srp_id: string
+          srp_table: string
+        }
+        Insert: {
+          created_at?: string
+          external_id: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          provider: string
+          srp_id: string
+          srp_table: string
+        }
+        Update: {
+          created_at?: string
+          external_id?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          provider?: string
+          srp_id?: string
+          srp_table?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_reference_mapping_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -2166,6 +2309,47 @@ export type Database = {
           },
         ]
       }
+      idempotency_keys: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          key: string
+          organization_id: string | null
+          request_hash: string | null
+          response: Json | null
+          scope: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          key: string
+          organization_id?: string | null
+          request_hash?: string | null
+          response?: Json | null
+          scope: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          key?: string
+          organization_id?: string | null
+          request_hash?: string | null
+          response?: Json | null
+          scope?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idempotency_keys_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       installment_contracts: {
         Row: {
           annual_interest_rate: number
@@ -2184,12 +2368,14 @@ export type Database = {
           id: string
           installment_count: number
           installment_frequency: Database["public"]["Enums"]["installment_frequency"]
+          is_prepaid: boolean
           late_penalty_type: Database["public"]["Enums"]["penalty_type"] | null
           late_penalty_value: number | null
           metadata: Json
           monthly_amount: number | null
           notes: string | null
           organization_id: string
+          prepaid_months_paid: number
           resident_id: string
           total_property_price: number
           unit_id: string
@@ -2213,12 +2399,14 @@ export type Database = {
           id?: string
           installment_count: number
           installment_frequency?: Database["public"]["Enums"]["installment_frequency"]
+          is_prepaid?: boolean
           late_penalty_type?: Database["public"]["Enums"]["penalty_type"] | null
           late_penalty_value?: number | null
           metadata?: Json
           monthly_amount?: number | null
           notes?: string | null
           organization_id: string
+          prepaid_months_paid?: number
           resident_id: string
           total_property_price: number
           unit_id: string
@@ -2242,12 +2430,14 @@ export type Database = {
           id?: string
           installment_count?: number
           installment_frequency?: Database["public"]["Enums"]["installment_frequency"]
+          is_prepaid?: boolean
           late_penalty_type?: Database["public"]["Enums"]["penalty_type"] | null
           late_penalty_value?: number | null
           metadata?: Json
           monthly_amount?: number | null
           notes?: string | null
           organization_id?: string
+          prepaid_months_paid?: number
           resident_id?: string
           total_property_price?: number
           unit_id?: string
@@ -3056,7 +3246,6 @@ export type Database = {
           previous_reading: number
           reading_date: string
           reading_value: number
-          source: Database["public"]["Enums"]["reading_source"]
           updated_at: string
           validated_at: string | null
           validated_by: string | null
@@ -3074,7 +3263,6 @@ export type Database = {
           previous_reading?: number
           reading_date?: string
           reading_value: number
-          source?: Database["public"]["Enums"]["reading_source"]
           updated_at?: string
           validated_at?: string | null
           validated_by?: string | null
@@ -3092,7 +3280,6 @@ export type Database = {
           previous_reading?: number
           reading_date?: string
           reading_value?: number
-          source?: Database["public"]["Enums"]["reading_source"]
           updated_at?: string
           validated_at?: string | null
           validated_by?: string | null
@@ -3682,6 +3869,53 @@ export type Database = {
           },
         ]
       }
+      payment_method_registry: {
+        Row: {
+          code: string
+          config: Json
+          created_at: string
+          display_name: string
+          gateway_provider: string | null
+          id: string
+          is_active: boolean
+          is_online: boolean
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          config?: Json
+          created_at?: string
+          display_name: string
+          gateway_provider?: string | null
+          id?: string
+          is_active?: boolean
+          is_online?: boolean
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          config?: Json
+          created_at?: string
+          display_name?: string
+          gateway_provider?: string | null
+          id?: string
+          is_active?: boolean
+          is_online?: boolean
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_method_registry_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_reminders: {
         Row: {
           channel: Database["public"]["Enums"]["reminder_channel"]
@@ -3774,12 +4008,17 @@ export type Database = {
           created_by: string | null
           currency: string | null
           external_reference: string | null
+          gateway_payment_intent: string | null
+          gateway_provider: string | null
+          gateway_session_id: string | null
           id: string
+          idempotency_key: string | null
           notes: string | null
           organization_id: string
           payment_amount: number
           payment_date: string
           payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_method_code: string | null
           payment_reference: string
           payment_status: Database["public"]["Enums"]["payment_status"]
           resident_id: string
@@ -3788,6 +4027,7 @@ export type Database = {
           reversed_by: string | null
           updated_at: string
           updated_by: string | null
+          utility_bill_id: string | null
         }
         Insert: {
           compound_id: string
@@ -3796,12 +4036,17 @@ export type Database = {
           created_by?: string | null
           currency?: string | null
           external_reference?: string | null
+          gateway_payment_intent?: string | null
+          gateway_provider?: string | null
+          gateway_session_id?: string | null
           id?: string
+          idempotency_key?: string | null
           notes?: string | null
           organization_id: string
           payment_amount: number
           payment_date?: string
           payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_method_code?: string | null
           payment_reference: string
           payment_status?: Database["public"]["Enums"]["payment_status"]
           resident_id: string
@@ -3810,6 +4055,7 @@ export type Database = {
           reversed_by?: string | null
           updated_at?: string
           updated_by?: string | null
+          utility_bill_id?: string | null
         }
         Update: {
           compound_id?: string
@@ -3818,12 +4064,17 @@ export type Database = {
           created_by?: string | null
           currency?: string | null
           external_reference?: string | null
+          gateway_payment_intent?: string | null
+          gateway_provider?: string | null
+          gateway_session_id?: string | null
           id?: string
+          idempotency_key?: string | null
           notes?: string | null
           organization_id?: string
           payment_amount?: number
           payment_date?: string
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_method_code?: string | null
           payment_reference?: string
           payment_status?: Database["public"]["Enums"]["payment_status"]
           resident_id?: string
@@ -3832,6 +4083,7 @@ export type Database = {
           reversed_by?: string | null
           updated_at?: string
           updated_by?: string | null
+          utility_bill_id?: string | null
         }
         Relationships: [
           {
@@ -3860,6 +4112,13 @@ export type Database = {
             columns: ["resident_id"]
             isOneToOne: false
             referencedRelation: "residents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_utility_bill_id_fkey"
+            columns: ["utility_bill_id"]
+            isOneToOne: false
+            referencedRelation: "utility_bills"
             referencedColumns: ["id"]
           },
         ]
@@ -3979,6 +4238,158 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prepaid_tokens: {
+        Row: {
+          amount: number
+          currency: string
+          delivered_at: string | null
+          expires_at: string | null
+          generated_at: string
+          id: string
+          metadata: Json
+          meter_id: string
+          organization_id: string
+          status: string
+          token_format: string
+          token_value: string
+          topup_id: string
+          units_purchased: number
+          units_unit: string
+          used_at: string | null
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          currency?: string
+          delivered_at?: string | null
+          expires_at?: string | null
+          generated_at?: string
+          id?: string
+          metadata?: Json
+          meter_id: string
+          organization_id: string
+          status?: string
+          token_format?: string
+          token_value: string
+          topup_id: string
+          units_purchased: number
+          units_unit?: string
+          used_at?: string | null
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          currency?: string
+          delivered_at?: string | null
+          expires_at?: string | null
+          generated_at?: string
+          id?: string
+          metadata?: Json
+          meter_id?: string
+          organization_id?: string
+          status?: string
+          token_format?: string
+          token_value?: string
+          topup_id?: string
+          units_purchased?: number
+          units_unit?: string
+          used_at?: string | null
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prepaid_tokens_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prepaid_tokens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prepaid_tokens_topup_id_fkey"
+            columns: ["topup_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_topups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prepaid_tokens_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "utility_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      provider_credentials: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          credential_name: string
+          env_var_name: string | null
+          expires_at: string | null
+          id: string
+          integration_id: string
+          notes: string | null
+          organization_id: string
+          rotated_at: string | null
+          scope: string | null
+          updated_at: string
+          vault_key: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          credential_name: string
+          env_var_name?: string | null
+          expires_at?: string | null
+          id?: string
+          integration_id: string
+          notes?: string | null
+          organization_id: string
+          rotated_at?: string | null
+          scope?: string | null
+          updated_at?: string
+          vault_key?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          credential_name?: string
+          env_var_name?: string | null
+          expires_at?: string | null
+          id?: string
+          integration_id?: string
+          notes?: string | null
+          organization_id?: string
+          rotated_at?: string | null
+          scope?: string | null
+          updated_at?: string
+          vault_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_credentials_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "provider_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "provider_credentials_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -4204,6 +4615,39 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          last_seen_at: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          last_seen_at?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          last_seen_at?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       receipts: {
         Row: {
           id: string
@@ -4364,6 +4808,73 @@ export type Database = {
             columns: ["report_id"]
             isOneToOne: false
             referencedRelation: "report_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resident_invites: {
+        Row: {
+          code: string
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          email: string | null
+          expires_at: string
+          id: string
+          organization_id: string
+          tenancy_type: Database["public"]["Enums"]["tenancy_type"]
+          unit_id: string
+          used_at: string | null
+          used_by_user_id: string | null
+        }
+        Insert: {
+          code: string
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string
+          id?: string
+          organization_id: string
+          tenancy_type?: Database["public"]["Enums"]["tenancy_type"]
+          unit_id: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+        }
+        Update: {
+          code?: string
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string
+          id?: string
+          organization_id?: string
+          tenancy_type?: Database["public"]["Enums"]["tenancy_type"]
+          unit_id?: string
+          used_at?: string | null
+          used_by_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resident_invites_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resident_invites_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "resident_invites_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -4752,6 +5263,77 @@ export type Database = {
           },
         ]
       }
+      service_overdue_actions: {
+        Row: {
+          action_kind: string
+          actor_id: string | null
+          compound_id: string
+          dunning_step: number | null
+          id: string
+          occurred_at: string
+          organization_id: string
+          outcome: string | null
+          payload: Json
+          subscription_id: string | null
+          utility_bill_id: string | null
+        }
+        Insert: {
+          action_kind: string
+          actor_id?: string | null
+          compound_id: string
+          dunning_step?: number | null
+          id?: string
+          occurred_at?: string
+          organization_id: string
+          outcome?: string | null
+          payload?: Json
+          subscription_id?: string | null
+          utility_bill_id?: string | null
+        }
+        Update: {
+          action_kind?: string
+          actor_id?: string | null
+          compound_id?: string
+          dunning_step?: number | null
+          id?: string
+          occurred_at?: string
+          organization_id?: string
+          outcome?: string | null
+          payload?: Json
+          subscription_id?: string | null
+          utility_bill_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_overdue_actions_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_overdue_actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_overdue_actions_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "utility_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_overdue_actions_utility_bill_id_fkey"
+            columns: ["utility_bill_id"]
+            isOneToOne: false
+            referencedRelation: "utility_bills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_pricing_rules: {
         Row: {
           base_amount: number
@@ -4960,7 +5542,6 @@ export type Database = {
           suspended_at: string
           unit_id: string | null
           updated_at: string
-          utility_type: Database["public"]["Enums"]["utility_type"]
         }
         Insert: {
           compound_id: string
@@ -4977,7 +5558,6 @@ export type Database = {
           suspended_at?: string
           unit_id?: string | null
           updated_at?: string
-          utility_type: Database["public"]["Enums"]["utility_type"]
         }
         Update: {
           compound_id?: string
@@ -4994,7 +5574,6 @@ export type Database = {
           suspended_at?: string
           unit_id?: string | null
           updated_at?: string
-          utility_type?: Database["public"]["Enums"]["utility_type"]
         }
         Relationships: [
           {
@@ -5099,6 +5678,145 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      sync_job_logs: {
+        Row: {
+          duration_ms: number | null
+          error_message: string | null
+          http_status: number | null
+          id: number
+          occurred_at: string
+          organization_id: string
+          outcome: string
+          request_payload: Json | null
+          response_payload: Json | null
+          step: string
+          sync_job_id: string
+        }
+        Insert: {
+          duration_ms?: number | null
+          error_message?: string | null
+          http_status?: number | null
+          id?: number
+          occurred_at?: string
+          organization_id: string
+          outcome: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          step: string
+          sync_job_id: string
+        }
+        Update: {
+          duration_ms?: number | null
+          error_message?: string | null
+          http_status?: number | null
+          id?: number
+          occurred_at?: string
+          organization_id?: string
+          outcome?: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          step?: string
+          sync_job_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_job_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sync_job_logs_sync_job_id_fkey"
+            columns: ["sync_job_id"]
+            isOneToOne: false
+            referencedRelation: "sync_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sync_jobs: {
+        Row: {
+          attempts: number
+          created_at: string
+          created_by: string | null
+          finished_at: string | null
+          id: string
+          idempotency_key: string | null
+          integration_id: string | null
+          kind: string
+          last_error: string | null
+          max_attempts: number
+          organization_id: string
+          provider_id: string | null
+          request_payload: Json
+          result_payload: Json | null
+          scheduled_for: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          idempotency_key?: string | null
+          integration_id?: string | null
+          kind: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id: string
+          provider_id?: string | null
+          request_payload?: Json
+          result_payload?: Json | null
+          scheduled_for?: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
+          id?: string
+          idempotency_key?: string | null
+          integration_id?: string | null
+          kind?: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id?: string
+          provider_id?: string | null
+          request_payload?: Json
+          result_payload?: Json | null
+          scheduled_for?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_jobs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "provider_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sync_jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sync_jobs_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "utility_providers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       system_alerts: {
         Row: {
@@ -5713,12 +6431,17 @@ export type Database = {
           billing_period_start: string
           compound_id: string
           consumption: number | null
+          consumption_aggregate_id: string | null
           created_at: string
           created_by: string | null
           currency: string
           current_reading: number | null
           due_date: string
+          dynamic_tariff_id: string | null
+          external_invoice_id: string | null
+          generated_by_rpc: string | null
           id: string
+          idempotency_key: string | null
           metadata: Json
           meter_id: string | null
           notes: string | null
@@ -5734,6 +6457,8 @@ export type Database = {
           status: Database["public"]["Enums"]["utility_bill_status"]
           subscription_id: string | null
           subtotal: number
+          suspended_at: string | null
+          tariff_id: string | null
           tax_amount: number
           total_amount: number
           unit_id: string | null
@@ -5747,12 +6472,17 @@ export type Database = {
           billing_period_start: string
           compound_id: string
           consumption?: number | null
+          consumption_aggregate_id?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           current_reading?: number | null
           due_date: string
+          dynamic_tariff_id?: string | null
+          external_invoice_id?: string | null
+          generated_by_rpc?: string | null
           id?: string
+          idempotency_key?: string | null
           metadata?: Json
           meter_id?: string | null
           notes?: string | null
@@ -5768,12 +6498,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["utility_bill_status"]
           subscription_id?: string | null
           subtotal?: number
+          suspended_at?: string | null
+          tariff_id?: string | null
           tax_amount?: number
           total_amount?: number
           unit_id?: string | null
           updated_at?: string
           updated_by?: string | null
-          utility_type: Database["public"]["Enums"]["utility_type"]
+          utility_type?: Database["public"]["Enums"]["utility_type"]
         }
         Update: {
           bill_number?: string
@@ -5781,12 +6513,17 @@ export type Database = {
           billing_period_start?: string
           compound_id?: string
           consumption?: number | null
+          consumption_aggregate_id?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           current_reading?: number | null
           due_date?: string
+          dynamic_tariff_id?: string | null
+          external_invoice_id?: string | null
+          generated_by_rpc?: string | null
           id?: string
+          idempotency_key?: string | null
           metadata?: Json
           meter_id?: string | null
           notes?: string | null
@@ -5802,6 +6539,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["utility_bill_status"]
           subscription_id?: string | null
           subtotal?: number
+          suspended_at?: string | null
+          tariff_id?: string | null
           tax_amount?: number
           total_amount?: number
           unit_id?: string | null
@@ -5815,6 +6554,13 @@ export type Database = {
             columns: ["compound_id"]
             isOneToOne: false
             referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_bills_consumption_aggregate_id_fkey"
+            columns: ["consumption_aggregate_id"]
+            isOneToOne: false
+            referencedRelation: "utility_usage_aggregates"
             referencedColumns: ["id"]
           },
           {
@@ -5860,10 +6606,151 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "utility_bills_tariff_id_fkey"
+            columns: ["tariff_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_tariffs"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "utility_bills_unit_id_fkey"
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_meter_readings: {
+        Row: {
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          external_reading_id: string | null
+          id: string
+          is_validated: boolean
+          meter_id: string
+          organization_id: string
+          raw_payload: Json
+          reading_at: string
+          reading_unit: string
+          reading_value: number
+          source: Database["public"]["Enums"]["reading_source"]
+          utility_type: Database["public"]["Enums"]["utility_type"]
+          validated_at: string | null
+          validated_by: string | null
+          validation_notes: string | null
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          external_reading_id?: string | null
+          id?: string
+          is_validated?: boolean
+          meter_id: string
+          organization_id: string
+          raw_payload?: Json
+          reading_at?: string
+          reading_unit?: string
+          reading_value: number
+          source?: Database["public"]["Enums"]["reading_source"]
+          utility_type: Database["public"]["Enums"]["utility_type"]
+          validated_at?: string | null
+          validated_by?: string | null
+          validation_notes?: string | null
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          external_reading_id?: string | null
+          id?: string
+          is_validated?: boolean
+          meter_id?: string
+          organization_id?: string
+          raw_payload?: Json
+          reading_at?: string
+          reading_unit?: string
+          reading_value?: number
+          source?: Database["public"]["Enums"]["reading_source"]
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+          validated_at?: string | null
+          validated_by?: string | null
+          validation_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_meter_readings_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_meter_readings_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_meter_readings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_payment_allocation: {
+        Row: {
+          amount: number
+          applied_to: string
+          created_at: string
+          id: string
+          organization_id: string
+          payment_id: string
+          utility_bill_id: string
+        }
+        Insert: {
+          amount: number
+          applied_to?: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          payment_id: string
+          utility_bill_id: string
+        }
+        Update: {
+          amount?: number
+          applied_to?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          payment_id?: string
+          utility_bill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_payment_allocation_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_payment_allocation_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_payment_allocation_utility_bill_id_fkey"
+            columns: ["utility_bill_id"]
+            isOneToOne: false
+            referencedRelation: "utility_bills"
             referencedColumns: ["id"]
           },
         ]
@@ -5877,15 +6764,20 @@ export type Database = {
           contact_email: string | null
           contact_name: string | null
           contact_phone: string | null
+          country_code: string | null
           created_at: string
           created_by: string | null
+          currency: string
           id: string
+          is_default_for_kind: boolean
           metadata: Json
           organization_id: string
           provider_code: string | null
           provider_name: string
           provider_status: Database["public"]["Enums"]["provider_status"]
           provider_type: Database["public"]["Enums"]["utility_type"]
+          region: string | null
+          support_url: string | null
           tariff_type: Database["public"]["Enums"]["tariff_type"]
           updated_at: string
           updated_by: string | null
@@ -5898,15 +6790,20 @@ export type Database = {
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
+          country_code?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
+          is_default_for_kind?: boolean
           metadata?: Json
           organization_id: string
           provider_code?: string | null
           provider_name: string
           provider_status?: Database["public"]["Enums"]["provider_status"]
-          provider_type: Database["public"]["Enums"]["utility_type"]
+          provider_type?: Database["public"]["Enums"]["utility_type"]
+          region?: string | null
+          support_url?: string | null
           tariff_type?: Database["public"]["Enums"]["tariff_type"]
           updated_at?: string
           updated_by?: string | null
@@ -5919,15 +6816,20 @@ export type Database = {
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
+          country_code?: string | null
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
+          is_default_for_kind?: boolean
           metadata?: Json
           organization_id?: string
           provider_code?: string | null
           provider_name?: string
           provider_status?: Database["public"]["Enums"]["provider_status"]
           provider_type?: Database["public"]["Enums"]["utility_type"]
+          region?: string | null
+          support_url?: string | null
           tariff_type?: Database["public"]["Enums"]["tariff_type"]
           updated_at?: string
           updated_by?: string | null
@@ -5951,23 +6853,32 @@ export type Database = {
       }
       utility_subscriptions: {
         Row: {
+          auto_cutoff: boolean
           auto_suspend: boolean
           billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          billing_mode: string
           compound_id: string
           created_at: string
           created_by: string | null
           currency: string
+          cutoff_at: string | null
+          dunning_step: number
           end_date: string | null
           id: string
           internet_package_id: string | null
           last_billed_at: string | null
+          last_overdue_check_at: string | null
+          low_balance_threshold: number
           metadata: Json
           monthly_fee: number
           next_billing_date: string | null
           notes: string | null
           organization_id: string
+          prepaid_balance: number
           provider_id: string
           resident_id: string | null
+          restored_at: string | null
+          service_overdue_state: string
           start_date: string
           status: Database["public"]["Enums"]["subscription_status"]
           subscription_type: Database["public"]["Enums"]["utility_type"]
@@ -5976,48 +6887,66 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          auto_cutoff?: boolean
           auto_suspend?: boolean
           billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          billing_mode?: string
           compound_id: string
           created_at?: string
           created_by?: string | null
           currency?: string
+          cutoff_at?: string | null
+          dunning_step?: number
           end_date?: string | null
           id?: string
           internet_package_id?: string | null
           last_billed_at?: string | null
+          last_overdue_check_at?: string | null
+          low_balance_threshold?: number
           metadata?: Json
           monthly_fee?: number
           next_billing_date?: string | null
           notes?: string | null
           organization_id: string
+          prepaid_balance?: number
           provider_id: string
           resident_id?: string | null
+          restored_at?: string | null
+          service_overdue_state?: string
           start_date: string
           status?: Database["public"]["Enums"]["subscription_status"]
-          subscription_type: Database["public"]["Enums"]["utility_type"]
+          subscription_type?: Database["public"]["Enums"]["utility_type"]
           unit_id: string
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
+          auto_cutoff?: boolean
           auto_suspend?: boolean
           billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
+          billing_mode?: string
           compound_id?: string
           created_at?: string
           created_by?: string | null
           currency?: string
+          cutoff_at?: string | null
+          dunning_step?: number
           end_date?: string | null
           id?: string
           internet_package_id?: string | null
           last_billed_at?: string | null
+          last_overdue_check_at?: string | null
+          low_balance_threshold?: number
           metadata?: Json
           monthly_fee?: number
           next_billing_date?: string | null
           notes?: string | null
           organization_id?: string
+          prepaid_balance?: number
           provider_id?: string
           resident_id?: string | null
+          restored_at?: string | null
+          service_overdue_state?: string
           start_date?: string
           status?: Database["public"]["Enums"]["subscription_status"]
           subscription_type?: Database["public"]["Enums"]["utility_type"]
@@ -6066,6 +6995,300 @@ export type Database = {
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_usage_aggregates: {
+        Row: {
+          bill_id: string | null
+          compound_id: string
+          computed_at: string
+          event_count: number
+          id: string
+          is_frozen: boolean
+          meter_id: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          quantity_unit: string
+          subscription_id: string | null
+          total_quantity: number
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Insert: {
+          bill_id?: string | null
+          compound_id: string
+          computed_at?: string
+          event_count?: number
+          id?: string
+          is_frozen?: boolean
+          meter_id?: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          quantity_unit: string
+          subscription_id?: string | null
+          total_quantity: number
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Update: {
+          bill_id?: string | null
+          compound_id?: string
+          computed_at?: string
+          event_count?: number
+          id?: string
+          is_frozen?: boolean
+          meter_id?: string | null
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          quantity_unit?: string
+          subscription_id?: string | null
+          total_quantity?: number
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_usage_aggregates_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "utility_bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_aggregates_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_aggregates_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_aggregates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_aggregates_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "utility_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_usage_events: {
+        Row: {
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          derived_from_reading_id: string | null
+          id: string
+          meter_id: string | null
+          notes: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          quantity: number
+          quantity_unit: string
+          source: string
+          subscription_id: string | null
+          unit_id: string | null
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Insert: {
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          derived_from_reading_id?: string | null
+          id?: string
+          meter_id?: string | null
+          notes?: string | null
+          organization_id: string
+          period_end: string
+          period_start: string
+          quantity: number
+          quantity_unit: string
+          source?: string
+          subscription_id?: string | null
+          unit_id?: string | null
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Update: {
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          derived_from_reading_id?: string | null
+          id?: string
+          meter_id?: string | null
+          notes?: string | null
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          quantity?: number
+          quantity_unit?: string
+          source?: string
+          subscription_id?: string | null
+          unit_id?: string | null
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_usage_events_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_events_derived_from_reading_id_fkey"
+            columns: ["derived_from_reading_id"]
+            isOneToOne: false
+            referencedRelation: "utility_meter_readings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_events_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "utility_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_usage_events_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utility_wallets: {
+        Row: {
+          auto_cutoff_at_zero: boolean
+          balance: number
+          compound_id: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          grace_period_until: string | null
+          id: string
+          last_deduction_at: string | null
+          last_low_balance_alert_at: string | null
+          last_topup_amount: number | null
+          last_topup_at: string | null
+          low_balance_threshold: number
+          metadata: Json
+          meter_id: string | null
+          organization_id: string
+          resident_id: string
+          service_state: string
+          status: string
+          total_consumed: number
+          total_topped_up: number
+          updated_at: string
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Insert: {
+          auto_cutoff_at_zero?: boolean
+          balance?: number
+          compound_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          grace_period_until?: string | null
+          id?: string
+          last_deduction_at?: string | null
+          last_low_balance_alert_at?: string | null
+          last_topup_amount?: number | null
+          last_topup_at?: string | null
+          low_balance_threshold?: number
+          metadata?: Json
+          meter_id?: string | null
+          organization_id: string
+          resident_id: string
+          service_state?: string
+          status?: string
+          total_consumed?: number
+          total_topped_up?: number
+          updated_at?: string
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }
+        Update: {
+          auto_cutoff_at_zero?: boolean
+          balance?: number
+          compound_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          grace_period_until?: string | null
+          id?: string
+          last_deduction_at?: string | null
+          last_low_balance_alert_at?: string | null
+          last_topup_amount?: number | null
+          last_topup_at?: string | null
+          low_balance_threshold?: number
+          metadata?: Json
+          meter_id?: string | null
+          organization_id?: string
+          resident_id?: string
+          service_state?: string
+          status?: string
+          total_consumed?: number
+          total_topped_up?: number
+          updated_at?: string
+          utility_type?: Database["public"]["Enums"]["utility_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "utility_wallets_compound_id_fkey"
+            columns: ["compound_id"]
+            isOneToOne: false
+            referencedRelation: "compounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_wallets_meter_id_fkey"
+            columns: ["meter_id"]
+            isOneToOne: false
+            referencedRelation: "electricity_meters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_wallets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "utility_wallets_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "residents"
             referencedColumns: ["id"]
           },
         ]
@@ -6259,15 +7482,334 @@ export type Database = {
           },
         ]
       }
+      wallet_alerts: {
+        Row: {
+          alert_kind: string
+          balance_at_alert: number | null
+          id: string
+          notified_at: string | null
+          occurred_at: string
+          organization_id: string
+          payload: Json
+          threshold: number | null
+          wallet_id: string
+        }
+        Insert: {
+          alert_kind: string
+          balance_at_alert?: number | null
+          id?: string
+          notified_at?: string | null
+          occurred_at?: string
+          organization_id: string
+          payload?: Json
+          threshold?: number | null
+          wallet_id: string
+        }
+        Update: {
+          alert_kind?: string
+          balance_at_alert?: number | null
+          id?: string
+          notified_at?: string | null
+          occurred_at?: string
+          organization_id?: string
+          payload?: Json
+          threshold?: number | null
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_alerts_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "utility_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_deductions: {
+        Row: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at: string
+          created_by: string | null
+          id: string
+          meter_reading_id: string | null
+          notes: string | null
+          organization_id: string
+          reason: string
+          reversal_reason: string | null
+          reversed_at: string | null
+          unit_price: number | null
+          units_consumed: number | null
+          usage_event_id: string | null
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          meter_reading_id?: string | null
+          notes?: string | null
+          organization_id: string
+          reason: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          unit_price?: number | null
+          units_consumed?: number | null
+          usage_event_id?: string | null
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          balance_before?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          meter_reading_id?: string | null
+          notes?: string | null
+          organization_id?: string
+          reason?: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          unit_price?: number | null
+          units_consumed?: number | null
+          usage_event_id?: string | null
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_deductions_meter_reading_id_fkey"
+            columns: ["meter_reading_id"]
+            isOneToOne: false
+            referencedRelation: "utility_meter_readings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_deductions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_deductions_usage_event_id_fkey"
+            columns: ["usage_event_id"]
+            isOneToOne: false
+            referencedRelation: "utility_usage_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_deductions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "utility_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_topups: {
+        Row: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          external_reference: string | null
+          external_token: string | null
+          id: string
+          idempotency_key: string | null
+          notes: string | null
+          organization_id: string
+          payment_id: string | null
+          refund_reason: string | null
+          refunded_at: string | null
+          topup_method: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          external_reference?: string | null
+          external_token?: string | null
+          id?: string
+          idempotency_key?: string | null
+          notes?: string | null
+          organization_id: string
+          payment_id?: string | null
+          refund_reason?: string | null
+          refunded_at?: string | null
+          topup_method: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          balance_before?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          external_reference?: string | null
+          external_token?: string | null
+          id?: string
+          idempotency_key?: string | null
+          notes?: string | null
+          organization_id?: string
+          payment_id?: string | null
+          refund_reason?: string | null
+          refunded_at?: string | null
+          topup_method?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_topups_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_topups_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_topups_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "utility_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      admin_action_log: {
+        Row: {
+          actor_email: string | null
+          actor_id: string | null
+          actor_role: string | null
+          business_action: string | null
+          client_ip: string | null
+          compound_id: string | null
+          created_at: string | null
+          diff: Json | null
+          id: number | null
+          organization_id: string | null
+          request_id: string | null
+          target_id: string | null
+          target_table: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          business_action?: string | null
+          client_ip?: string | null
+          compound_id?: string | null
+          created_at?: string | null
+          diff?: Json | null
+          id?: number | null
+          organization_id?: string | null
+          request_id?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          actor_email?: string | null
+          actor_id?: string | null
+          actor_role?: string | null
+          business_action?: string | null
+          client_ip?: string | null
+          compound_id?: string | null
+          created_at?: string | null
+          diff?: Json | null
+          id?: number | null
+          organization_id?: string | null
+          request_id?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      _actor_context: {
+        Args: never
+        Returns: {
+          email: string
+          organization_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
+      _idempotency_begin: {
+        Args: {
+          p_key: string
+          p_org: string
+          p_request_hash: string
+          p_scope: string
+        }
+        Returns: Json
+      }
+      _idempotency_complete: {
+        Args: { p_key: string; p_response: Json }
+        Returns: undefined
+      }
+      _idempotency_fail: {
+        Args: { p_error: string; p_key: string }
+        Returns: undefined
+      }
       activate_contract: { Args: { p_contract_id: string }; Returns: undefined }
+      advance_billing_date: {
+        Args: { p_cycle: string; p_date: string }
+        Returns: string
+      }
       apply_penalties_all: { Args: never; Returns: number }
       apply_penalties_for_contract: {
         Args: { p_contract_id: string }
+        Returns: number
+      }
+      apply_utility_bill_penalties_all: {
+        Args: { p_grace_days?: number; p_rate?: number }
+        Returns: Json
+      }
+      apply_utility_bill_penalty: {
+        Args: { p_bill_id: string; p_grace_days?: number; p_rate?: number }
+        Returns: number
+      }
+      audit_admin_action: {
+        Args: {
+          p_business_action: string
+          p_compound_id?: string
+          p_organization_id: string
+          p_payload?: Json
+          p_reason?: string
+          p_target_id: string
+          p_target_table: string
+        }
         Returns: number
       }
       auto_suspend_overdue_utilities: {
@@ -6279,9 +7821,22 @@ export type Database = {
         Returns: string
       }
       bootstrap_super_admin: { Args: { p_email: string }; Returns: string }
+      calculate_usage_for_period: {
+        Args: {
+          p_meter_id: string
+          p_period_end?: string
+          p_period_start?: string
+          p_subscription_id?: string
+        }
+        Returns: string
+      }
       cancel_marketplace_order: {
         Args: { p_order_id: string; p_reason?: string }
         Returns: undefined
+      }
+      check_balance_and_cutoff: {
+        Args: { p_wallet_id: string }
+        Returns: boolean
       }
       complete_device_command: {
         Args: {
@@ -6316,6 +7871,31 @@ export type Database = {
         Returns: string
       }
       contract_currency: { Args: { p_contract_id: string }; Returns: string }
+      create_meter_reading: {
+        Args: {
+          p_external_id?: string
+          p_idempotency_key?: string
+          p_meter_id: string
+          p_raw_payload?: Json
+          p_reading_at?: string
+          p_reading_value: number
+          p_source?: Database["public"]["Enums"]["reading_source"]
+        }
+        Returns: string
+      }
+      deduct_for_consumption: {
+        Args: {
+          p_amount: number
+          p_meter_reading_id?: string
+          p_notes?: string
+          p_reason?: string
+          p_unit_price?: number
+          p_units_consumed?: number
+          p_usage_event_id?: string
+          p_wallet_id: string
+        }
+        Returns: string
+      }
       dismiss_reminder: { Args: { p_reminder_id: string }; Returns: undefined }
       enqueue_job: {
         Args: {
@@ -6350,6 +7930,11 @@ export type Database = {
         Returns: number
       }
       execute_due_automation_rules: { Args: never; Returns: number }
+      gen_invite_code: { Args: never; Returns: string }
+      generate_due_utility_bills: {
+        Args: { p_dry_run?: boolean }
+        Returns: Json
+      }
       generate_electricity_bill_for_reading: {
         Args: { p_reading_id: string }
         Returns: string
@@ -6374,6 +7959,46 @@ export type Database = {
         Args: { p_billing_date?: string }
         Returns: number
       }
+      generate_sts_token: {
+        Args: {
+          p_amount: number
+          p_meter_id: string
+          p_topup_id: string
+          p_units: number
+          p_wallet_id: string
+        }
+        Returns: string
+      }
+      generate_utility_bill: {
+        Args: {
+          p_due_date?: string
+          p_idempotency_key?: string
+          p_period_end: string
+          p_period_start: string
+          p_subscription_id: string
+          p_tariff_id?: string
+        }
+        Returns: string
+      }
+      get_resident_dashboard_summary: {
+        Args: { p_resident_id?: string }
+        Returns: Json
+      }
+      get_unit_utility_summary: {
+        Args: { p_unit_id: string }
+        Returns: {
+          current_reading: number
+          last_bill_at: string
+          last_bill_id: string
+          last_reading: number
+          open_amount: number
+          open_bill_count: number
+          service_overdue_state: string
+          unit_label: string
+          utility_type: Database["public"]["Enums"]["utility_type"]
+        }[]
+      }
+      get_wallet_summary: { Args: { p_resident_id?: string }; Returns: Json }
       has_feature: {
         Args: { p_feature: string; p_org_id: string }
         Returns: boolean
@@ -6417,6 +8042,19 @@ export type Database = {
           p_status_code?: number
         }
         Returns: number
+      }
+      mark_bill_as_paid: {
+        Args: {
+          p_amount: number
+          p_bill_id: string
+          p_gateway_payment_intent?: string
+          p_gateway_provider?: string
+          p_idempotency_key?: string
+          p_payment_method: Database["public"]["Enums"]["payment_method"]
+          p_payment_method_code?: string
+          p_payment_reference?: string
+        }
+        Returns: string
       }
       mark_order_completed: { Args: { p_order_id: string }; Returns: undefined }
       place_order: {
@@ -6506,10 +8144,24 @@ export type Database = {
         }
         Returns: undefined
       }
+      record_utility_bill_payment: {
+        Args: {
+          p_amount: number
+          p_bill_id: string
+          p_method?: string
+          p_notes?: string
+          p_reference?: string
+        }
+        Returns: string
+      }
       refresh_all_daily_kpi: { Args: { p_kpi_date?: string }; Returns: number }
       refresh_daily_kpi: {
         Args: { p_kpi_date?: string; p_org_id: string }
         Returns: undefined
+      }
+      refund_wallet_topup: {
+        Args: { p_reason: string; p_topup_id: string }
+        Returns: boolean
       }
       release_suspension: {
         Args: { p_subscription_id: string }
@@ -6529,6 +8181,11 @@ export type Database = {
         Args: { p_host: string }
         Returns: string
       }
+      restore_after_topup: { Args: { p_wallet_id: string }; Returns: boolean }
+      restore_service_after_payment: {
+        Args: { p_reason?: string; p_subscription_id: string }
+        Returns: boolean
+      }
       reverse_payment: {
         Args: { p_payment_id: string; p_reason: string }
         Returns: undefined
@@ -6536,6 +8193,10 @@ export type Database = {
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       storage_org_from_path: { Args: { p_path: string }; Returns: string }
+      suspend_service_for_overdue_bill: {
+        Args: { p_bill_id: string; p_reason?: string }
+        Returns: string
+      }
       suspend_subscription: {
         Args: {
           p_notes?: string
@@ -6543,6 +8204,39 @@ export type Database = {
           p_subscription_id: string
         }
         Returns: string
+      }
+      sync_meter_reading_from_provider: {
+        Args: {
+          p_external_id: string
+          p_idempotency_key?: string
+          p_integration_id?: string
+          p_meter_id: string
+          p_raw_payload?: Json
+          p_reading_at: string
+          p_reading_value: number
+        }
+        Returns: string
+      }
+      topup_wallet: {
+        Args: {
+          p_amount: number
+          p_external_ref?: string
+          p_idempotency_key?: string
+          p_method: string
+          p_notes?: string
+          p_payment_id?: string
+          p_wallet_id: string
+        }
+        Returns: string
+      }
+      transfer_wallet_balance: {
+        Args: {
+          p_amount: number
+          p_from_wallet_id: string
+          p_reason?: string
+          p_to_wallet_id: string
+        }
+        Returns: boolean
       }
       user_compound_ids: { Args: { p_user?: string }; Returns: string[] }
       user_has_management_role: {

@@ -215,13 +215,14 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
   for (const b of BUILDINGS) {
     const { data, error } = await admin
       .from("buildings")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- buildings schema mismatch
       .insert({
         organization_id: orgId,
         compound_id: compoundId,
         name: b.name,
         code: b.code,
         floors: b.floors,
-      })
+      } as any)
       .select("id")
       .single();
     if (error || !data) throw new Error(`building ${b.code} insert: ${error?.message}`);
@@ -231,12 +232,15 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
   // Step 4 — units
   const unitByNumber: Record<string, { id: string; building: string }> = {};
   for (const u of UNITS) {
+    const buildingId = buildingByCode[u.building];
+    if (!buildingId) throw new Error(`unit ${u.number}: building ${u.building} not found`);
     const { data, error } = await admin
       .from("units")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- units schema mismatch on optional fields
       .insert({
         organization_id: orgId,
         compound_id: compoundId,
-        building_id: buildingByCode[u.building],
+        building_id: buildingId,
         unit_number: u.number,
         unit_type: u.type,
         status: "vacant",
@@ -244,7 +248,7 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
         area_sqm: u.area,
         bedrooms: u.bedrooms,
         bathrooms: u.bathrooms,
-      })
+      } as any)
       .select("id")
       .single();
     if (error || !data) throw new Error(`unit ${u.number} insert: ${error?.message}`);
@@ -313,8 +317,10 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
 
   for (let i = 0; i < residentEmails.length; i++) {
     const email = residentEmails[i];
+    if (!email) continue;
     const res = residentByEmail[email];
     const userId = userIdByEmail[email];
+    if (!res || !userId) continue;
     const isOwner = email.startsWith("owner");
 
     // ── Installment contract (owners get sale, tenants get rental) ──

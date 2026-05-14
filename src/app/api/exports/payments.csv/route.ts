@@ -44,7 +44,11 @@ export async function GET(request: NextRequest) {
         .select("*")
         .order("payment_date", { ascending: false })
         .range(offset, offset + limit - 1);
-      if (status && status !== "all") q = q.eq("payment_status", status);
+      if (status && status !== "all") {
+        // payment_status is an enum — cast to satisfy strict typing.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        q = q.eq("payment_status", status as any);
+      }
       if (contract) q = q.eq("contract_id", contract);
       const { data, error } = await q;
       if (error) throw new Error(error.message);

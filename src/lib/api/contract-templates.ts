@@ -24,7 +24,8 @@ export async function listContractTemplates(opts: { kind?: string; locale?: stri
   await requireUser();
   const supabase = await createClient();
   let q = supabase.from("contract_templates").select("*").eq("is_active", true).order("is_default", { ascending: false }).order("name");
-  if (opts.kind) q = q.eq("kind", opts.kind);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.kind) q = q.eq("kind", opts.kind as any);
   if (opts.locale) q = q.eq("locale", opts.locale);
   const { data, error } = await q;
   if (error) {
@@ -79,6 +80,7 @@ function formatValue(v: unknown): string {
 export async function renderTemplate(html: string, ctx: RenderContext): Promise<string> {
   return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_match, path: string) => {
     const [root, ...rest] = path.split(".");
+    if (!root) return "—";
     const obj = (ctx as unknown as Record<string, Record<string, unknown>>)[root];
     if (!obj) return "—";
     const v = rest.length === 0 ? obj : getPath(obj, rest.join("."));

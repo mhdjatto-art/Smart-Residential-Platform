@@ -55,9 +55,11 @@ export async function createAutomationRule(input: AutomationRuleInput): Promise<
       name: parsed.name,
       description: parsed.description ?? null,
       trigger_kind: parsed.trigger_kind,
-      trigger_config: parsed.trigger_config,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      trigger_config: parsed.trigger_config as any,
       action: parsed.action,
-      action_config: parsed.action_config,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      action_config: parsed.action_config as any,
       status: parsed.status,
       created_by: user.id,
       updated_by: user.id,

@@ -78,7 +78,8 @@ export async function listAuditLog(opts: ListOpts = {}): Promise<{ data: AuditRo
   if (opts.table)   q = q.eq("table_name", opts.table);
   if (opts.rowId)   q = q.eq("row_id", opts.rowId);
   if (opts.actorId) q = q.eq("actor_id", opts.actorId);
-  if (opts.action)  q = q.eq("action", opts.action);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.action)  q = q.eq("action", opts.action as any);
 
   const { data, count, error } = await q;
   if (error) {

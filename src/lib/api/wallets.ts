@@ -113,9 +113,12 @@ export async function listWallets(opts: {
   let q = supabase.from("utility_wallets").select("*", { count: "exact" })
     .order("balance", { ascending: true })
     .range(from, to);
-  if (opts.utilityType)  q = q.eq("utility_type", opts.utilityType);
-  if (opts.status)       q = q.eq("status", opts.status);
-  if (opts.serviceState) q = q.eq("service_state", opts.serviceState);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.utilityType)  q = q.eq("utility_type", opts.utilityType as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status)       q = q.eq("status", opts.status as any);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.serviceState) q = q.eq("service_state", opts.serviceState as any);
   if (opts.lowBalanceOnly) {
     // Filter wallets where balance <= threshold (best-effort via large filter expression)
     q = q.lt("balance", 100_000_000);  // placeholder — the real filter is in the where clause below

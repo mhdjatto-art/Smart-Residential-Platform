@@ -97,19 +97,21 @@ export async function getReceipt(billId: string): Promise<ReceiptData | null> {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- PostgrestBuilder vs Promise typing mismatch
+  type AnyPromise = Promise<{ data: any; error: { message: string } | null }>;
   const [unitRow, providerRow, residentRow, compoundRow] = await Promise.all([
     bill.unit_id     ? safeOne<{ unit_number: string | null; building_id: string | null }>(
-      supabase.from("units").select("unit_number, building_id").eq("id", bill.unit_id).maybeSingle()) : null,
+      supabase.from("units").select("unit_number, building_id").eq("id", bill.unit_id).maybeSingle() as unknown as AnyPromise) : null,
     bill.provider_id ? safeOne<{ provider_name: string | null; adapter_kind: string | null }>(
-      supabase.from("utility_providers").select("provider_name, adapter_kind").eq("id", bill.provider_id).maybeSingle()) : null,
+      supabase.from("utility_providers").select("provider_name, adapter_kind").eq("id", bill.provider_id).maybeSingle() as unknown as AnyPromise) : null,
     bill.resident_id ? safeOne<{ first_name: string | null; last_name: string | null; email: string | null; phone: string | null }>(
-      supabase.from("residents").select("first_name, last_name, email, phone").eq("id", bill.resident_id).maybeSingle()) : null,
+      supabase.from("residents").select("first_name, last_name, email, phone").eq("id", bill.resident_id).maybeSingle() as unknown as AnyPromise) : null,
     bill.compound_id ? safeOne<{ name: string | null; city: string | null }>(
-      supabase.from("compounds").select("name, city").eq("id", bill.compound_id).maybeSingle()) : null,
+      supabase.from("compounds").select("name, city").eq("id", bill.compound_id).maybeSingle() as unknown as AnyPromise) : null,
   ]);
 
   const buildingRow = unitRow?.building_id
-    ? await safeOne<{ name: string | null }>(supabase.from("buildings").select("name").eq("id", unitRow.building_id).maybeSingle())
+    ? await safeOne<{ name: string | null }>(supabase.from("buildings").select("name").eq("id", unitRow.building_id).maybeSingle() as unknown as AnyPromise)
     : null;
 
   // Rebuild a Raw row that the rest of the function expects
@@ -232,7 +234,8 @@ export async function listMyPaidBills(): Promise<Array<{
 
     // Avoid the tricky .or() syntax — fetch by resident_id and unit_id separately
     // and merge in memory. RLS still applies.
-    const queries: Array<Promise<{ data: unknown; error: { message: string } | null }>> = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- PostgrestBuilder vs Promise typing mismatch
+    const queries: Array<Promise<{ data: any; error: { message: string } | null }>> = [];
 
     if (residentIds.length > 0) {
       queries.push(
@@ -242,7 +245,8 @@ export async function listMyPaidBills(): Promise<Array<{
           .eq("status", "paid")
           .in("resident_id", residentIds)
           .order("paid_at", { ascending: false })
-          .limit(50),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- PostgrestBuilder vs Promise typing mismatch
+          .limit(50) as unknown as Promise<{ data: any; error: { message: string } | null }>,
       );
     }
     if (unitIds.length > 0) {
@@ -254,7 +258,8 @@ export async function listMyPaidBills(): Promise<Array<{
           .is("resident_id", null)
           .in("unit_id", unitIds)
           .order("paid_at", { ascending: false })
-          .limit(50),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- PostgrestBuilder vs Promise typing mismatch
+          .limit(50) as unknown as Promise<{ data: any; error: { message: string } | null }>,
       );
     }
 

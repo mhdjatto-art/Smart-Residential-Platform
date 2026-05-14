@@ -37,7 +37,8 @@ export async function listBuildingsPaged(opts: ListOpts = {}): Promise<{ data: B
 
   let q = supabase.from("buildings").select("*", { count: "exact" }).order("name").range(from, to);
   if (opts.compoundId) q = q.eq("compound_id", opts.compoundId);
-  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (opts.status && opts.status !== "all") q = q.eq("status", opts.status as any);
   if (opts.search?.trim()) {
     const term = `%${opts.search.trim()}%`;
     q = q.or(`name.ilike.${term},code.ilike.${term}`);
