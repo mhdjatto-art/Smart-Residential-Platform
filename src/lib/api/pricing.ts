@@ -63,7 +63,8 @@ export async function createPricingRule(input: PricingRuleInput): Promise<Pricin
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
       tiers: parsed.tiers as any,
       formula: parsed.formula ?? null,
-      schedule: parsed.schedule,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Record<string,unknown> not assignable to Json
+      schedule: parsed.schedule as any,
       is_active: parsed.is_active,
       effective_from: parsed.effective_from,
       effective_to: parsed.effective_to ?? null,

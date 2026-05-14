@@ -515,9 +515,8 @@ export async function createGasOrder(input: GasOrderInput): Promise<GasOrderRow>
   const supabase = await createClient();
   const { data: c } = await supabase.from("compounds").select("organization_id").eq("id", parsed.compound_id).single();
   if (!c) throw new Error("Compound not found");
-  const { data, error } = await supabase
-    .from("gas_orders")
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gas_orders schema mismatch on optional fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- gas_orders requires order_number (set by trigger); insert payload casts to any so TS doesn't reject.
+  const { data, error } = await (supabase.from("gas_orders") as any)
     .insert({
       organization_id: (c as { organization_id: string }).organization_id,
       compound_id: parsed.compound_id,
