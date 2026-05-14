@@ -13,7 +13,12 @@ import { formatCurrency } from "@/lib/utils";
 
 const QUICK_AMOUNTS = [10000, 25000, 50000, 100000, 250000, 500000];
 
-type Method = "stripe" | "fastpay" | "zaincash" | "asiapay" | "nass" | "qicard" | "cash";
+type OnlineMethod = "stripe" | "nass" | "qicard" | "fastpay" | "zaincash" | "asiapay";
+type Method = OnlineMethod | "cash";
+
+const ONLINE_METHODS: ReadonlySet<OnlineMethod> = new Set<OnlineMethod>([
+  "stripe", "nass", "qicard", "fastpay", "zaincash", "asiapay",
+]);
 
 interface TopupFormProps {
   walletId: string;
@@ -47,25 +52,58 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
           return;
         }
 
-        // For online methods we'd normally redirect to the gateway first
-        // and the webhook calls topup_wallet. For now we call the RPC
-        // directly with the chosen method as a placeholder — each gateway's
-        // real checkout + webhook will be wired once credentials land.
-        const topupId = await topupWalletAction({
-          walletId,
-          amount: a,
-          method,
-          notes: `Resident-initiated top-up via ${method}`,
-        });
-        toast.success("Top-up recorded", {
-          description: `Topup #${topupId.slice(0,8)} · +${formatCurrency(a, { currency })}`,
-        });
-        router.push("/m/wallet");
-        router.refresh();
+        // Online gateways — call the unified checkout endpoint, then redirect
+        // the browser to the gateway's hosted checkout. On settlement, the
+        // gateway's webhook credits the wallet via topup_wallet RPC.
+        if (ONLINE_METHODS.has(method)) {
+          const res = await fetch(`/api/wallet/topup/${method}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ walletId, amount: a, currency }),
+          });
+          const json = (await res.json()) as { checkoutUrl?: string; error?: string };
+
+          if (!res.ok || !json.checkoutUrl) {
+            // Fallback to the existing direct-pay path when the gateway is
+            // not configured yet (returns 503). This lets you keep recording
+            // top-ups in dev before credentials arrive.
+            if (res.status === 503) {
+              toast.info(`بوابة ${method.toUpperCase()} غير مفعّلة بعد`, {
+                description: "سيتم تسجيل الدفعة مباشرة في النظام (وضع التطوير).",
+              });
+              await directRecord(a, method);
+              return;
+            }
+            throw new Error(json.error ?? `HTTP ${res.status}`);
+          }
+
+          // Send the user to the gateway.
+          window.location.href = json.checkoutUrl;
+          return;
+        }
+
+        // Unreachable — `method` is exhaustively handled above.
+        toast.error("Unsupported method");
       } catch (e) {
         toast.error("Top-up failed", { description: e instanceof Error ? e.message : "Unknown" });
       }
     });
+  }
+
+  /** Dev fallback: when the gateway is not configured, record the top-up
+   *  directly through the server action (so the wallet still reflects state). */
+  async function directRecord(a: number, m: OnlineMethod) {
+    const topupId = await topupWalletAction({
+      walletId,
+      amount: a,
+      method: m,
+      notes: `Dev top-up via ${m} (gateway not configured)`,
+    });
+    toast.success("Top-up recorded", {
+      description: `Topup #${topupId.slice(0,8)} · +${formatCurrency(a, { currency })}`,
+    });
+    router.push("/m/wallet");
+    router.refresh();
   }
 
   // Per-method explanatory copy shown below the picker.
