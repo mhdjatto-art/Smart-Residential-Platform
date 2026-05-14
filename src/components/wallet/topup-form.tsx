@@ -47,11 +47,10 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
           return;
         }
 
-        // For online methods, we'd normally redirect to the gateway first
-        // and the webhook calls topup_wallet. For now we call directly with
-        // the method as a placeholder — the resident still needs to complete
-        // payment through the gateway checkout. Wire each provider's flow in
-        // a separate step once credentials are available.
+        // For online methods we'd normally redirect to the gateway first
+        // and the webhook calls topup_wallet. For now we call the RPC
+        // directly with the chosen method as a placeholder — each gateway's
+        // real checkout + webhook will be wired once credentials land.
         const topupId = await topupWalletAction({
           walletId,
           amount: a,
@@ -69,7 +68,7 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
     });
   }
 
-  // Helper: dynamic notice for the picked gateway
+  // Per-method explanatory copy shown below the picker.
   const methodNotice: Record<Method, string | null> = {
     stripe:   "سيتم تحويلك إلى بوابة Stripe لإتمام الدفع.",
     fastpay:  "سيتم تحويلك إلى تطبيق FastPay لإتمام الدفع.",
@@ -131,8 +130,8 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
         <Label className="text-xs uppercase tracking-wider text-muted-foreground">طريقة الدفع</Label>
         <div className="mt-2 grid grid-cols-2 gap-2">
           <MethodTile name="stripe"   icon={CreditCard} label="بطاقة ائتمان" sub="Stripe"      selected={method==="stripe"}   onClick={() => setMethod("stripe")} />
-          <MethodTile name="nass"     icon={Wallet}     label="NASS Pay"     sub="ناس باي"      selected={method==="nass"}     onClick={() => setMethod("nass")} accentClass="text-orange-500" />
-          <MethodTile name="qicard"   icon={CreditCard} label="Qi Card"      sub="كي كارد"      selected={method==="qicard"}   onClick={() => setMethod("qicard")} accentClass="text-blue-600" />
+          <MethodTile name="nass"     icon={Wallet}     label="NASS Pay"     sub="ناس باي"      selected={method==="nass"}     onClick={() => setMethod("nass")}    accentClass="text-orange-500" />
+          <MethodTile name="qicard"   icon={CreditCard} label="Qi Card"      sub="كي كارد"      selected={method==="qicard"}   onClick={() => setMethod("qicard")}  accentClass="text-blue-600" />
           <MethodTile name="fastpay"  icon={Smartphone} label="FastPay"      sub="محفظة محلية"  selected={method==="fastpay"}  onClick={() => setMethod("fastpay")} />
           <MethodTile name="zaincash" icon={Smartphone} label="ZainCash"     sub="محفظة محلية"  selected={method==="zaincash"} onClick={() => setMethod("zaincash")} />
           <MethodTile name="asiapay"  icon={Smartphone} label="AsiaHawala"   sub="محفظة محلية"  selected={method==="asiapay"}  onClick={() => setMethod("asiapay")} />

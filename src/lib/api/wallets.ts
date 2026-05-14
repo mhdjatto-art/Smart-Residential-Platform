@@ -168,7 +168,8 @@ export async function topupWalletAction(input: {
   const supabase = await createClient();
 
   // Cash / bank_transfer / admin_credit require management role.
-  // Stripe / fastpay / zaincash / asiapay can be initiated by the resident.
+  // Online methods (Stripe / FastPay / ZainCash / AsiaPay / NASS Pay / Qi Card)
+  // can be initiated by the resident.
   const onlineMethods = new Set(["stripe","fastpay","zaincash","asiapay","nass","qicard"]);
   if (!onlineMethods.has(input.method)) {
     if (!user.isSuperAdmin &&
