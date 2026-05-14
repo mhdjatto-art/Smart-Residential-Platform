@@ -109,6 +109,7 @@ export const navigation: NavSection[] = [
       { title: "Utility bills",   href: "/utility-bills",     icon: Receipt,     requiredCapability: "utility:read" },
       { title: "Pricing rules",   href: "/pricing-rules",     icon: Calculator,  requiredCapability: "pricing:read" },
       { title: "Integrations",    href: "/integrations",      icon: Cable,       requiredCapability: "integrations:read" },
+      { title: "Hardware testing", href: "/hardware-test",    icon: Cable,       requiredCapability: "integrations:read" },
     ],
   },
   {
