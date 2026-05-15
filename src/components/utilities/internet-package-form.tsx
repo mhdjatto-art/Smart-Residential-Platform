@@ -11,12 +11,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { internetPackageSchema } from "@/lib/validations/utilities";
 import { createInternetPackage } from "@/lib/api/utilities";
+import { useT } from "@/lib/i18n/client";
 
 interface ProviderOption { id: string; name: string; }
 interface InternetPackageFormProps { providers: ProviderOption[]; }
 
 export function InternetPackageForm({ providers }: InternetPackageFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -50,11 +52,11 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
     startTransition(async () => {
       try {
         await createInternetPackage(parsed.data);
-        toast.success("Package created");
+        toast.success(t("forms.toast_package_created"));
         router.push("/internet-packages");
         router.refresh();
       } catch (err) {
-        toast.error("Save failed", { description: err instanceof Error ? err.message : "" });
+        toast.error(t("forms.toast_save_failed"), { description: err instanceof Error ? err.message : "" });
       }
     });
   }
@@ -64,7 +66,7 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Provider</Label>
+            <Label>{t("forms.provider")}</Label>
             <Select name="provider_id" defaultValue={providers[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -74,46 +76,46 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Package name</Label>
-            <Input name="package_name" required placeholder="e.g. Fiber 100/20" />
+            <Label>{t("forms.package_name")}</Label>
+            <Input name="package_name" required placeholder={t("forms.package_name_placeholder")} />
             {errors.package_name && <p className="text-xs text-destructive">{errors.package_name}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Tier</Label>
+            <Label>{t("forms.tier")}</Label>
             <Select name="package_tier" defaultValue="standard">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="basic">Basic</SelectItem>
-                <SelectItem value="standard">Standard</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-                <SelectItem value="enterprise">Enterprise</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
+                <SelectItem value="basic">{t("forms.tier_basic")}</SelectItem>
+                <SelectItem value="standard">{t("forms.tier_standard")}</SelectItem>
+                <SelectItem value="premium">{t("forms.tier_premium")}</SelectItem>
+                <SelectItem value="enterprise">{t("forms.tier_enterprise")}</SelectItem>
+                <SelectItem value="custom">{t("forms.tier_custom")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Download speed (Mbps)</Label>
+            <Label>{t("forms.download_speed")}</Label>
             <Input name="speed_mbps_down" type="number" required />
             {errors.speed_mbps_down && <p className="text-xs text-destructive">{errors.speed_mbps_down}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Upload speed (Mbps)</Label>
-            <Input name="speed_mbps_up" type="number" placeholder="optional" />
+            <Label>{t("forms.upload_speed")}</Label>
+            <Input name="speed_mbps_up" type="number" placeholder={t("forms.optional")} />
           </div>
 
           <div className="space-y-2">
-            <Label>Data cap (GB)</Label>
-            <Input name="data_cap_gb" type="number" placeholder="0 = unlimited" />
+            <Label>{t("forms.data_cap")}</Label>
+            <Input name="data_cap_gb" type="number" placeholder={t("forms.data_cap_placeholder")} />
           </div>
           <div className="space-y-2">
-            <Label>Monthly price</Label>
+            <Label>{t("forms.monthly_price")}</Label>
             <Input name="monthly_price" type="number" step="0.01" required />
             {errors.monthly_price && <p className="text-xs text-destructive">{errors.monthly_price}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label>Currency</Label>
+            <Label>{t("forms.currency")}</Label>
             <Select name="currency" defaultValue="USD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -127,28 +129,28 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Suspension policy</Label>
+            <Label>{t("forms.suspension_policy")}</Label>
             <Select name="suspension_policy" defaultValue="after_grace">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="immediate">Immediate on non-payment</SelectItem>
-                <SelectItem value="after_grace">After grace period</SelectItem>
-                <SelectItem value="manual">Manual only</SelectItem>
-                <SelectItem value="never">Never auto-suspend</SelectItem>
+                <SelectItem value="immediate">{t("forms.suspension_immediate")}</SelectItem>
+                <SelectItem value="after_grace">{t("forms.suspension_after_grace")}</SelectItem>
+                <SelectItem value="manual">{t("forms.suspension_manual")}</SelectItem>
+                <SelectItem value="never">{t("forms.suspension_never")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Description</Label>
-            <Textarea name="description" rows={3} placeholder="Optional notes about the package." />
+            <Label>{t("forms.description")}</Label>
+            <Textarea name="description" rows={3} placeholder={t("forms.description_optional")} />
           </div>
         </CardContent>
       </Card>
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Create package"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.create_package")}</Button>
       </div>
     </form>
   );

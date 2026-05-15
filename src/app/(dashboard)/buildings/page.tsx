@@ -35,9 +35,9 @@ export default async function BuildingsPage({
   return (
     <div>
       <PageHeader
-        title="Buildings"
+        title={t("headers.buildings_title")}
         titleKey="headers.buildings_title"
-        description="Buildings across your compounds."
+        description={t("headers.buildings_desc")}
         descKey="headers.buildings_desc"
         actions={
           <Button asChild>

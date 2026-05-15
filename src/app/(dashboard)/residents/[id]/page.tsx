@@ -14,14 +14,9 @@ import { listDocuments, getDocumentSignedUrl } from "@/lib/api/documents";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, initials } from "@/lib/utils";
 import { DocumentSection } from "@/components/documents/document-section";
+import { getT, type T } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
-
-const TABS = [
-  { value: "profile",     label: "Profile" },
-  { value: "assignments", label: "Assignments" },
-  { value: "documents",   label: "Documents" },
-];
 
 export default async function ResidentDetailPage({
   params, searchParams,
@@ -33,6 +28,13 @@ export default async function ResidentDetailPage({
   const { tab } = await searchParams;
   const resident = await getResident(id);
   if (!resident) notFound();
+  const { t } = await getT();
+
+  const TABS = [
+    { value: "profile",     label: t("tabs.profile") },
+    { value: "assignments", label: t("tabs.assignments") },
+    { value: "documents",   label: t("tabs.documents") },
+  ];
 
   const fullName = `${resident.first_name} ${resident.last_name}`;
 
@@ -40,14 +42,14 @@ export default async function ResidentDetailPage({
     <div>
       <PageHeader
         title={fullName}
-        description={resident.occupation ?? resident.email ?? "Resident profile"}
+        description={resident.occupation ?? resident.email ?? t("headers.resident_profile_desc")}
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/residents"><ArrowLeft className="h-4 w-4" />Back</Link>
+              <Link href="/residents"><ArrowLeft className="h-4 w-4" />{t("actions.back")}</Link>
             </Button>
             <Button asChild>
-              <Link href={`/residents/${resident.id}/edit`}><Edit className="h-4 w-4" />Edit</Link>
+              <Link href={`/residents/${resident.id}/edit`}><Edit className="h-4 w-4" />{t("actions.edit")}</Link>
             </Button>
           </div>
         }
@@ -69,41 +71,41 @@ export default async function ResidentDetailPage({
 
       <Tabs tabs={TABS} defaultValue="profile" className="mb-6" />
 
-      {(tab ?? "profile") === "profile" && <ProfileTab resident={resident} />}
-      {tab === "assignments" && <AssignmentsTab residentId={resident.id} />}
+      {(tab ?? "profile") === "profile" && <ProfileTab resident={resident} t={t} />}
+      {tab === "assignments" && <AssignmentsTab residentId={resident.id} t={t} />}
       {tab === "documents" && <DocumentsTab residentId={resident.id} />}
     </div>
   );
 }
 
-function ProfileTab({ resident }: { resident: Awaited<ReturnType<typeof getResident>> }) {
+function ProfileTab({ resident, t }: { resident: Awaited<ReturnType<typeof getResident>>; t: T }) {
   if (!resident) return null;
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <Card>
-        <CardHeader><CardTitle>Identity</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("headers.resident_identity")}</CardTitle></CardHeader>
         <CardContent className="grid grid-cols-2 gap-4 text-sm">
-          <Field label="First name" value={resident.first_name} />
-          <Field label="Last name" value={resident.last_name} />
-          <Field label="Gender" value={<span className="capitalize">{resident.gender}</span>} />
-          <Field label="Date of birth" value={formatDate(resident.date_of_birth)} />
-          <Field label="National ID" value={resident.national_id ?? "—"} />
-          <Field label="Occupation" value={resident.occupation ?? "—"} />
+          <Field label={t("details.first_name")} value={resident.first_name} />
+          <Field label={t("details.last_name")} value={resident.last_name} />
+          <Field label={t("details.gender")} value={<span className="capitalize">{resident.gender}</span>} />
+          <Field label={t("details.date_of_birth")} value={formatDate(resident.date_of_birth)} />
+          <Field label={t("details.national_id")} value={resident.national_id ?? "—"} />
+          <Field label={t("details.occupation")} value={resident.occupation ?? "—"} />
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Contact</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("headers.resident_contact")}</CardTitle></CardHeader>
         <CardContent className="grid grid-cols-2 gap-4 text-sm">
-          <Field label="Email" value={resident.email ?? "—"} />
-          <Field label="Mobile" value={resident.mobile ?? resident.phone ?? "—"} />
+          <Field label={t("details.email")} value={resident.email ?? "—"} />
+          <Field label={t("details.mobile")} value={resident.mobile ?? resident.phone ?? "—"} />
         </CardContent>
       </Card>
     </div>
   );
 }
 
-async function AssignmentsTab({ residentId }: { residentId: string }) {
+async function AssignmentsTab({ residentId, t }: { residentId: string; t: T }) {
   const supabase = await createClient();
   const assignments = await listAssignmentsByResident(residentId);
 
@@ -120,7 +122,7 @@ async function AssignmentsTab({ residentId }: { residentId: string }) {
   if (assignments.length === 0) {
     return (
       <Card><CardContent className="p-6 text-sm text-muted-foreground">
-        No unit assignments for this resident yet.
+        {t("headers.resident_no_assignments")}
       </CardContent></Card>
     );
   }
@@ -130,12 +132,12 @@ async function AssignmentsTab({ residentId }: { residentId: string }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Unit</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Start</TableHead>
-            <TableHead>End</TableHead>
-            <TableHead className="text-right">Rent</TableHead>
+            <TableHead>{t("tables.unit")}</TableHead>
+            <TableHead>{t("tables.type")}</TableHead>
+            <TableHead>{t("tables.status")}</TableHead>
+            <TableHead>{t("tables.start")}</TableHead>
+            <TableHead>{t("tables.end")}</TableHead>
+            <TableHead className="text-right">{t("tables.rent")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

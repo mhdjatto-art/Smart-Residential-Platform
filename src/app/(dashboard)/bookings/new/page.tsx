@@ -7,6 +7,7 @@ import { BookingForm } from "@/components/bookings/booking-form";
 import { requireUser } from "@/lib/auth/guards";
 import { listFacilities } from "@/lib/api/facilities";
 import { listResidentOptions } from "@/lib/api/residents";
+import { getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "New booking" };
 export const dynamic = "force-dynamic";
@@ -17,15 +18,16 @@ export default async function NewBookingPage() {
     listFacilities(),
     listResidentOptions(),
   ]);
+  const { t } = await getT();
 
   if (facilities.length === 0) {
     return (
       <div>
-        <PageHeader title="New booking" description="Reserve a facility." />
+        <PageHeader title={t("ops.new_booking_title")} description={t("ops.new_booking_desc")} />
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">No facilities yet — create one first.</p>
-            <Button asChild className="mt-4"><Link href="/facilities/new">Add facility</Link></Button>
+            <p className="text-sm text-muted-foreground">{t("ops.new_booking_no_facilities")}</p>
+            <Button asChild className="mt-4"><Link href="/facilities/new">{t("ops.facilities_add")}</Link></Button>
           </CardContent>
         </Card>
       </div>
@@ -35,8 +37,8 @@ export default async function NewBookingPage() {
   return (
     <div>
       <PageHeader
-        title="New booking"
-        description="Reserve a facility for a resident. Conflicts are auto-detected."
+        title={t("ops.new_booking_title")}
+        description={t("ops.new_booking_desc_full")}
       />
       <BookingForm facilities={facilities} residents={residents} />
     </div>

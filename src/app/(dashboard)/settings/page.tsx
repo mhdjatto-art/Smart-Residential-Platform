@@ -13,24 +13,24 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Settings" description="Account preferences and access details." />
+      <PageHeader titleKey="headers.settings_title" descKey="headers.settings_desc" />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>Information from your Supabase auth profile.</CardDescription>
+            <CardTitle>{t("headers.account_title")}</CardTitle>
+            <CardDescription>{t("headers.account_desc")}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 text-sm">
-            <Row label="Email" value={user.email ?? "—"} />
-            <Row label="User ID" value={<span className="font-mono text-xs">{user.id}</span>} />
+            <Row label={t("common.email_col")} value={user.email ?? "—"} />
+            <Row label={t("tables.user_id")} value={<span className="font-mono text-xs">{user.id}</span>} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Roles & scope</CardTitle>
-            <CardDescription>Where you're allowed to operate.</CardDescription>
+            <CardTitle>{t("headers.roles_scope_title")}</CardTitle>
+            <CardDescription>{t("headers.roles_scope_desc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             {user.isSuperAdmin && <Badge>{t("roles.super_admin_platform_wide")}</Badge>}

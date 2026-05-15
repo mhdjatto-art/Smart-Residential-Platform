@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { unitSchema, type UnitInput } from "@/lib/validations/unit";
 import { createUnit, updateUnit } from "@/lib/api/units";
+import { useT } from "@/lib/i18n/client";
 
 interface BuildingOption { id: string; name: string; compound_id: string; }
 interface FloorOption { id: string; label: string; }
@@ -30,6 +31,7 @@ const UNIT_TYPES = [
 
 export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuildingId }: UnitFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
   const editing = !!initial?.id;
@@ -85,17 +87,17 @@ export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuilding
       try {
         if (editing && initial?.id) {
           await updateUnit(initial.id, parsed.data);
-          toast.success("Unit updated");
+          toast.success(t("forms.toast_unit_updated"));
         } else {
           await createUnit(parsed.data);
-          toast.success("Unit created");
+          toast.success(t("forms.toast_unit_created"));
         }
         router.push("/units");
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }
@@ -104,91 +106,91 @@ export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuilding
     <form onSubmit={onSubmit} noValidate>
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
-          <Field label="Building" error={errors.building_id}>
+          <Field label={t("forms.building")} error={errors.building_id}>
             <Select name="building_id" value={buildingId} onValueChange={setBuildingId} required>
-              <SelectTrigger><SelectValue placeholder="Select building" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.select_building")} /></SelectTrigger>
               <SelectContent>
                 {buildings.map((b) => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Floor" error={errors.floor_id}>
+          <Field label={t("forms.floor")} error={errors.floor_id}>
             <Select name="floor_id" defaultValue={initial?.floor_id ?? "__none__"}>
-              <SelectTrigger><SelectValue placeholder="Optional" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.optional")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">— None —</SelectItem>
+                <SelectItem value="__none__">{t("forms.none")}</SelectItem>
                 {floors.map((f) => <SelectItem key={f.id} value={f.id}>{f.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Unit number" error={errors.unit_number}>
+          <Field label={t("forms.unit_number")} error={errors.unit_number}>
             <Input name="unit_number" defaultValue={initial?.unit_number} required />
           </Field>
-          <Field label="Floor (display)" error={errors.floor}>
+          <Field label={t("forms.floor_display")} error={errors.floor}>
             <Input type="number" name="floor" defaultValue={initial?.floor ?? ""} />
           </Field>
 
-          <Field label="Unit type" error={errors.unit_type}>
+          <Field label={t("forms.unit_type")} error={errors.unit_type}>
             <Select name="unit_type" defaultValue={initial?.unit_type ?? "apartment"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                {UNIT_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                {UNIT_TYPES.map((tp) => <SelectItem key={tp} value={tp}>{tp}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Status" error={errors.status}>
+          <Field label={t("forms.status")} error={errors.status}>
             <Select name="status" defaultValue={initial?.status ?? "vacant"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="vacant">Vacant</SelectItem>
-                <SelectItem value="occupied">Occupied</SelectItem>
-                <SelectItem value="reserved">Reserved</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
+                <SelectItem value="vacant">{t("forms.unit_status_vacant")}</SelectItem>
+                <SelectItem value="occupied">{t("forms.unit_status_occupied")}</SelectItem>
+                <SelectItem value="reserved">{t("forms.unit_status_reserved")}</SelectItem>
+                <SelectItem value="maintenance">{t("forms.unit_status_maintenance")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Ownership" error={errors.ownership_status}>
+          <Field label={t("forms.ownership")} error={errors.ownership_status}>
             <Select name="ownership_status" defaultValue={initial?.ownership_status ?? "owned"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="owned">Owned</SelectItem>
-                <SelectItem value="for_sale">For sale</SelectItem>
-                <SelectItem value="for_rent">For rent</SelectItem>
-                <SelectItem value="leased">Leased</SelectItem>
-                <SelectItem value="reserved">Reserved</SelectItem>
+                <SelectItem value="owned">{t("forms.ownership_owned")}</SelectItem>
+                <SelectItem value="for_sale">{t("forms.ownership_for_sale")}</SelectItem>
+                <SelectItem value="for_rent">{t("forms.ownership_for_rent")}</SelectItem>
+                <SelectItem value="leased">{t("forms.ownership_leased")}</SelectItem>
+                <SelectItem value="reserved">{t("forms.ownership_reserved")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Area (m²)" error={errors.area_sqm}>
+          <Field label={t("forms.area_sqm")} error={errors.area_sqm}>
             <Input type="number" step="0.01" name="area_sqm" defaultValue={initial?.area_sqm ?? ""} />
           </Field>
 
-          <Field label="Bedrooms" error={errors.bedrooms}>
+          <Field label={t("forms.bedrooms")} error={errors.bedrooms}>
             <Input type="number" name="bedrooms" defaultValue={initial?.bedrooms ?? ""} />
           </Field>
-          <Field label="Bathrooms" error={errors.bathrooms}>
+          <Field label={t("forms.bathrooms")} error={errors.bathrooms}>
             <Input type="number" name="bathrooms" defaultValue={initial?.bathrooms ?? ""} />
           </Field>
-          <Field label="Parking slots" error={errors.parking_slots}>
+          <Field label={t("forms.parking_slots")} error={errors.parking_slots}>
             <Input type="number" name="parking_slots" defaultValue={initial?.parking_slots ?? 0} />
           </Field>
 
-          <Field label="Purchase price" error={errors.purchase_price}>
+          <Field label={t("forms.purchase_price")} error={errors.purchase_price}>
             <Input type="number" step="0.01" name="purchase_price" defaultValue={initial?.purchase_price ?? ""} />
           </Field>
-          <Field label="Monthly rent" error={errors.rent_price}>
+          <Field label={t("forms.monthly_rent")} error={errors.rent_price}>
             <Input type="number" step="0.01" name="rent_price" defaultValue={initial?.rent_price ?? ""} />
           </Field>
-          <Field label="Maintenance fee" error={errors.maintenance_fee}>
+          <Field label={t("forms.maintenance_fee")} error={errors.maintenance_fee}>
             <Input type="number" step="0.01" name="maintenance_fee" defaultValue={initial?.maintenance_fee ?? ""} />
           </Field>
 
-          <Field label="Description" error={errors.description} className="md:col-span-2">
+          <Field label={t("forms.description")} error={errors.description} className="md:col-span-2">
             <textarea
               name="description"
               defaultValue={initial?.description ?? ""}
@@ -206,9 +208,9 @@ export function UnitForm({ buildings, floorsByBuilding, initial, defaultBuilding
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
         <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : editing ? "Save changes" : "Create unit"}
+          {pending ? t("forms.saving") : editing ? t("forms.save_changes") : t("forms.create_unit")}
         </Button>
       </div>
     </form>

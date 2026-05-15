@@ -10,6 +10,7 @@ import { StatusChanger, CommentBox } from "@/components/tickets/ticket-actions";
 import { getTicket, listComments } from "@/lib/api/tickets";
 import { requireUser, isStaff } from "@/lib/auth/guards";
 import { formatDate, initials } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
   const user = await requireUser();
   const [ticket, comments] = await Promise.all([getTicket(id), listComments(id)]);
   if (!ticket) notFound();
+  const { t } = await getT();
 
   const staff = isStaff(user);
   const visibleComments = staff ? comments : comments.filter((c) => !c.is_internal);
@@ -26,11 +28,11 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
     <div>
       <PageHeader
         title={`${ticket.ticket_number} · ${ticket.subject}`}
-        description={`Opened ${formatDate(ticket.opened_at)}`}
+        description={t("ops.ticket_opened_at", { date: formatDate(ticket.opened_at) ?? "" })}
         actions={
           <div className="flex gap-2 items-center">
             <Button asChild variant="outline">
-              <Link href="/tickets"><ArrowLeft className="h-4 w-4" />Back</Link>
+              <Link href="/tickets"><ArrowLeft className="h-4 w-4" />{t("actions.back")}</Link>
             </Button>
             {staff && <StatusChanger ticketId={ticket.id} current={ticket.status} />}
           </div>
@@ -56,12 +58,12 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
-                Comments ({visibleComments.length})
+                {t("ops.ticket_comments_title", { n: visibleComments.length })}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {visibleComments.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No comments yet.</p>
+                <p className="text-sm text-muted-foreground">{t("ops.ticket_no_comments")}</p>
               ) : (
                 <ul className="space-y-4">
                   {visibleComments.map((c) => (
@@ -71,7 +73,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
                       </Avatar>
                       <div className={`flex-1 rounded-md p-3 text-sm ${c.is_internal ? "border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/30" : "bg-muted/40"}`}>
                         <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-                          <span>{c.is_internal ? "Internal note" : "Comment"}</span>
+                          <span>{c.is_internal ? t("ops.ticket_internal_note") : t("ops.ticket_comment")}</span>
                           <span>{formatDate(c.created_at)}</span>
                         </div>
                         <p className="mt-1 whitespace-pre-wrap">{c.body}</p>
@@ -88,19 +90,19 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
         </div>
 
         <Card>
-          <CardHeader><CardTitle>Details</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("ops.ticket_details_title")}</CardTitle></CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <Row label="Status" value={<StatusBadge status={ticket.status} />} />
-            <Row label="Priority" value={<span className="capitalize">{ticket.priority}</span>} />
-            <Row label="Category" value={<span className="capitalize">{ticket.category}</span>} />
-            <Row label="SLA due" value={formatDate(ticket.sla_due_date)} />
-            <Row label="Assigned to" value={ticket.assigned_to ? <span className="font-mono text-xs">{ticket.assigned_to.slice(0, 8)}</span> : "—"} />
-            <Row label="Assigned at" value={formatDate(ticket.assigned_at)} />
-            <Row label="Resolved at" value={formatDate(ticket.resolved_at)} />
-            <Row label="Closed at" value={formatDate(ticket.closed_at)} />
+            <Row label={t("ops.ticket_status")} value={<StatusBadge status={ticket.status} />} />
+            <Row label={t("ops.ticket_priority")} value={<span className="capitalize">{ticket.priority}</span>} />
+            <Row label={t("ops.ticket_category")} value={<span className="capitalize">{ticket.category}</span>} />
+            <Row label={t("ops.ticket_sla_due")} value={formatDate(ticket.sla_due_date)} />
+            <Row label={t("ops.ticket_assigned_to")} value={ticket.assigned_to ? <span className="font-mono text-xs">{ticket.assigned_to.slice(0, 8)}</span> : "—"} />
+            <Row label={t("ops.ticket_assigned_at")} value={formatDate(ticket.assigned_at)} />
+            <Row label={t("ops.ticket_resolved_at")} value={formatDate(ticket.resolved_at)} />
+            <Row label={t("ops.ticket_closed_at")} value={formatDate(ticket.closed_at)} />
             {ticket.resolution_notes && (
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Resolution</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("ops.ticket_resolution")}</p>
                 <p className="mt-1">{ticket.resolution_notes}</p>
               </div>
             )}

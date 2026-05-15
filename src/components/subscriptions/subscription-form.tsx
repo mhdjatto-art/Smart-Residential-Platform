@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { createSubscription, type ProviderRow } from "@/lib/api/utilities";
 import type { UnitOption } from "@/lib/api/units";
 import type { SubscriptionInput } from "@/lib/validations/utilities";
+import { useT } from "@/lib/i18n/client";
 
 interface SubscriptionFormProps {
   units: UnitOption[];
@@ -30,6 +31,7 @@ function flag(code?: string | null): string {
 
 export function SubscriptionForm({ units, providers, residents }: SubscriptionFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const today = new Date().toISOString().slice(0, 10);
   const [pending, startTransition] = useTransition();
 
@@ -61,17 +63,17 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.unit_id || !form.provider_id) {
-      toast.error("Unit and provider are required");
+      toast.error(t("forms.toast_unit_provider_required"));
       return;
     }
     startTransition(async () => {
       try {
         await createSubscription(form);
-        toast.success("Subscription created");
+        toast.success(t("forms.toast_subscription_created"));
         router.push("/subscriptions");
         router.refresh();
       } catch (err) {
-        toast.error("Save failed", { description: err instanceof Error ? err.message : "Unknown error" });
+        toast.error(t("forms.toast_save_failed"), { description: err instanceof Error ? err.message : t("forms.unknown_error") });
       }
     });
   }
@@ -82,12 +84,12 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
     <form onSubmit={onSubmit} className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Service</CardTitle>
-          <CardDescription>What kind of utility, who delivers it, and at what fee.</CardDescription>
+          <CardTitle>{t("forms.service_card_title")}</CardTitle>
+          <CardDescription>{t("forms.service_card_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="subscription_type">Service type</Label>
+            <Label htmlFor="subscription_type">{t("forms.service_type")}</Label>
             <select
               id="subscription_type"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -97,12 +99,12 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
                 set("provider_id", ""); // reset provider when type changes
               }}
             >
-              {UTILITY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+              {UTILITY_TYPES.map((tp) => <option key={tp} value={tp}>{tp}</option>)}
             </select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="provider_id">Provider</Label>
+            <Label htmlFor="provider_id">{t("forms.provider")}</Label>
             <select
               id="provider_id"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -110,7 +112,7 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
               onChange={(e) => set("provider_id", e.target.value)}
               required
             >
-              <option value="">— Select provider —</option>
+              <option value="">{t("forms.select_provider")}</option>
               {filteredProviders.map((p) => {
                 const country = (p.metadata as Record<string, unknown> | null)?.country as string | undefined;
                 return (
@@ -123,18 +125,18 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
             </select>
             {filteredProviders.length === 0 && (
               <p className="text-xs text-amber-600 dark:text-amber-400">
-                No providers of type <code>{form.subscription_type}</code>. Add one or seed providers first.
+                {t("forms.no_providers_of_type")} <code>{form.subscription_type}</code>{t("forms.no_providers_seed_hint")}
               </p>
             )}
             {selectedProvider && (
               <p className="text-[11px] text-muted-foreground">
-                Billing: {selectedProvider.billing_method.replace("_", " ")} · Tariff: {selectedProvider.tariff_type}
+                {t("forms.billing_label_inline", { method: selectedProvider.billing_method.replace("_", " "), tariff: selectedProvider.tariff_type })}
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="billing_cycle">Billing cycle</Label>
+            <Label htmlFor="billing_cycle">{t("forms.billing_cycle")}</Label>
             <select
               id="billing_cycle"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -146,7 +148,7 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="monthly_fee">Fee per cycle</Label>
+            <Label htmlFor="monthly_fee">{t("forms.fee_per_cycle")}</Label>
             <div className="flex gap-2">
               <Input id="monthly_fee" type="number" min={0} step="0.01"
                 value={form.monthly_fee}
@@ -164,12 +166,12 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
 
       <Card>
         <CardHeader>
-          <CardTitle>Assignment</CardTitle>
-          <CardDescription>Which unit (and optionally which resident) is being subscribed.</CardDescription>
+          <CardTitle>{t("forms.assignment_card_title")}</CardTitle>
+          <CardDescription>{t("forms.assignment_card_desc")}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="unit_id">Unit</Label>
+            <Label htmlFor="unit_id">{t("forms.unit")}</Label>
             <select
               id="unit_id"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -177,7 +179,7 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
               onChange={(e) => set("unit_id", e.target.value)}
               required
             >
-              <option value="">— Select unit —</option>
+              <option value="">{t("forms.select_unit")}</option>
               {units.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.building_name ? `${u.building_name} · ` : ""}{u.unit_number}
@@ -187,14 +189,14 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="resident_id">Resident (optional)</Label>
+            <Label htmlFor="resident_id">{t("forms.resident_optional")}</Label>
             <select
               id="resident_id"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={form.resident_id ?? ""}
               onChange={(e) => set("resident_id", e.target.value || undefined)}
             >
-              <option value="">— None / Unit-level —</option>
+              <option value="">{t("forms.none_unit_level")}</option>
               {residents.map((r) => (
                 <option key={r.id} value={r.id}>{r.full_name}</option>
               ))}
@@ -202,13 +204,13 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="start_date">Start date</Label>
+            <Label htmlFor="start_date">{t("forms.start_date")}</Label>
             <Input id="start_date" type="date" value={form.start_date}
               onChange={(e) => set("start_date", e.target.value)} required />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="end_date">End date (optional)</Label>
+            <Label htmlFor="end_date">{t("forms.end_date_optional")}</Label>
             <Input id="end_date" type="date" value={form.end_date ?? ""}
               onChange={(e) => set("end_date", e.target.value || undefined)} />
           </div>
@@ -217,17 +219,17 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
 
       <Card>
         <CardHeader>
-          <CardTitle>Policy</CardTitle>
+          <CardTitle>{t("forms.policy_card_title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox"
               checked={form.auto_suspend}
               onChange={(e) => set("auto_suspend", e.target.checked)} />
-            Auto-suspend service if bills go overdue
+            {t("forms.auto_suspend_label")}
           </label>
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">{t("forms.notes")}</Label>
             <Textarea id="notes" rows={3} value={form.notes ?? ""}
               onChange={(e) => set("notes", e.target.value || undefined)} />
           </div>
@@ -237,10 +239,10 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
       <div className="flex gap-2">
         <Button type="submit" disabled={pending}>
           {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {pending ? "Creating…" : "Create subscription"}
+          {pending ? t("forms.creating") : t("forms.create_subscription")}
         </Button>
         <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>
-          Cancel
+          {t("actions.cancel")}
         </Button>
       </div>
     </form>

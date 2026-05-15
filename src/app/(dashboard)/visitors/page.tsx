@@ -13,6 +13,7 @@ import { VisitorActions } from "@/components/visitors/visitor-actions";
 import { VisitorQr } from "@/components/visitors/visitor-qr";
 import { listVisitorsPaged } from "@/lib/api/visitors";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -31,41 +32,42 @@ export default async function VisitorsPage({
     page,
     pageSize: PAGE_SIZE,
   });
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
-        title="Visitors"
-        description="Visitor registry with QR-coded passes and security logs."
+        titleKey="headers.visitors_title"
+        description={t("ops.visitors_desc")}
         actions={
           <Button asChild>
-            <Link href="/visitors/new"><Plus className="h-4 w-4" />New visitor</Link>
+            <Link href="/visitors/new"><Plus className="h-4 w-4" />{t("actions.new")}</Link>
           </Button>
         }
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2"><SearchBar placeholder="Search name, pass code, mobile…" /></div>
+        <div className="lg:col-span-2"><SearchBar placeholder={t("ops.visitors_search_ph")} /></div>
         <FilterSelect
           paramName="visitor_type"
-          placeholder="type"
+          placeholder={t("ops.visitors_filter_type")}
           options={[
-            { value: "guest", label: "Guest" },
-            { value: "delivery", label: "Delivery" },
-            { value: "maintenance", label: "Maintenance" },
-            { value: "contractor", label: "Contractor" },
+            { value: "guest", label: t("ops.visitor_type_guest") },
+            { value: "delivery", label: t("ops.visitor_type_delivery") },
+            { value: "maintenance", label: t("ops.visitor_type_maintenance") },
+            { value: "contractor", label: t("ops.visitor_type_contractor") },
           ]}
         />
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("filters.status_placeholder")}
           options={[
-            { value: "pending", label: "Pending" },
-            { value: "approved", label: "Approved" },
-            { value: "rejected", label: "Rejected" },
-            { value: "checked_in", label: "Checked in" },
-            { value: "checked_out", label: "Checked out" },
-            { value: "expired", label: "Expired" },
+            { value: "pending", label: t("ops.visitor_status_pending") },
+            { value: "approved", label: t("ops.visitor_status_approved") },
+            { value: "rejected", label: t("ops.visitor_status_rejected") },
+            { value: "checked_in", label: t("ops.visitor_status_checked_in") },
+            { value: "checked_out", label: t("ops.visitor_status_checked_out") },
+            { value: "expired", label: t("ops.visitor_status_expired") },
           ]}
         />
       </div>
@@ -73,22 +75,22 @@ export default async function VisitorsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={UserPlus}
-          title="No visitors yet"
-          description="Register visitors to issue passes and track entries."
-          action={<Button asChild><Link href="/visitors/new">New visitor</Link></Button>}
+          title={t("ops.visitors_no_results_title")}
+          description={t("ops.visitors_no_results_desc")}
+          action={<Button asChild><Link href="/visitors/new">{t("actions.new")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Pass</TableHead>
-                <TableHead>Visitor</TableHead>
-                <TableHead className="hidden md:table-cell">Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead className="hidden lg:table-cell">Time</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("tables.pass")}</TableHead>
+                <TableHead>{t("tables.visitor")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("tables.type")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("tables.date")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("mobile.time")}</TableHead>
+                <TableHead className="text-right">{t("common.actions_col")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

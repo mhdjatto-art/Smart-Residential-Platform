@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getServiceProvider, listServiceItems, listReviews } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -16,33 +17,34 @@ export default async function ServiceProviderDetailPage({ params }: { params: Pr
   const provider = await getServiceProvider(id);
   if (!provider) notFound();
   const [items, reviews] = await Promise.all([listServiceItems({ provider_id: id }), listReviews({ provider_id: id })]);
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
         title={provider.provider_name}
-        description={`${provider.provider_kind.replace("_", " ")} · ${provider.address ?? "No address"}`}
+        description={t("ops.provider_subtitle", { kind: provider.provider_kind.replace("_", " "), address: provider.address ?? t("ops.provider_no_address") })}
         actions={
           <Button asChild>
-            <Link href={`/service-providers/${id}/items/new`}><Plus className="h-4 w-4" />Add service / product</Link>
+            <Link href={`/service-providers/${id}/items/new`}><Plus className="h-4 w-4" />{t("ops.provider_add_item")}</Link>
           </Button>
         }
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card>
-          <CardHeader><CardTitle>Profile</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("ops.provider_profile_title")}</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 fill-amber-400 stroke-amber-500" />
               <span className="font-medium">{provider.rating_avg.toFixed(2)}</span>
-              <span className="text-xs text-muted-foreground">({provider.rating_count} reviews)</span>
+              <span className="text-xs text-muted-foreground">{t("ops.provider_rating_count", { n: provider.rating_count })}</span>
             </div>
-            <div>Verification: <StatusBadge status={provider.verification_status} /></div>
-            <div>Availability: <StatusBadge status={provider.availability_status} /></div>
-            <div>Active: <StatusBadge status={provider.is_active ? "active" : "inactive"} /></div>
+            <div>{t("ops.provider_verification")}: <StatusBadge status={provider.verification_status} /></div>
+            <div>{t("ops.provider_availability")}: <StatusBadge status={provider.availability_status} /></div>
+            <div>{t("ops.provider_active")}: <StatusBadge status={provider.is_active ? "active" : "inactive"} /></div>
             <div className="pt-2 border-t">
-              <p className="text-xs text-muted-foreground">Commission</p>
+              <p className="text-xs text-muted-foreground">{t("ops.provider_commission")}</p>
               <p className="font-mono">
                 {provider.default_commission_kind === "percentage"
                   ? `${provider.default_commission_value}%`
@@ -53,30 +55,30 @@ export default async function ServiceProviderDetailPage({ params }: { params: Pr
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader><CardTitle>Contact</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("ops.provider_contact_title")}</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
-            {provider.mobile && <div>Phone: <span className="font-mono">{provider.mobile}</span></div>}
-            {provider.email && <div>Email: <span className="font-mono">{provider.email}</span></div>}
-            {provider.website && <div>Web: <span className="font-mono">{provider.website}</span></div>}
+            {provider.mobile && <div>{t("ops.provider_phone_label")}: <span className="font-mono">{provider.mobile}</span></div>}
+            {provider.email && <div>{t("ops.provider_email_label")}: <span className="font-mono">{provider.email}</span></div>}
+            {provider.website && <div>{t("ops.provider_web_label")}: <span className="font-mono">{provider.website}</span></div>}
             {provider.description && <p className="text-muted-foreground pt-2 border-t">{provider.description}</p>}
           </CardContent>
         </Card>
       </div>
 
       <Card className="mt-6">
-        <CardHeader><CardTitle>Service catalog</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("ops.provider_catalog_title")}</CardTitle></CardHeader>
         <CardContent>
           {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No services or products yet.</p>
+            <p className="text-sm text-muted-foreground">{t("ops.provider_catalog_empty")}</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Kind</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Unit</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t("tables.name")}</TableHead>
+                  <TableHead>{t("ops.provider_item_kind")}</TableHead>
+                  <TableHead>{t("ops.provider_item_price")}</TableHead>
+                  <TableHead>{t("ops.provider_item_unit")}</TableHead>
+                  <TableHead>{t("tables.status")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -96,10 +98,10 @@ export default async function ServiceProviderDetailPage({ params }: { params: Pr
       </Card>
 
       <Card className="mt-6">
-        <CardHeader><CardTitle>Recent reviews</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("ops.provider_reviews_title")}</CardTitle></CardHeader>
         <CardContent>
           {reviews.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No reviews yet.</p>
+            <p className="text-sm text-muted-foreground">{t("ops.provider_reviews_empty")}</p>
           ) : (
             <div className="space-y-3">
               {reviews.slice(0, 10).map((r) => (

@@ -8,6 +8,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { listUnitOptions } from "@/lib/api/units";
 import { listProviders } from "@/lib/api/utilities";
 import { listResidentOptions } from "@/lib/api/residents";
+import { getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "New subscription" };
 export const dynamic = "force-dynamic";
@@ -20,15 +21,16 @@ export default async function NewSubscriptionPage() {
     listProviders(),
     listResidentOptions(),
   ]);
+  const { t } = await getT();
 
   if (units.length === 0) {
     return (
       <div>
-        <PageHeader title="New subscription" description="Subscribe a unit to a utility service." />
+        <PageHeader title={t("ops.new_subscription_title")} description={t("ops.new_subscription_desc")} />
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">No units yet — create a unit first.</p>
-            <Button asChild className="mt-4"><Link href="/units/new">Add unit</Link></Button>
+            <p className="text-sm text-muted-foreground">{t("ops.new_subscription_no_units")}</p>
+            <Button asChild className="mt-4"><Link href="/units/new">{t("forms.add_unit_btn")}</Link></Button>
           </CardContent>
         </Card>
       </div>
@@ -38,11 +40,11 @@ export default async function NewSubscriptionPage() {
   if (providers.length === 0) {
     return (
       <div>
-        <PageHeader title="New subscription" description="Subscribe a unit to a utility service." />
+        <PageHeader title={t("ops.new_subscription_title")} description={t("ops.new_subscription_desc")} />
         <Card>
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">No providers yet — add one before creating a subscription.</p>
-            <Button asChild className="mt-4"><Link href="/providers/new">Add provider</Link></Button>
+            <p className="text-sm text-muted-foreground">{t("ops.new_subscription_no_providers")}</p>
+            <Button asChild className="mt-4"><Link href="/providers/new">{t("forms.add_provider")}</Link></Button>
           </CardContent>
         </Card>
       </div>
@@ -52,8 +54,8 @@ export default async function NewSubscriptionPage() {
   return (
     <div>
       <PageHeader
-        title="New subscription"
-        description="Subscribe a unit to a utility provider. Bills will auto-generate based on the billing cycle."
+        title={t("ops.new_subscription_title")}
+        description={t("ops.new_subscription_desc_full")}
       />
       <SubscriptionForm units={units} providers={providers} residents={residents} />
     </div>

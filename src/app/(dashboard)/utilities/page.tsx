@@ -8,6 +8,7 @@ import { getUtilityStats } from "@/lib/api/utility-stats";
 import { requireRole, requireUser } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export default async function UtilitiesPage() {
   await requireRole(["super_admin", "developer_admin", "compound_manager", "finance_officer", "maintenance_staff"]);
   const user = await requireUser();
   const stats = await getUtilityStats();
+  const { t } = await getT();
 
   let currency = "USD";
   const firstOrgId = user.organizationIds[0];
@@ -27,51 +29,51 @@ export default async function UtilitiesPage() {
   return (
     <div>
       <PageHeader
-        title="Utilities"
-        description="Smart infrastructure overview — electricity, internet, gas, water."
+        title={t("ops.utilities_title")}
+        description={t("ops.utilities_desc")}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active subscriptions" value={stats.active_subscriptions} icon={Repeat} />
-        <StatCard label="Electricity subs" value={stats.electricity_subs} icon={Zap} />
-        <StatCard label="Internet subs" value={stats.internet_subs} icon={Wifi} />
-        <StatCard label="Gas orders (pending)" value={stats.gas_orders_pending} icon={Flame} />
+        <StatCard label={t("ops.utilities_stat_active_subs")} value={stats.active_subscriptions} icon={Repeat} />
+        <StatCard label={t("ops.utilities_stat_electricity")} value={stats.electricity_subs} icon={Zap} />
+        <StatCard label={t("ops.utilities_stat_internet")} value={stats.internet_subs} icon={Wifi} />
+        <StatCard label={t("ops.utilities_stat_gas_pending")} value={stats.gas_orders_pending} icon={Flame} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Unpaid bills" value={stats.unpaid_bills} icon={AlertOctagon}
-          trend={stats.unpaid_bills > 0 ? { value: "needs collection", positive: false } : undefined} />
-        <StatCard label="Outstanding" value={formatCurrency(stats.unpaid_amount, { currency })} icon={Receipt} />
-        <StatCard label="Monthly revenue (30d)" value={formatCurrency(stats.monthly_utility_revenue, { currency })} icon={Wallet} />
-        <StatCard label="Active meters" value={stats.active_meters} icon={Gauge} />
+        <StatCard label={t("ops.utilities_stat_unpaid_bills")} value={stats.unpaid_bills} icon={AlertOctagon}
+          trend={stats.unpaid_bills > 0 ? { value: t("ops.utilities_needs_collection"), positive: false } : undefined} />
+        <StatCard label={t("ops.utilities_stat_outstanding")} value={formatCurrency(stats.unpaid_amount, { currency })} icon={Receipt} />
+        <StatCard label={t("ops.utilities_stat_monthly_revenue")} value={formatCurrency(stats.monthly_utility_revenue, { currency })} icon={Wallet} />
+        <StatCard label={t("ops.utilities_stat_active_meters")} value={stats.active_meters} icon={Gauge} />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card>
-          <CardHeader><CardTitle>Quick actions</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("ops.utilities_quick_actions")}</CardTitle></CardHeader>
           <CardContent className="space-y-2">
-            <Button asChild variant="outline" className="w-full justify-start"><Link href="/providers/new"><Zap className="h-4 w-4" />New provider</Link></Button>
-            <Button asChild variant="outline" className="w-full justify-start"><Link href="/subscriptions/new"><Repeat className="h-4 w-4" />New subscription</Link></Button>
-            <Button asChild variant="outline" className="w-full justify-start"><Link href="/meters/new"><Gauge className="h-4 w-4" />Register meter</Link></Button>
-            <Button asChild variant="outline" className="w-full justify-start"><Link href="/internet-packages/new"><Wifi className="h-4 w-4" />New internet package</Link></Button>
+            <Button asChild variant="outline" className="w-full justify-start"><Link href="/providers/new"><Zap className="h-4 w-4" />{t("ops.utilities_new_provider")}</Link></Button>
+            <Button asChild variant="outline" className="w-full justify-start"><Link href="/subscriptions/new"><Repeat className="h-4 w-4" />{t("ops.utilities_new_subscription")}</Link></Button>
+            <Button asChild variant="outline" className="w-full justify-start"><Link href="/meters/new"><Gauge className="h-4 w-4" />{t("ops.utilities_register_meter")}</Link></Button>
+            <Button asChild variant="outline" className="w-full justify-start"><Link href="/internet-packages/new"><Wifi className="h-4 w-4" />{t("ops.utilities_new_internet_pkg")}</Link></Button>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Electricity</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("ops.utilities_electricity_title")}</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <p className="text-muted-foreground">Manage meters and record readings to generate consumption bills.</p>
-            <Button asChild size="sm" variant="outline"><Link href="/meters">View meters</Link></Button>
-            <Button asChild size="sm"><Link href="/utility-bills?utility_type=electricity">View bills</Link></Button>
+            <p className="text-muted-foreground">{t("ops.utilities_electricity_desc")}</p>
+            <Button asChild size="sm" variant="outline"><Link href="/meters">{t("ops.utilities_view_meters")}</Link></Button>
+            <Button asChild size="sm"><Link href="/utility-bills?utility_type=electricity">{t("ops.utilities_view_bills")}</Link></Button>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="flex items-center gap-2"><Droplets className="h-4 w-4" />Other utilities</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2"><Droplets className="h-4 w-4" />{t("ops.utilities_other_title")}</CardTitle></CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <p className="text-muted-foreground">Water, gas, generator, and recurring services.</p>
-            <Button asChild size="sm" variant="outline"><Link href="/subscriptions">All subscriptions</Link></Button>
-            <Button asChild size="sm"><Link href="/utility-bills">All utility bills</Link></Button>
+            <p className="text-muted-foreground">{t("ops.utilities_other_desc")}</p>
+            <Button asChild size="sm" variant="outline"><Link href="/subscriptions">{t("ops.utilities_all_subscriptions")}</Link></Button>
+            <Button asChild size="sm"><Link href="/utility-bills">{t("ops.utilities_all_bills")}</Link></Button>
           </CardContent>
         </Card>
       </div>

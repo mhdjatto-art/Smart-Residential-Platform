@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { contractSchema, type ContractInput } from "@/lib/validations/contract";
 import { createContract } from "@/lib/api/contracts";
+import { useT } from "@/lib/i18n/client";
 
 interface UnitOption { id: string; unit_number: string; }
 interface ResidentOption { id: string; full_name: string; }
@@ -23,6 +24,7 @@ type Errors = Partial<Record<keyof ContractInput | "form", string>>;
 
 export function ContractForm({ units, residents }: ContractFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
   const [showPenalty, setShowPenalty] = useState(false);
@@ -65,13 +67,13 @@ export function ContractForm({ units, residents }: ContractFormProps) {
     startTransition(async () => {
       try {
         const created = await createContract(parsed.data);
-        toast.success("Contract created (draft)", { description: "Generate schedule on the detail page to activate." });
+        toast.success(t("forms.toast_contract_created"), { description: t("forms.toast_contract_generate_hint") });
         router.push(`/contracts/${created.id}`);
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }
@@ -80,121 +82,121 @@ export function ContractForm({ units, residents }: ContractFormProps) {
     <form onSubmit={onSubmit} noValidate>
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
-          <Field label="Unit" error={errors.unit_id}>
+          <Field label={t("forms.unit")} error={errors.unit_id}>
             <Select name="unit_id" required>
-              <SelectTrigger><SelectValue placeholder="Select unit" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.select_unit")} /></SelectTrigger>
               <SelectContent>
                 {units.map((u) => <SelectItem key={u.id} value={u.id}>{u.unit_number}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Resident" error={errors.resident_id}>
+          <Field label={t("forms.resident")} error={errors.resident_id}>
             <Select name="resident_id" required>
-              <SelectTrigger><SelectValue placeholder="Select resident" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.select_resident")} /></SelectTrigger>
               <SelectContent>
                 {residents.map((r) => <SelectItem key={r.id} value={r.id}>{r.full_name}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Contract number" error={errors.contract_number}>
-            <Input name="contract_number" placeholder="e.g. CT-2026-001" required />
+          <Field label={t("forms.contract_number")} error={errors.contract_number}>
+            <Input name="contract_number" placeholder={t("forms.contract_number_placeholder")} required />
           </Field>
-          <Field label="Contract type" error={errors.contract_type}>
+          <Field label={t("forms.contract_type")} error={errors.contract_type}>
             <Select name="contract_type" defaultValue="property_sale">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="property_sale">Property sale</SelectItem>
-                <SelectItem value="rental">Rental</SelectItem>
-                <SelectItem value="lease_to_own">Lease to own</SelectItem>
+                <SelectItem value="property_sale">{t("contract_types.property_sale")}</SelectItem>
+                <SelectItem value="rental">{t("contract_types.rental")}</SelectItem>
+                <SelectItem value="lease_to_own">{t("contract_types.lease_to_own")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Currency" error={errors.currency}>
+          <Field label={t("forms.currency")} error={errors.currency}>
             <Select name="currency" defaultValue="USD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="USD">USD — US Dollar ($)</SelectItem>
-                <SelectItem value="IQD">IQD — Iraqi Dinar (د.ع)</SelectItem>
-                <SelectItem value="EUR">EUR — Euro (€)</SelectItem>
-                <SelectItem value="GBP">GBP — British Pound (£)</SelectItem>
-                <SelectItem value="SAR">SAR — Saudi Riyal</SelectItem>
-                <SelectItem value="AED">AED — UAE Dirham</SelectItem>
-                <SelectItem value="EGP">EGP — Egyptian Pound</SelectItem>
-                <SelectItem value="JOD">JOD — Jordanian Dinar</SelectItem>
-                <SelectItem value="KWD">KWD — Kuwaiti Dinar</SelectItem>
-                <SelectItem value="QAR">QAR — Qatari Riyal</SelectItem>
-                <SelectItem value="BHD">BHD — Bahraini Dinar</SelectItem>
-                <SelectItem value="OMR">OMR — Omani Rial</SelectItem>
-                <SelectItem value="TRY">TRY — Turkish Lira</SelectItem>
+                <SelectItem value="USD">{t("forms.currency_usd_label")}</SelectItem>
+                <SelectItem value="IQD">{t("forms.currency_iqd_label")}</SelectItem>
+                <SelectItem value="EUR">{t("forms.currency_eur_label")}</SelectItem>
+                <SelectItem value="GBP">{t("forms.currency_gbp_label")}</SelectItem>
+                <SelectItem value="SAR">{t("forms.currency_sar_label")}</SelectItem>
+                <SelectItem value="AED">{t("forms.currency_aed_label")}</SelectItem>
+                <SelectItem value="EGP">{t("forms.currency_egp_label")}</SelectItem>
+                <SelectItem value="JOD">{t("forms.currency_jod_label")}</SelectItem>
+                <SelectItem value="KWD">{t("forms.currency_kwd_label")}</SelectItem>
+                <SelectItem value="QAR">{t("forms.currency_qar_label")}</SelectItem>
+                <SelectItem value="BHD">{t("forms.currency_bhd_label")}</SelectItem>
+                <SelectItem value="OMR">{t("forms.currency_omr_label")}</SelectItem>
+                <SelectItem value="TRY">{t("forms.currency_try_label")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Start date" error={errors.contract_start_date}>
+          <Field label={t("forms.start_date")} error={errors.contract_start_date}>
             <Input type="date" name="contract_start_date" required />
           </Field>
-          <Field label="End date (optional)" error={errors.contract_end_date}>
+          <Field label={t("forms.end_date_only_optional")} error={errors.contract_end_date}>
             <Input type="date" name="contract_end_date" />
           </Field>
 
-          <Field label="Total property price" error={errors.total_property_price}>
+          <Field label={t("forms.total_property_price")} error={errors.total_property_price}>
             <Input type="number" step="0.01" name="total_property_price" required />
           </Field>
-          <Field label="Down payment" error={errors.down_payment}>
+          <Field label={t("forms.down_payment")} error={errors.down_payment}>
             <Input type="number" step="0.01" name="down_payment" defaultValue="0" required />
           </Field>
 
-          <Field label="Frequency" error={errors.installment_frequency}>
+          <Field label={t("forms.frequency")} error={errors.installment_frequency}>
             <Select name="installment_frequency" defaultValue="monthly">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="quarterly">Quarterly</SelectItem>
-                <SelectItem value="biannual">Biannual</SelectItem>
-                <SelectItem value="annual">Annual</SelectItem>
+                <SelectItem value="monthly">{t("forms.freq_monthly")}</SelectItem>
+                <SelectItem value="quarterly">{t("forms.freq_quarterly")}</SelectItem>
+                <SelectItem value="biannual">{t("forms.freq_biannual")}</SelectItem>
+                <SelectItem value="annual">{t("forms.freq_annual")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Number of installments" error={errors.installment_count}>
+          <Field label={t("forms.installment_count")} error={errors.installment_count}>
             <Input type="number" name="installment_count" min={1} max={600} required />
           </Field>
 
-          <Field label="Annual interest rate (%)" error={errors.annual_interest_rate}>
+          <Field label={t("forms.annual_interest_rate")} error={errors.annual_interest_rate}>
             <Input type="number" step="0.01" name="annual_interest_rate" defaultValue="0" />
           </Field>
 
           <Field label="" error={undefined}>
             <label className="flex items-center gap-2 text-sm pt-7">
               <input type="checkbox" checked={showPenalty} onChange={(e) => setShowPenalty(e.target.checked)} />
-              Configure late payment penalty
+              {t("forms.configure_late_penalty")}
             </label>
           </Field>
 
           {showPenalty && (
             <>
-              <Field label="Penalty type" error={errors.late_penalty_type}>
+              <Field label={t("forms.penalty_type")} error={errors.late_penalty_type}>
                 <Select name="late_penalty_type" defaultValue="fixed">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fixed">Fixed amount</SelectItem>
-                    <SelectItem value="percentage">% of installment</SelectItem>
-                    <SelectItem value="daily">Daily fee</SelectItem>
-                    <SelectItem value="monthly">Monthly fee</SelectItem>
+                    <SelectItem value="fixed">{t("forms.penalty_fixed")}</SelectItem>
+                    <SelectItem value="percentage">{t("forms.penalty_percentage")}</SelectItem>
+                    <SelectItem value="daily">{t("forms.penalty_daily")}</SelectItem>
+                    <SelectItem value="monthly">{t("forms.penalty_monthly")}</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
-              <Field label="Penalty value" error={errors.late_penalty_value}>
+              <Field label={t("forms.penalty_value")} error={errors.late_penalty_value}>
                 <Input type="number" step="0.01" name="late_penalty_value" required />
               </Field>
-              <Field label="Grace period (days)" error={errors.grace_period_days}>
+              <Field label={t("forms.grace_period_days")} error={errors.grace_period_days}>
                 <Input type="number" name="grace_period_days" defaultValue="0" />
               </Field>
             </>
           )}
 
-          <Field label="Notes" error={errors.notes} className="md:col-span-2">
+          <Field label={t("forms.notes")} error={errors.notes} className="md:col-span-2">
             <textarea
               name="notes"
               rows={3}
@@ -211,9 +213,9 @@ export function ContractForm({ units, residents }: ContractFormProps) {
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
         <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : "Create draft contract"}
+          {pending ? t("forms.saving") : t("forms.create_draft_contract")}
         </Button>
       </div>
     </form>

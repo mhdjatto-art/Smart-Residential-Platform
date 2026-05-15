@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { technicianSchema, type TechnicianInput, TICKET_CATEGORIES } from "@/lib/validations/operations";
 import { createTechnician } from "@/lib/api/technicians";
+import { useT } from "@/lib/i18n/client";
 
 interface OrgOption { id: string; name: string; }
 
@@ -19,6 +20,7 @@ interface TechnicianFormProps {
 
 export function TechnicianForm({ organizations }: TechnicianFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Partial<Record<keyof TechnicianInput | "form" | "organization_id", string>>>({});
   const [specs, setSpecs] = useState<string[]>([]);
@@ -33,7 +35,7 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
     const fd = new FormData(e.currentTarget);
     const orgId = String(fd.get("organization_id") ?? "");
     if (!orgId) {
-      setErrors({ organization_id: "Required" });
+      setErrors({ organization_id: t("forms.required") });
       return;
     }
     const candidate = {
@@ -56,13 +58,13 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
     startTransition(async () => {
       try {
         await createTechnician(orgId, parsed.data);
-        toast.success("Technician added");
+        toast.success(t("forms.toast_technician_added"));
         router.push("/technicians");
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown";
+        const msg = err instanceof Error ? err.message : t("forms.unknown");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }
@@ -72,7 +74,7 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Organization</Label>
+            <Label>{t("forms.organization")}</Label>
             <Select name="organization_id" defaultValue={organizations[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -83,33 +85,33 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Full name</Label>
+            <Label>{t("forms.full_name")}</Label>
             <Input name="full_name" required />
             {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Mobile</Label>
+            <Label>{t("forms.mobile")}</Label>
             <Input name="mobile" placeholder="+971…" />
           </div>
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>{t("forms.email")}</Label>
             <Input type="email" name="email" />
           </div>
           <div className="space-y-2">
-            <Label>Availability</Label>
+            <Label>{t("forms.availability")}</Label>
             <Select name="availability_status" defaultValue="available">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="busy">Busy</SelectItem>
-                <SelectItem value="off_duty">Off duty</SelectItem>
-                <SelectItem value="vacation">Vacation</SelectItem>
+                <SelectItem value="available">{t("forms.availability_available")}</SelectItem>
+                <SelectItem value="busy">{t("forms.availability_busy")}</SelectItem>
+                <SelectItem value="off_duty">{t("forms.availability_off_duty")}</SelectItem>
+                <SelectItem value="vacation">{t("forms.availability_vacation")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Specialization (tap to toggle)</Label>
+            <Label>{t("forms.specialization_label")}</Label>
             <div className="flex flex-wrap gap-2">
               {TICKET_CATEGORIES.map((cat) => (
                 <button
@@ -127,12 +129,12 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("forms.notes")}</Label>
             <textarea name="notes" rows={2} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
 
           <label className="md:col-span-2 flex items-center gap-2 text-sm">
-            <input type="checkbox" name="is_active" defaultChecked /> Active
+            <input type="checkbox" name="is_active" defaultChecked /> {t("forms.active_checkbox")}
           </label>
         </CardContent>
       </Card>
@@ -144,8 +146,8 @@ export function TechnicianForm({ organizations }: TechnicianFormProps) {
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Add technician"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.add_technician")}</Button>
       </div>
     </form>
   );

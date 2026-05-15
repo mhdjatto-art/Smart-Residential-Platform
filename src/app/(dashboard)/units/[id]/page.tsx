@@ -12,6 +12,7 @@ import { listAssignmentsByUnit } from "@/lib/api/assignments";
 import { listResidentOptions } from "@/lib/api/residents";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
   const { id } = await params;
   const unit = await getUnit(id);
   if (!unit) notFound();
+  const { t } = await getT();
 
   const supabase = await createClient();
   const [assignments, residents] = await Promise.all([
@@ -42,18 +44,22 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
   return (
     <div>
       <PageHeader
-        title={`Unit ${unit.unit_number}`}
-        description={`${unit.unit_type} · ${unit.bedrooms ?? "?"} BR / ${unit.bathrooms ?? "?"} BA`}
+        title={t("details.unit_label", { number: unit.unit_number })}
+        description={t("details.unit_subtitle", {
+          type: unit.unit_type,
+          beds: unit.bedrooms ?? "?",
+          baths: unit.bathrooms ?? "?",
+        })}
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href={`/buildings/${unit.building_id}`}><ArrowLeft className="h-4 w-4" />Building</Link>
+              <Link href={`/buildings/${unit.building_id}`}><ArrowLeft className="h-4 w-4" />{t("actions.building")}</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href={`/units/${unit.id}/barcode`}><QrCode className="h-4 w-4" />Barcode</Link>
+              <Link href={`/units/${unit.id}/barcode`}><QrCode className="h-4 w-4" />{t("actions.barcode")}</Link>
             </Button>
             <Button asChild>
-              <Link href={`/units/${unit.id}/edit`}><Edit className="h-4 w-4" />Edit</Link>
+              <Link href={`/units/${unit.id}/edit`}><Edit className="h-4 w-4" />{t("actions.edit")}</Link>
             </Button>
           </div>
         }
@@ -61,26 +67,26 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card>
-          <CardHeader><CardTitle>Details</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("common.details")}</CardTitle></CardHeader>
           <CardContent className="grid grid-cols-2 gap-4 text-sm">
-            <Field label="Type" value={<span className="capitalize">{unit.unit_type}</span>} />
-            <Field label="Status" value={<StatusBadge status={unit.status} />} />
-            <Field label="Ownership" value={<StatusBadge status={unit.ownership_status} />} />
-            <Field label="Floor" value={unit.floor ?? "—"} />
-            <Field label="Bedrooms" value={unit.bedrooms ?? "—"} />
-            <Field label="Bathrooms" value={unit.bathrooms ?? "—"} />
-            <Field label="Parking" value={unit.parking_slots} />
-            <Field label="Area (m²)" value={unit.area_sqm ?? "—"} />
+            <Field label={t("details.type")} value={<span className="capitalize">{unit.unit_type}</span>} />
+            <Field label={t("details.status")} value={<StatusBadge status={unit.status} />} />
+            <Field label={t("details.ownership")} value={<StatusBadge status={unit.ownership_status} />} />
+            <Field label={t("details.floor")} value={unit.floor ?? "—"} />
+            <Field label={t("details.bedrooms")} value={unit.bedrooms ?? "—"} />
+            <Field label={t("details.bathrooms")} value={unit.bathrooms ?? "—"} />
+            <Field label={t("details.parking")} value={unit.parking_slots} />
+            <Field label={t("details.area_sqm")} value={unit.area_sqm ?? "—"} />
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Pricing</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("headers.pricing_title")}</CardTitle></CardHeader>
           <CardContent className="grid grid-cols-2 gap-4 text-sm">
-            <Field label="Purchase price" value={unit.purchase_price ?? "—"} />
-            <Field label="Monthly rent" value={unit.rent_price ?? "—"} />
-            <Field label="Maintenance fee" value={unit.maintenance_fee ?? "—"} />
-            <Field label="Created" value={formatDate(unit.created_at)} />
+            <Field label={t("details.purchase_price")} value={unit.purchase_price ?? "—"} />
+            <Field label={t("details.monthly_rent")} value={unit.rent_price ?? "—"} />
+            <Field label={t("details.maintenance_fee")} value={unit.maintenance_fee ?? "—"} />
+            <Field label={t("details.created")} value={formatDate(unit.created_at)} />
           </CardContent>
         </Card>
 
@@ -88,12 +94,12 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Home className="h-4 w-4" />
-              Notes
+              {t("headers.unit_notes_title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              {unit.description ?? "No description."}
+              {unit.description ?? t("headers.unit_no_description")}
             </p>
           </CardContent>
         </Card>

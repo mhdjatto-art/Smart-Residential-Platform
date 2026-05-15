@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { meterSchema, type MeterInput } from "@/lib/validations/utilities";
 import { createMeter } from "@/lib/api/utilities";
+import { useT } from "@/lib/i18n/client";
 
 interface CompoundOption { id: string; name: string; }
 interface UnitOption { id: string; unit_number: string; }
@@ -21,6 +22,7 @@ interface MeterFormProps {
 
 export function MeterForm({ compounds, units }: MeterFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -52,11 +54,11 @@ export function MeterForm({ compounds, units }: MeterFormProps) {
     startTransition(async () => {
       try {
         await createMeter(parsed.data);
-        toast.success("Meter registered");
+        toast.success(t("forms.toast_meter_registered"));
         router.push("/meters");
         router.refresh();
       } catch (err) {
-        toast.error("Save failed", { description: err instanceof Error ? err.message : "" });
+        toast.error(t("forms.toast_save_failed"), { description: err instanceof Error ? err.message : "" });
       }
     });
   }
@@ -66,7 +68,7 @@ export function MeterForm({ compounds, units }: MeterFormProps) {
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Compound</Label>
+            <Label>{t("forms.compound")}</Label>
             <Select name="compound_id" defaultValue={compounds[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -75,63 +77,63 @@ export function MeterForm({ compounds, units }: MeterFormProps) {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Unit (optional)</Label>
+            <Label>{t("forms.unit_optional")}</Label>
             <Select name="unit_id" defaultValue="__none__">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">— None —</SelectItem>
+                <SelectItem value="__none__">{t("forms.none")}</SelectItem>
                 {units.map((u) => <SelectItem key={u.id} value={u.id}>{u.unit_number}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Meter number</Label>
+            <Label>{t("forms.meter_number")}</Label>
             <Input name="meter_number" required />
             {errors.meter_number && <p className="text-xs text-destructive">{errors.meter_number}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Unit of measure</Label>
+            <Label>{t("forms.unit_of_measure")}</Label>
             <Input name="unit_of_measure" defaultValue="kWh" />
           </div>
 
           <div className="space-y-2">
-            <Label>Brand</Label>
+            <Label>{t("forms.brand")}</Label>
             <Input name="brand" />
           </div>
           <div className="space-y-2">
-            <Label>Model</Label>
+            <Label>{t("forms.model")}</Label>
             <Input name="model" />
           </div>
 
           <div className="space-y-2">
-            <Label>Serial number</Label>
+            <Label>{t("forms.serial_number")}</Label>
             <Input name="serial_number" />
           </div>
           <div className="space-y-2">
-            <Label>Installed at</Label>
+            <Label>{t("forms.installed_at")}</Label>
             <Input type="date" name="installed_at" />
           </div>
 
           <div className="space-y-2">
-            <Label>Current reading</Label>
+            <Label>{t("forms.current_reading")}</Label>
             <Input type="number" step="0.01" name="current_reading" defaultValue="0" />
           </div>
           <label className="flex items-center gap-2 text-sm pt-7">
             <input type="checkbox" name="smart_enabled" />
-            Smart meter (IoT-enabled — future integration)
+            {t("forms.smart_meter_label")}
           </label>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("forms.notes")}</Label>
             <textarea name="notes" rows={2} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
         </CardContent>
       </Card>
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Add meter"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.add_meter")}</Button>
       </div>
     </form>
   );

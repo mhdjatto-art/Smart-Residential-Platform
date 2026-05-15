@@ -9,6 +9,7 @@ import { StatusButtons } from "@/components/maintenance/status-buttons";
 import { requireUser } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "Maintenance job" };
 export const dynamic = "force-dynamic";
@@ -51,12 +52,13 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
 
   if (!data) notFound();
   const j = data as unknown as JobDetail;
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
         title={j.title}
-        description={`Job #${j.job_number}`}
+        description={t("ops.maintenance_job_subtitle", { number: j.job_number })}
         actions={<StatusBadge status={j.status} />}
       />
 
@@ -65,32 +67,32 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wrench className="h-5 w-5" /> Details
+              <Wrench className="h-5 w-5" /> {t("ops.maintenance_details")}
             </CardTitle>
-            <CardDescription className="capitalize">{j.job_type} maintenance</CardDescription>
+            <CardDescription className="capitalize">{t("ops.maintenance_type_subtitle", { type: j.job_type })}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-              <Field icon={Hash}      label="Job number"  value={<span className="font-mono">{j.job_number}</span>} />
-              <Field icon={Wrench}    label="Type"        value={<span className="capitalize">{j.job_type}</span>} />
-              <Field icon={MapPin}    label="Compound"    value={j.compound?.name ?? "—"} />
-              <Field icon={MapPin}    label="Unit"        value={j.unit?.unit_number ? `${j.unit.building?.name ? j.unit.building.name + " · " : ""}${j.unit.unit_number}` : "Compound-level"} />
-              <Field icon={Calendar}  label="Scheduled"   value={formatDate(j.scheduled_for) || "—"} />
-              <Field icon={Calendar}  label="Started"     value={j.started_at ? new Date(j.started_at).toLocaleString() : "—"} />
-              <Field icon={Calendar}  label="Completed"   value={j.completed_at ? new Date(j.completed_at).toLocaleString() : "—"} />
-              <Field icon={Hash}      label="Cost"        value={j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "USD" }) : "—"} />
+              <Field icon={Hash}      label={t("ops.maintenance_field_job_number")}  value={<span className="font-mono">{j.job_number}</span>} />
+              <Field icon={Wrench}    label={t("ops.maintenance_field_type")}        value={<span className="capitalize">{j.job_type}</span>} />
+              <Field icon={MapPin}    label={t("ops.maintenance_field_compound")}    value={j.compound?.name ?? "—"} />
+              <Field icon={MapPin}    label={t("ops.maintenance_field_unit")}        value={j.unit?.unit_number ? `${j.unit.building?.name ? j.unit.building.name + " · " : ""}${j.unit.unit_number}` : t("ops.maintenance_compound_level")} />
+              <Field icon={Calendar}  label={t("ops.maintenance_field_scheduled")}   value={formatDate(j.scheduled_for) || "—"} />
+              <Field icon={Calendar}  label={t("ops.maintenance_field_started")}     value={j.started_at ? new Date(j.started_at).toLocaleString() : "—"} />
+              <Field icon={Calendar}  label={t("ops.maintenance_field_completed")}   value={j.completed_at ? new Date(j.completed_at).toLocaleString() : "—"} />
+              <Field icon={Hash}      label={t("ops.maintenance_field_cost")}        value={j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "USD" }) : "—"} />
             </dl>
 
             {j.description && (
               <div>
-                <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">Description</p>
+                <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">{t("ops.maintenance_description")}</p>
                 <p className="rounded-md border bg-muted/30 p-3 text-sm whitespace-pre-wrap">{j.description}</p>
               </div>
             )}
 
             {j.completion_notes && (
               <div>
-                <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">Completion notes</p>
+                <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">{t("ops.maintenance_completion_notes")}</p>
                 <p className="rounded-md border bg-emerald-50 p-3 text-sm whitespace-pre-wrap dark:bg-emerald-950/30">{j.completion_notes}</p>
               </div>
             )}
@@ -102,7 +104,7 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <ClipboardList className="h-4 w-4" /> Technician
+                <ClipboardList className="h-4 w-4" /> {t("ops.maintenance_technician")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -112,15 +114,15 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
                   {j.technician.phone && <p className="text-muted-foreground">{j.technician.phone}</p>}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No technician assigned yet.</p>
+                <p className="text-sm text-muted-foreground">{t("ops.maintenance_no_technician")}</p>
               )}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Actions</CardTitle>
-              <CardDescription>Move the job through its lifecycle.</CardDescription>
+              <CardTitle className="text-base">{t("ops.maintenance_actions")}</CardTitle>
+              <CardDescription>{t("ops.maintenance_actions_desc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-3"><Badge variant="muted" className="capitalize">{j.status.replace("_", " ")}</Badge></div>

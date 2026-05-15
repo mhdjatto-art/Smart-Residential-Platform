@@ -13,7 +13,7 @@ export default async function NewVisitorPage() {
 
   return (
     <div>
-      <PageHeader title="Register visitor" description="Generate a visitor pass with QR code." />
+      <PageHeader titleKey="ops.register_visitor_title" descKey="ops.register_visitor_desc" />
       <VisitorForm residents={residents} />
     </div>
   );

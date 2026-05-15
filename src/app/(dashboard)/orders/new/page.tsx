@@ -19,7 +19,7 @@ export default async function NewOrderPage() {
 
   return (
     <div>
-      <PageHeader title="New marketplace order" description="Place an order on behalf of a resident." />
+      <PageHeader titleKey="ops.new_order_title" descKey="ops.new_order_desc" />
       <PlaceOrderForm
         providers={providers.map((p) => ({ id: p.id, name: p.provider_name }))}
         items={items.map((i) => ({ id: i.id, name: i.name, price: Number(i.price), currency: i.currency, provider_id: i.provider_id }))}

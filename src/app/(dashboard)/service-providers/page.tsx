@@ -7,43 +7,43 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listServiceProviders } from "@/lib/api/marketplace";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function ServiceProvidersPage() {
   const providers = await listServiceProviders();
+  const { t } = await getT();
   return (
     <div>
       <PageHeader
-        title="Service providers"
         titleKey="headers.providers_title"
-        description="Marketplace providers offering on-demand services and products to residents."
         descKey="headers.providers_desc"
         actions={
           <Button asChild>
-            <Link href="/service-providers/new"><Plus className="h-4 w-4" />Add provider</Link>
+            <Link href="/service-providers/new"><Plus className="h-4 w-4" />{t("ops.providers_add")}</Link>
           </Button>
         }
       />
       {providers.length === 0 ? (
         <EmptyState
           icon={Store}
-          title="No service providers yet"
-          description="Register your first marketplace provider — restaurant, plumber, cleaner, grocery, etc."
-          action={<Button asChild><Link href="/service-providers/new">Add provider</Link></Button>}
+          title={t("ops.providers_empty_title")}
+          description={t("ops.providers_empty_desc")}
+          action={<Button asChild><Link href="/service-providers/new">{t("ops.providers_add")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Kind</TableHead>
-                <TableHead>Rating</TableHead>
-                <TableHead>Verified</TableHead>
-                <TableHead>Availability</TableHead>
-                <TableHead>Commission</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("tables.name")}</TableHead>
+                <TableHead>{t("ops.providers_kind")}</TableHead>
+                <TableHead>{t("ops.providers_rating")}</TableHead>
+                <TableHead>{t("ops.providers_verified")}</TableHead>
+                <TableHead>{t("ops.providers_availability")}</TableHead>
+                <TableHead>{t("ops.providers_commission")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -60,7 +60,7 @@ export default async function ServiceProvidersPage() {
                         {p.rating_avg.toFixed(2)} <span className="text-xs text-muted-foreground">({p.rating_count})</span>
                       </span>
                     ) : (
-                      <span className="text-xs text-muted-foreground">No reviews</span>
+                      <span className="text-xs text-muted-foreground">{t("ops.providers_no_reviews")}</span>
                     )}
                   </TableCell>
                   <TableCell><StatusBadge status={p.verification_status} /></TableCell>

@@ -12,7 +12,7 @@ export default async function NewServiceProviderPage() {
   if (orgs.length === 0) redirect("/organizations");
   return (
     <div>
-      <PageHeader title="Add service provider" description="Register a marketplace provider with commission terms." />
+      <PageHeader titleKey="ops.add_service_provider_title" descKey="ops.add_service_provider_desc" />
       <ServiceProviderForm organizations={orgs.map((o) => ({ id: o.id, name: o.name }))} />
     </div>
   );

@@ -7,32 +7,33 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { listOrganizations } from "@/lib/api/organizations";
 import { requireRole } from "@/lib/auth/guards";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
+import type { TranslationKey } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrganizationsPage() {
   await requireRole(["developer_admin"]);
   const orgs = await listOrganizations();
+  const { t } = await getT();
   return (
     <div>
       <PageHeader
-        title="Organizations"
         titleKey="headers.organizations_title"
-        description="Developers and property management companies on the platform."
         descKey="headers.organizations_desc"
       />
       {orgs.length === 0 ? (
-        <EmptyState icon={Boxes} title="No organizations" />
+        <EmptyState icon={Boxes} title={t("headers.organizations_no_orgs")} />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Created</TableHead>
+                <TableHead>{t("tables.name")}</TableHead>
+                <TableHead>{t("tables.slug")}</TableHead>
+                <TableHead>{t("tables.contact")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.created")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -42,7 +43,7 @@ export default async function OrganizationsPage() {
                   <TableCell className="font-mono text-xs text-muted-foreground">{o.slug}</TableCell>
                   <TableCell className="text-muted-foreground">{o.contact_email ?? "—"}</TableCell>
                   <TableCell>
-                    <Badge variant={o.status === "active" ? "success" : "muted"}>{o.status}</Badge>
+                    <Badge variant={o.status === "active" ? "success" : "muted"}>{t(`status.${o.status}` as TranslationKey)}</Badge>
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">{formatDate(o.created_at)}</TableCell>
                 </TableRow>

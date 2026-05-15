@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { providerSchema, UTILITY_TYPES, type ProviderInput } from "@/lib/validations/utilities";
 import { createProvider } from "@/lib/api/utilities";
+import { useT } from "@/lib/i18n/client";
 
 interface OrgOption { id: string; name: string; }
 
@@ -19,6 +20,7 @@ interface ProviderFormProps {
 
 export function ProviderForm({ organizations }: ProviderFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -51,12 +53,12 @@ export function ProviderForm({ organizations }: ProviderFormProps) {
     startTransition(async () => {
       try {
         await createProvider(parsed.data);
-        toast.success("Provider added");
+        toast.success(t("forms.toast_provider_added"));
         router.push("/providers");
         router.refresh();
       } catch (err) {
-        toast.error("Save failed", { description: err instanceof Error ? err.message : "" });
-        setErrors({ form: err instanceof Error ? err.message : "Unknown" });
+        toast.error(t("forms.toast_save_failed"), { description: err instanceof Error ? err.message : "" });
+        setErrors({ form: err instanceof Error ? err.message : t("forms.unknown") });
       }
     });
   }
@@ -66,7 +68,7 @@ export function ProviderForm({ organizations }: ProviderFormProps) {
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Organization</Label>
+            <Label>{t("forms.organization")}</Label>
             <Select name="organization_id" defaultValue={organizations[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -76,58 +78,58 @@ export function ProviderForm({ organizations }: ProviderFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Provider name</Label>
-            <Input name="provider_name" required placeholder="e.g. Dubai Electricity & Water Authority" />
+            <Label>{t("forms.provider_name")}</Label>
+            <Input name="provider_name" required placeholder={t("forms.provider_name_placeholder")} />
             {errors.provider_name && <p className="text-xs text-destructive">{errors.provider_name}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label>{t("forms.type")}</Label>
             <Select name="provider_type" defaultValue="electricity">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                {UTILITY_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                {UTILITY_TYPES.map((tp) => <SelectItem key={tp} value={tp}>{tp}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Code</Label>
-            <Input name="provider_code" placeholder="optional internal code" />
+            <Label>{t("forms.code")}</Label>
+            <Input name="provider_code" placeholder={t("forms.code_optional")} />
           </div>
           <div className="space-y-2">
-            <Label>Billing method</Label>
+            <Label>{t("forms.billing_method")}</Label>
             <Select name="billing_method" defaultValue="flat">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="flat">Flat fee</SelectItem>
-                <SelectItem value="metered">Metered</SelectItem>
-                <SelectItem value="tiered">Tiered</SelectItem>
-                <SelectItem value="time_of_use">Time of use</SelectItem>
-                <SelectItem value="package">Package</SelectItem>
-                <SelectItem value="pay_per_use">Pay per use</SelectItem>
+                <SelectItem value="flat">{t("forms.method_flat")}</SelectItem>
+                <SelectItem value="metered">{t("forms.method_metered")}</SelectItem>
+                <SelectItem value="tiered">{t("forms.method_tiered")}</SelectItem>
+                <SelectItem value="time_of_use">{t("forms.method_time_of_use")}</SelectItem>
+                <SelectItem value="package">{t("forms.method_package")}</SelectItem>
+                <SelectItem value="pay_per_use">{t("forms.method_pay_per_use")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Contact name</Label>
+            <Label>{t("forms.contact_name")}</Label>
             <Input name="contact_name" />
           </div>
           <div className="space-y-2">
-            <Label>Contact phone</Label>
+            <Label>{t("forms.contact_phone")}</Label>
             <Input name="contact_phone" />
           </div>
           <div className="space-y-2">
-            <Label>Contact email</Label>
+            <Label>{t("forms.contact_email")}</Label>
             <Input type="email" name="contact_email" />
           </div>
 
           <div className="space-y-2">
-            <Label>Adapter (future IoT integration)</Label>
+            <Label>{t("forms.adapter_label")}</Label>
             <Select name="adapter_kind" defaultValue="__none__">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">— None (manual) —</SelectItem>
+                <SelectItem value="__none__">{t("forms.none_manual")}</SelectItem>
                 <SelectItem value="modbus">Modbus</SelectItem>
                 <SelectItem value="mqtt">MQTT</SelectItem>
                 <SelectItem value="rs485">RS485</SelectItem>
@@ -138,7 +140,7 @@ export function ProviderForm({ organizations }: ProviderFormProps) {
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">
-              The system is integration-ready. Live hardware/API hookup is configured later.
+              {t("forms.adapter_note")}
             </p>
           </div>
         </CardContent>
@@ -151,8 +153,8 @@ export function ProviderForm({ organizations }: ProviderFormProps) {
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Add provider"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.add_provider")}</Button>
       </div>
     </form>
   );

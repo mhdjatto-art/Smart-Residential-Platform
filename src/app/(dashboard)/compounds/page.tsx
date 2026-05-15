@@ -36,9 +36,9 @@ export default async function CompoundsPage({
   return (
     <div>
       <PageHeader
-        title="Compounds"
+        title={t("headers.compounds_title")}
         titleKey="headers.compounds_title"
-        description="Residential projects under your organization."
+        description={t("headers.compounds_desc")}
         descKey="headers.compounds_desc"
         actions={
           <Button asChild>

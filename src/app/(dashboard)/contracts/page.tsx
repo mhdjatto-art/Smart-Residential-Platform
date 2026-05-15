@@ -35,9 +35,9 @@ export default async function ContractsPage({
   return (
     <div>
       <PageHeader
-        title="Contracts"
+        title={t("headers.contracts_title")}
         titleKey="headers.contracts_title"
-        description="Installment contracts: property sales, rentals, and lease-to-own agreements."
+        description={t("headers.contracts_desc")}
         descKey="headers.contracts_desc"
         actions={
           <div className="flex gap-2">
@@ -57,9 +57,9 @@ export default async function ContractsPage({
           paramName="contract_type"
           placeholder={t("tables.type")}
           options={[
-            { value: "property_sale", label: "Property sale" },
-            { value: "rental", label: "Rental" },
-            { value: "lease_to_own", label: "Lease to own" },
+            { value: "property_sale", label: t("contract_types.property_sale") },
+            { value: "rental", label: t("contract_types.rental") },
+            { value: "lease_to_own", label: t("contract_types.lease_to_own") },
           ]}
         />
         <FilterSelect
@@ -70,7 +70,7 @@ export default async function ContractsPage({
             { value: "active", label: t("status.active") },
             { value: "completed", label: t("status.completed") },
             { value: "cancelled", label: t("status.cancelled") },
-            { value: "defaulted", label: t("status.overdue") },
+            { value: "defaulted", label: t("status.defaulted") },
           ]}
         />
       </div>

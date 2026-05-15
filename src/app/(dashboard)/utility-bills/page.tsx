@@ -11,6 +11,8 @@ import { ApplyPenaltiesButton } from "@/components/utility-bills/apply-penalties
 import { PayBillDialog } from "@/components/utility-bills/pay-bill-dialog";
 import { listUtilityBills } from "@/lib/api/utilities";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
+import type { TranslationKey } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -28,12 +30,13 @@ export default async function UtilityBillsPage({
     page,
     pageSize: PAGE_SIZE,
   });
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
-        title="Utility bills"
-        description="Electricity, internet, gas, water, and recurring service bills. Apply penalties and record payments."
+        titleKey="headers.utility_bills_title"
+        descKey="headers.utility_bills_desc"
         actions={
           <div className="flex flex-wrap gap-2">
             <ApplyPenaltiesButton />
@@ -43,35 +46,35 @@ export default async function UtilityBillsPage({
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <FilterSelect paramName="utility_type" placeholder="utility"
-          options={["electricity","internet","gas","water","maintenance","generator","other"].map((v) => ({ value: v, label: v }))} />
-        <FilterSelect paramName="status" placeholder="status"
+        <FilterSelect paramName="utility_type" placeholder={t("filters.utility_placeholder")}
+          options={["electricity","internet","gas","water","maintenance","generator","other"].map((v) => ({ value: v, label: t(`utility_types.${v}` as TranslationKey) }))} />
+        <FilterSelect paramName="status" placeholder={t("filters.status_placeholder")}
           options={[
-            { value: "draft", label: "Draft" },
-            { value: "issued", label: "Issued" },
-            { value: "partial", label: "Partial" },
-            { value: "paid", label: "Paid" },
-            { value: "overdue", label: "Overdue" },
-            { value: "cancelled", label: "Cancelled" },
+            { value: "draft", label: t("status.draft") },
+            { value: "issued", label: t("status.issued") },
+            { value: "partial", label: t("status.partial") },
+            { value: "paid", label: t("status.paid") },
+            { value: "overdue", label: t("status.overdue") },
+            { value: "cancelled", label: t("status.cancelled") },
           ]} />
       </div>
 
       {data.length === 0 ? (
-        <EmptyState icon={Receipt} title="No utility bills" description="Generate recurring bills or create one from a meter reading." />
+        <EmptyState icon={Receipt} title={t("headers.no_utility_bills_title")} description={t("headers.no_utility_bills_desc")} />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Bill #</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead className="hidden md:table-cell">Period</TableHead>
-                <TableHead>Due</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead className="text-right">Penalty</TableHead>
-                <TableHead className="text-right">Paid</TableHead>
-                <TableHead className="text-right">Owed</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{t("tables.bill_number")}</TableHead>
+                <TableHead>{t("tables.type")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("tables.period")}</TableHead>
+                <TableHead>{t("tables.due")}</TableHead>
+                <TableHead className="text-right">{t("tables.total")}</TableHead>
+                <TableHead className="text-right">{t("tables.penalty")}</TableHead>
+                <TableHead className="text-right">{t("tables.paid")}</TableHead>
+                <TableHead className="text-right">{t("tables.owed")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -82,9 +85,9 @@ export default async function UtilityBillsPage({
                 return (
                   <TableRow key={b.id}>
                     <TableCell className="font-mono text-xs">{b.bill_number}</TableCell>
-                    <TableCell className="capitalize text-muted-foreground">{b.utility_type}</TableCell>
+                    <TableCell className="text-muted-foreground">{t(`utility_types.${b.utility_type}` as TranslationKey)}</TableCell>
                     <TableCell className="hidden text-muted-foreground md:table-cell">
-                      {formatDate(b.billing_period_start)} → {formatDate(b.billing_period_end)}
+                      {t("common.period_range", { start: formatDate(b.billing_period_start), end: formatDate(b.billing_period_end) })}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{formatDate(b.due_date)}</TableCell>
                     <TableCell className="text-right tabular-nums font-medium">{formatCurrency(b.total_amount, { currency: b.currency })}</TableCell>

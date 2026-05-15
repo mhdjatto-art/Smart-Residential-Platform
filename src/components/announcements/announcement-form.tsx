@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { announcementSchema, type AnnouncementInput } from "@/lib/validations/operations";
 import { createAnnouncement } from "@/lib/api/announcements";
+import { useT } from "@/lib/i18n/client";
 
 interface OrgOption { id: string; name: string; }
 interface CompoundOption { id: string; name: string; }
@@ -21,6 +22,7 @@ interface AnnouncementFormProps {
 
 export function AnnouncementForm({ organizations, compounds }: AnnouncementFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Partial<Record<keyof AnnouncementInput | "form" | "organization_id", string>>>({});
 
@@ -30,7 +32,7 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
     const fd = new FormData(e.currentTarget);
     const orgId = String(fd.get("organization_id") ?? "");
     if (!orgId) {
-      setErrors({ organization_id: "Required" });
+      setErrors({ organization_id: t("forms.required") });
       return;
     }
     const candidate = {
@@ -53,13 +55,13 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
     startTransition(async () => {
       try {
         await createAnnouncement(orgId, parsed.data);
-        toast.success("Announcement published");
+        toast.success(t("forms.toast_announcement_published"));
         router.push("/announcements");
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown";
+        const msg = err instanceof Error ? err.message : t("forms.unknown");
         setErrors({ form: msg });
-        toast.error("Failed", { description: msg });
+        toast.error(t("forms.toast_failed"), { description: msg });
       }
     });
   }
@@ -69,7 +71,7 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Organization</Label>
+            <Label>{t("forms.organization")}</Label>
             <Select name="organization_id" defaultValue={organizations[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -80,56 +82,56 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
           </div>
 
           <div className="space-y-2">
-            <Label>Compound (optional)</Label>
+            <Label>{t("forms.compound_optional")}</Label>
             <Select name="compound_id" defaultValue="__none__">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">— All compounds —</SelectItem>
+                <SelectItem value="__none__">{t("forms.all_compounds")}</SelectItem>
                 {compounds.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Kind</Label>
+            <Label>{t("forms.kind")}</Label>
             <Select name="kind" defaultValue="general">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="billing">Billing</SelectItem>
-                <SelectItem value="security">Security</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
+                <SelectItem value="general">{t("forms.general")}</SelectItem>
+                <SelectItem value="urgent">{t("forms.urgent")}</SelectItem>
+                <SelectItem value="maintenance">{t("forms.maintenance")}</SelectItem>
+                <SelectItem value="billing">{t("forms.billing")}</SelectItem>
+                <SelectItem value="security">{t("forms.security")}</SelectItem>
+                <SelectItem value="event">{t("forms.event")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Audience</Label>
+            <Label>{t("forms.audience")}</Label>
             <Select name="target_audience" defaultValue="all">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Everyone</SelectItem>
-                <SelectItem value="staff_only">Staff only</SelectItem>
-                <SelectItem value="residents_only">Residents only</SelectItem>
+                <SelectItem value="all">{t("forms.audience_all")}</SelectItem>
+                <SelectItem value="staff_only">{t("forms.audience_staff")}</SelectItem>
+                <SelectItem value="residents_only">{t("forms.audience_residents")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Expires at (optional)</Label>
+            <Label>{t("forms.expires_at_optional")}</Label>
             <Input type="datetime-local" name="expires_at" />
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Title</Label>
+            <Label>{t("forms.title")}</Label>
             <Input name="title" required maxLength={200} />
             {errors.title && <p className="text-xs text-destructive">{errors.title}</p>}
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Body</Label>
+            <Label>{t("forms.body")}</Label>
             <textarea
               name="body" required rows={6}
               className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
@@ -138,7 +140,7 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
           </div>
 
           <label className="md:col-span-2 flex items-center gap-2 text-sm">
-            <input type="checkbox" name="is_pinned" /> Pin to top
+            <input type="checkbox" name="is_pinned" /> {t("forms.pin_to_top")}
           </label>
         </CardContent>
       </Card>
@@ -150,8 +152,8 @@ export function AnnouncementForm({ organizations, compounds }: AnnouncementFormP
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Publishing…" : "Publish"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.publishing") : t("forms.publish")}</Button>
       </div>
     </form>
   );

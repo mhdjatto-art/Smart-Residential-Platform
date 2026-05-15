@@ -7,6 +7,7 @@ import { DomainsForm } from "@/components/saas/domains-form";
 import { DomainRowActions } from "@/components/saas/domain-row-actions";
 import { requireRole, requireUser } from "@/lib/auth/guards";
 import { listDomains } from "@/lib/api/saas";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -16,39 +17,38 @@ export default async function DomainsPage() {
   const orgId = user.organizationIds[0];
   if (!orgId) redirect("/organizations");
   const domains = await listDomains(orgId);
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
-        title="Custom domains"
         titleKey="headers.domains_title"
-        description="Point custom hostnames at SRP. Add a CNAME from your DNS, then verify."
         descKey="headers.domains_desc"
       />
       <DomainsForm orgId={orgId} />
 
       <Card className="mt-6">
         <div className="px-4 pt-4 pb-2 text-sm font-semibold text-muted-foreground flex items-center gap-2">
-          <Globe className="h-4 w-4" />Configured hosts
+          <Globe className="h-4 w-4" />{t("headers.configured_hosts")}
         </div>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Host</TableHead>
-              <TableHead>Primary</TableHead>
-              <TableHead>SSL</TableHead>
-              <TableHead>Verified</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t("tables.host")}</TableHead>
+              <TableHead>{t("tables.primary")}</TableHead>
+              <TableHead>{t("tables.ssl")}</TableHead>
+              <TableHead>{t("tables.verified")}</TableHead>
+              <TableHead className="text-right">{t("tables.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {domains.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center text-sm text-muted-foreground py-6">No domains yet.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={5} className="text-center text-sm text-muted-foreground py-6">{t("headers.no_domains_yet")}</TableCell></TableRow>
             ) : (
               domains.map((d) => (
                 <TableRow key={d.id}>
                   <TableCell className="font-mono">{d.host}</TableCell>
-                  <TableCell>{d.is_primary ? "Yes" : "—"}</TableCell>
+                  <TableCell>{d.is_primary ? t("common.yes") : "—"}</TableCell>
                   <TableCell className="text-xs uppercase">{d.ssl_status}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">{d.verified_at ? new Date(d.verified_at).toLocaleDateString() : "—"}</TableCell>
                   <TableCell className="text-right"><DomainRowActions id={d.id} orgId={orgId} isPrimary={d.is_primary} /></TableCell>

@@ -5,6 +5,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { listResidentContracts } from "@/lib/api/contract-signatures";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "My contracts" };
 export const dynamic = "force-dynamic";
@@ -12,16 +13,17 @@ export const dynamic = "force-dynamic";
 export default async function MobileContractsPage() {
   const ctx = await getResidentContext();
   const contracts = await listResidentContracts();
+  const { t } = await getT();
 
   return (
     <div>
-      <MobileTopbar title="My contracts" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("mobile.my_contracts")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4">
         {contracts.length === 0 ? (
           <div className="rounded-2xl border bg-card p-8 text-center">
             <FileText className="mx-auto h-10 w-10 text-muted-foreground/40" />
             <p className="mt-3 text-sm text-muted-foreground">
-              You don&apos;t have any contracts yet. Your compound manager will create one once your unit is assigned.
+              {t("mobile.no_contracts")}
             </p>
           </div>
         ) : (
@@ -47,18 +49,18 @@ export default async function MobileContractsPage() {
                           {c.total_property_price
                             ? formatCurrency(c.total_property_price, { currency: cur })
                             : c.monthly_amount
-                            ? `${formatCurrency(c.monthly_amount, { currency: cur })} / mo`
+                            ? t("mobile.per_month", { amount: formatCurrency(c.monthly_amount, { currency: cur }) })
                             : "—"}
                         </p>
                       </div>
                       <div className="shrink-0">
                         {c.is_signed ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-800">
-                            <CheckCircle2 className="h-3 w-3" /> Signed
+                            <CheckCircle2 className="h-3 w-3" /> {t("mobile.signed_badge")}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-800">
-                            <FileSignature className="h-3 w-3" /> Pending
+                            <FileSignature className="h-3 w-3" /> {t("mobile.pending_badge")}
                           </span>
                         )}
                       </div>

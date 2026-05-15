@@ -11,6 +11,7 @@ import { listTicketsPaged } from "@/lib/api/tickets";
 import { listVisitorsPaged } from "@/lib/api/visitors";
 import { requireRole } from "@/lib/auth/guards";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -22,62 +23,63 @@ export default async function OperationsPage() {
     listTicketsPaged({ pageSize: 5 }),
     listVisitorsPaged({ status: "pending", pageSize: 5 }),
   ]);
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
-        title="Operations"
-        description="Real-time view of tickets, maintenance, visitors, and bookings."
+        titleKey="headers.operations_title"
+        descKey="headers.operations_desc"
         actions={
           <div className="flex gap-2">
-            <Button asChild variant="outline"><Link href="/tickets/new">New ticket</Link></Button>
-            <Button asChild><Link href="/maintenance/new">New job</Link></Button>
+            <Button asChild variant="outline"><Link href="/tickets/new">{t("actions.new_ticket")}</Link></Button>
+            <Button asChild><Link href="/maintenance/new">{t("actions.new_job")}</Link></Button>
           </div>
         }
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Open tickets" value={stats.open_tickets} icon={Tag} />
-        <StatCard label="Urgent" value={stats.urgent_tickets} icon={AlertOctagon} trend={stats.urgent_tickets > 0 ? { value: "needs attention", positive: false } : undefined} />
-        <StatCard label="SLA breaches" value={stats.sla_breaches} icon={ClipboardList} trend={stats.sla_breaches > 0 ? { value: "overdue", positive: false } : undefined} />
-        <StatCard label="Active jobs" value={stats.active_jobs} icon={Wrench} />
+        <StatCard label={t("stats.open_tickets")} value={stats.open_tickets} icon={Tag} />
+        <StatCard label={t("stats.urgent")} value={stats.urgent_tickets} icon={AlertOctagon} trend={stats.urgent_tickets > 0 ? { value: t("stats.needs_attention"), positive: false } : undefined} />
+        <StatCard label={t("stats.sla_breaches")} value={stats.sla_breaches} icon={ClipboardList} trend={stats.sla_breaches > 0 ? { value: t("status.overdue"), positive: false } : undefined} />
+        <StatCard label={t("stats.active_jobs")} value={stats.active_jobs} icon={Wrench} />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Visitors today" value={stats.visitors_today} icon={UserPlus} />
-        <StatCard label="Pending visitors" value={stats.pending_visitors} icon={Bell} />
-        <StatCard label="Pending bookings" value={stats.pending_bookings} icon={CalendarDays} />
-        <StatCard label="Active technicians" value={stats.active_technicians} icon={Wrench} />
+        <StatCard label={t("stats.visitors_today")} value={stats.visitors_today} icon={UserPlus} />
+        <StatCard label={t("stats.pending_visitors")} value={stats.pending_visitors} icon={Bell} />
+        <StatCard label={t("stats.pending_bookings")} value={stats.pending_bookings} icon={CalendarDays} />
+        <StatCard label={t("stats.active_technicians")} value={stats.active_technicians} icon={Wrench} />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Recent tickets</CardTitle>
-            <Button asChild variant="outline" size="sm"><Link href="/tickets">View all</Link></Button>
+            <CardTitle>{t("headers.recent_tickets_title")}</CardTitle>
+            <Button asChild variant="outline" size="sm"><Link href="/tickets">{t("actions.view_all")}</Link></Button>
           </CardHeader>
           <CardContent className="p-0">
             {recentTickets.data.length === 0 ? (
-              <p className="p-6 text-sm text-muted-foreground">No tickets.</p>
+              <p className="p-6 text-sm text-muted-foreground">{t("headers.no_tickets")}</p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Ticket #</TableHead>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Priority</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>{t("tables.ticket_number")}</TableHead>
+                    <TableHead>{t("tables.subject")}</TableHead>
+                    <TableHead>{t("tables.priority")}</TableHead>
+                    <TableHead>{t("tables.status")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentTickets.data.map((t) => (
-                    <TableRow key={t.id}>
+                  {recentTickets.data.map((ticket) => (
+                    <TableRow key={ticket.id}>
                       <TableCell>
-                        <Link href={`/tickets/${t.id}`} className="font-mono hover:underline">{t.ticket_number}</Link>
+                        <Link href={`/tickets/${ticket.id}`} className="font-mono hover:underline">{ticket.ticket_number}</Link>
                       </TableCell>
-                      <TableCell className="max-w-xs truncate text-sm">{t.subject}</TableCell>
-                      <TableCell className="capitalize text-muted-foreground">{t.priority}</TableCell>
-                      <TableCell><StatusBadge status={t.status} /></TableCell>
+                      <TableCell className="max-w-xs truncate text-sm">{ticket.subject}</TableCell>
+                      <TableCell className="capitalize text-muted-foreground">{ticket.priority}</TableCell>
+                      <TableCell><StatusBadge status={ticket.status} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -88,20 +90,20 @@ export default async function OperationsPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Pending visitors</CardTitle>
-            <Button asChild variant="outline" size="sm"><Link href="/visitors">View all</Link></Button>
+            <CardTitle>{t("headers.pending_visitors_title")}</CardTitle>
+            <Button asChild variant="outline" size="sm"><Link href="/visitors">{t("actions.view_all")}</Link></Button>
           </CardHeader>
           <CardContent className="p-0">
             {recentVisitors.data.length === 0 ? (
-              <p className="p-6 text-sm text-muted-foreground">No pending visitors.</p>
+              <p className="p-6 text-sm text-muted-foreground">{t("headers.no_pending_visitors")}</p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Pass</TableHead>
-                    <TableHead>Visitor</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Type</TableHead>
+                    <TableHead>{t("tables.pass")}</TableHead>
+                    <TableHead>{t("tables.visitor")}</TableHead>
+                    <TableHead>{t("tables.date")}</TableHead>
+                    <TableHead>{t("tables.type")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

@@ -19,7 +19,7 @@ export default async function NewTicketPage() {
 
   return (
     <div>
-      <PageHeader title="New ticket" description="Open a complaint or maintenance request." />
+      <PageHeader titleKey="ops.new_ticket_title" descKey="ops.new_ticket_desc" />
       <TicketForm
         compounds={compounds}
         residents={residents}

@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { residentSchema, type ResidentInput } from "@/lib/validations/resident";
 import { createResident, updateResident } from "@/lib/api/residents";
+import { useT } from "@/lib/i18n/client";
 
 interface CompoundOption { id: string; name: string; }
 
@@ -23,6 +24,7 @@ type Errors = Partial<Record<keyof ResidentInput | "form", string>>;
 
 export function ResidentForm({ compounds, initial, defaultCompoundId }: ResidentFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
   const editing = !!initial?.id;
@@ -62,18 +64,18 @@ export function ResidentForm({ compounds, initial, defaultCompoundId }: Resident
       try {
         if (editing && initial?.id) {
           await updateResident(initial.id, parsed.data);
-          toast.success("Resident updated");
+          toast.success(t("forms.toast_resident_updated"));
           router.push(`/residents/${initial.id}`);
         } else {
           const created = await createResident(parsed.data);
-          toast.success("Resident created");
+          toast.success(t("forms.toast_resident_created"));
           router.push(`/residents/${created.id}`);
         }
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }
@@ -82,69 +84,69 @@ export function ResidentForm({ compounds, initial, defaultCompoundId }: Resident
     <form onSubmit={onSubmit} noValidate>
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
-          <Field label="Compound" error={errors.compound_id} className="md:col-span-2">
+          <Field label={t("forms.compound")} error={errors.compound_id} className="md:col-span-2">
             <Select name="compound_id" defaultValue={initial?.compound_id ?? defaultCompoundId} required>
-              <SelectTrigger><SelectValue placeholder="Select compound" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.select_compound")} /></SelectTrigger>
               <SelectContent>
                 {compounds.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="First name" error={errors.first_name}>
+          <Field label={t("forms.first_name")} error={errors.first_name}>
             <Input name="first_name" defaultValue={initial?.first_name} required />
           </Field>
-          <Field label="Last name" error={errors.last_name}>
+          <Field label={t("forms.last_name")} error={errors.last_name}>
             <Input name="last_name" defaultValue={initial?.last_name} required />
           </Field>
 
-          <Field label="Email" error={errors.email}>
+          <Field label={t("forms.email")} error={errors.email}>
             <Input type="email" name="email" defaultValue={initial?.email ?? ""} />
           </Field>
-          <Field label="Mobile" error={errors.mobile}>
+          <Field label={t("forms.mobile")} error={errors.mobile}>
             <Input name="mobile" defaultValue={initial?.mobile ?? ""} placeholder="+971…" />
           </Field>
 
-          <Field label="National ID" error={errors.national_id}>
+          <Field label={t("forms.national_id")} error={errors.national_id}>
             <Input name="national_id" defaultValue={initial?.national_id ?? ""} />
           </Field>
-          <Field label="Gender" error={errors.gender}>
+          <Field label={t("forms.gender")} error={errors.gender}>
             <Select name="gender" defaultValue={initial?.gender ?? "unspecified"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="unspecified">Unspecified</SelectItem>
+                <SelectItem value="male">{t("forms.gender_male")}</SelectItem>
+                <SelectItem value="female">{t("forms.gender_female")}</SelectItem>
+                <SelectItem value="unspecified">{t("forms.gender_unspecified")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Date of birth" error={errors.date_of_birth}>
+          <Field label={t("forms.date_of_birth")} error={errors.date_of_birth}>
             <Input type="date" name="date_of_birth" defaultValue={initial?.date_of_birth ?? ""} />
           </Field>
-          <Field label="Occupation" error={errors.occupation}>
+          <Field label={t("forms.occupation")} error={errors.occupation}>
             <Input name="occupation" defaultValue={initial?.occupation ?? ""} />
           </Field>
 
-          <Field label="Tenancy type" error={errors.tenancy_type}>
+          <Field label={t("forms.tenancy_type")} error={errors.tenancy_type}>
             <Select name="tenancy_type" defaultValue={initial?.tenancy_type ?? "tenant"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="owner">Owner</SelectItem>
-                <SelectItem value="tenant">Tenant</SelectItem>
-                <SelectItem value="family_member">Family member</SelectItem>
-                <SelectItem value="guest">Guest</SelectItem>
+                <SelectItem value="owner">{t("forms.owner")}</SelectItem>
+                <SelectItem value="tenant">{t("forms.tenant")}</SelectItem>
+                <SelectItem value="family_member">{t("forms.family_member")}</SelectItem>
+                <SelectItem value="guest">{t("forms.guest")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
 
-          <Field label="Status" error={errors.status}>
+          <Field label={t("forms.status")} error={errors.status}>
             <Select name="status" defaultValue={initial?.status ?? "active"}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="former">Former</SelectItem>
+                <SelectItem value="active">{t("forms.status_active")}</SelectItem>
+                <SelectItem value="pending">{t("forms.status_pending")}</SelectItem>
+                <SelectItem value="former">{t("forms.status_former")}</SelectItem>
               </SelectContent>
             </Select>
           </Field>
@@ -158,9 +160,9 @@ export function ResidentForm({ compounds, initial, defaultCompoundId }: Resident
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
         <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : editing ? "Save changes" : "Create resident"}
+          {pending ? t("forms.saving") : editing ? t("forms.save_changes") : t("forms.create_resident")}
         </Button>
       </div>
     </form>

@@ -53,9 +53,9 @@ export default async function UnitsPage({
   return (
     <div>
       <PageHeader
-        title="Units"
+        title={t("headers.units_title")}
         titleKey="headers.units_title"
-        description="All units across your compounds with availability and pricing."
+        description={t("headers.units_desc")}
         descKey="headers.units_desc"
         actions={
           <Button asChild>

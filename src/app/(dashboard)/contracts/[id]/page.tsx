@@ -14,6 +14,7 @@ import { getLatestSignature } from "@/lib/api/contract-signatures";
 import { ActivityTimeline } from "@/components/audit/activity-timeline";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
   const { id } = await params;
   const contract = await getContract(id);
   if (!contract) notFound();
+  const { t } = await getT();
 
   const supabase = await createClient();
   const [schedule, paymentsResult, unitRes, residentRes, orgRes, signature] = await Promise.all([
@@ -47,32 +49,44 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
   const paidTotal = schedule.reduce((sum, s) => sum + Number(s.paid_amount), 0);
   const nextDue = schedule.find((s) => s.status !== "paid" && s.status !== "cancelled");
 
+  // Translate contract type if a known key exists, else fall back to humanized form.
+  const contractTypeKey = `contract_types.${contract.contract_type}` as Parameters<typeof t>[0];
+  const contractTypeOut = t(contractTypeKey);
+  const contractTypeLabel = contractTypeOut === contractTypeKey
+    ? contract.contract_type.replace(/_/g, " ")
+    : contractTypeOut;
+
   return (
     <div>
       <PageHeader
         title={contract.contract_number}
-        description={`${contract.contract_type.replace(/_/g, " ")} · ${cur} · Unit ${unitNumber} · ${residentName}`}
+        description={t("details.contract_subtitle", {
+          type: contractTypeLabel,
+          currency: cur,
+          unit: unitNumber,
+          resident: residentName,
+        })}
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/contracts"><ArrowLeft className="h-4 w-4" />Back</Link>
+              <Link href="/contracts"><ArrowLeft className="h-4 w-4" />{t("actions.back")}</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href={`/contracts/${contract.id}/print`}>
-                <Printer className="h-4 w-4" />Print contract
+                <Printer className="h-4 w-4" />{t("actions.print_contract")}
               </Link>
             </Button>
             {schedule.length > 0 && (
               <Button asChild variant="outline">
                 <Link href={`/api/exports/schedules.csv?contract=${contract.id}`}>
-                  <Download className="h-4 w-4" />Export schedule
+                  <Download className="h-4 w-4" />{t("actions.export_schedule")}
                 </Link>
               </Button>
             )}
             {(contract.contract_status === "active" || contract.contract_status === "completed") && (
               <Button asChild>
                 <Link href={`/payments/new?contract=${contract.id}`}>
-                  <DollarSign className="h-4 w-4" />Record payment
+                  <DollarSign className="h-4 w-4" />{t("actions.record_payment")}
                 </Link>
               </Button>
             )}
@@ -81,20 +95,23 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total price" value={fmt(contract.total_property_price)} />
-        <StatCard label="Financed" value={fmt(contract.financed_amount)} />
-        <StatCard label="Paid to date" value={fmt(paidTotal)} />
-        <StatCard label="Outstanding" value={fmt(outstanding)} />
+        <StatCard label={t("details.total_price")} value={fmt(contract.total_property_price)} />
+        <StatCard label={t("details.financed")} value={fmt(contract.financed_amount)} />
+        <StatCard label={t("details.paid_to_date")} value={fmt(paidTotal)} />
+        <StatCard label={t("details.outstanding")} value={fmt(outstanding)} />
       </div>
 
       <div className="mt-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Contract</CardTitle>
+              <CardTitle>{t("headers.contract_short")}</CardTitle>
               <p className="text-xs text-muted-foreground capitalize mt-1">
-                <StatusBadge status={contract.contract_status} /> · {contract.installment_count} ×{" "}
-                {contract.installment_frequency} at {fmt(contract.monthly_amount)}
+                <StatusBadge status={contract.contract_status} /> · {t("details.installments_summary", {
+                  count: contract.installment_count,
+                  freq: contract.installment_frequency,
+                  amount: fmt(contract.monthly_amount),
+                })}
               </p>
             </div>
             <ContractActions
@@ -104,14 +121,14 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
             />
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
-            <Field label="Currency" value={cur} />
-            <Field label="Start date" value={formatDate(contract.contract_start_date)} />
-            <Field label="End date" value={formatDate(contract.contract_end_date)} />
-            <Field label="Down payment" value={fmt(contract.down_payment)} />
-            <Field label="Interest rate" value={`${contract.annual_interest_rate}%`} />
-            <Field label="Frequency" value={contract.installment_frequency} />
-            <Field label="Penalty type" value={contract.late_penalty_type ?? "—"} />
-            <Field label="Grace period" value={`${contract.grace_period_days} days`} />
+            <Field label={t("details.currency")} value={cur} />
+            <Field label={t("details.start_date")} value={formatDate(contract.contract_start_date)} />
+            <Field label={t("details.end_date")} value={formatDate(contract.contract_end_date)} />
+            <Field label={t("details.down_payment")} value={fmt(contract.down_payment)} />
+            <Field label={t("details.interest_rate")} value={`${contract.annual_interest_rate}%`} />
+            <Field label={t("details.frequency")} value={contract.installment_frequency} />
+            <Field label={t("details.penalty_type")} value={contract.late_penalty_type ?? "—"} />
+            <Field label={t("details.grace_period")} value={t("details.grace_period_days", { days: contract.grace_period_days })} />
           </CardContent>
         </Card>
       </div>
@@ -119,25 +136,25 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><FileText className="h-4 w-4" />Payment schedule</CardTitle>
+            <CardTitle className="flex items-center gap-2"><FileText className="h-4 w-4" />{t("headers.payment_schedule_title")}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {schedule.length === 0 ? (
               <p className="p-6 text-sm text-muted-foreground">
-                No schedule generated. Click "Generate schedule" above to create it.
+                {t("headers.no_schedule_generated")}
               </p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>#</TableHead>
-                    <TableHead>Due date</TableHead>
-                    <TableHead className="text-right">Principal</TableHead>
-                    <TableHead className="text-right">Interest</TableHead>
-                    <TableHead className="text-right">Penalty</TableHead>
-                    <TableHead className="text-right">Total due</TableHead>
-                    <TableHead className="text-right">Paid</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>{t("tables.due_date")}</TableHead>
+                    <TableHead className="text-right">{t("tables.principal")}</TableHead>
+                    <TableHead className="text-right">{t("tables.interest")}</TableHead>
+                    <TableHead className="text-right">{t("tables.penalty")}</TableHead>
+                    <TableHead className="text-right">{t("tables.total")}</TableHead>
+                    <TableHead className="text-right">{t("tables.paid")}</TableHead>
+                    <TableHead>{t("tables.status")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -161,11 +178,11 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
 
         <Card>
           <CardHeader>
-            <CardTitle>Payments</CardTitle>
+            <CardTitle>{t("headers.payments_title_short")}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {paymentsResult.data.length === 0 ? (
-              <p className="p-6 text-sm text-muted-foreground">No payments yet.</p>
+              <p className="p-6 text-sm text-muted-foreground">{t("headers.no_payments_yet")}</p>
             ) : (
               <ul className="divide-y">
                 {paymentsResult.data.map((p) => (
@@ -196,7 +213,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={signature.signature_png} alt="Signature" className="h-20 rounded border bg-white p-1" />
             <div className="text-sm">
-              <p className="font-medium">Signed by {signature.full_name_typed ?? residentName}</p>
+              <p className="font-medium">{t("details.signed_by", { name: signature.full_name_typed ?? residentName })}</p>
               <p className="text-xs text-muted-foreground">
                 {formatDate(signature.signed_at)} {signature.ip_address ? `· ${signature.ip_address}` : ""}
               </p>
@@ -208,7 +225,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
       {nextDue && (
         <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">
           <p className="text-sm">
-            <strong>Next due:</strong> {formatDate(nextDue.due_date)} —{" "}
+            <strong>{t("details.next_due_label")}</strong> {formatDate(nextDue.due_date)} —{" "}
             {fmt(Number(nextDue.total_due) + Number(nextDue.penalty_amount) - Number(nextDue.paid_amount))}
           </p>
         </div>

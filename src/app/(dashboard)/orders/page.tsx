@@ -8,42 +8,42 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listMarketplaceOrders } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
   const orders = await listMarketplaceOrders();
+  const { t } = await getT();
   return (
     <div>
       <PageHeader
-        title="Marketplace orders"
         titleKey="headers.orders_title"
-        description="Orders placed by residents through the service marketplace."
         descKey="headers.orders_desc"
         actions={
           <Button asChild>
-            <Link href="/orders/new"><Plus className="h-4 w-4" />New order</Link>
+            <Link href="/orders/new"><Plus className="h-4 w-4" />{t("ops.orders_new")}</Link>
           </Button>
         }
       />
       {orders.length === 0 ? (
         <EmptyState
           icon={ShoppingBag}
-          title="No orders yet"
-          description="Orders will appear here as residents place them."
-          action={<Button asChild><Link href="/orders/new">New order</Link></Button>}
+          title={t("ops.orders_empty_title")}
+          description={t("ops.orders_empty_desc")}
+          action={<Button asChild><Link href="/orders/new">{t("ops.orders_new")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order #</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Payment</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Commission</TableHead>
+                <TableHead>{t("ops.orders_order_number")}</TableHead>
+                <TableHead>{t("tables.date")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead>{t("ops.orders_payment")}</TableHead>
+                <TableHead>{t("ops.orders_total")}</TableHead>
+                <TableHead>{t("ops.orders_commission")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

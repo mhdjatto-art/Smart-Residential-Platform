@@ -11,6 +11,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { BookingActions } from "@/components/bookings/booking-actions";
 import { listBookings } from "@/lib/api/facilities";
 import { formatCurrency } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -29,17 +30,18 @@ export default async function BookingsPage({
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listBookings({ status: sp.status, page, pageSize: PAGE_SIZE });
+  const { t } = await getT();
 
   const pendingCount = data.filter((b) => b.status === "pending").length;
 
   return (
     <div>
       <PageHeader
-        title="Facility bookings"
-        description="Reservations across all facilities, pending approvals, and history."
+        title={t("ops.bookings_title")}
+        description={t("ops.bookings_desc")}
         actions={
           <Button asChild>
-            <Link href="/bookings/new"><Plus className="h-4 w-4" />New booking</Link>
+            <Link href="/bookings/new"><Plus className="h-4 w-4" />{t("ops.bookings_new")}</Link>
           </Button>
         }
       />
@@ -47,18 +49,18 @@ export default async function BookingsPage({
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("filters.status_placeholder")}
           options={[
-            { value: "pending", label: "Pending" },
-            { value: "approved", label: "Approved" },
-            { value: "rejected", label: "Rejected" },
-            { value: "cancelled", label: "Cancelled" },
-            { value: "completed", label: "Completed" },
+            { value: "pending", label: t("ops.bookings_status_pending") },
+            { value: "approved", label: t("ops.bookings_status_approved") },
+            { value: "rejected", label: t("ops.bookings_status_rejected") },
+            { value: "cancelled", label: t("ops.bookings_status_cancelled") },
+            { value: "completed", label: t("ops.bookings_status_completed") },
           ]}
         />
         {pendingCount > 0 && (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
-            ⏳ {pendingCount} pending approval{pendingCount === 1 ? "" : "s"}
+            ⏳ {pendingCount === 1 ? t("ops.bookings_pending_count_one", { n: pendingCount }) : t("ops.bookings_pending_count_many", { n: pendingCount })}
           </span>
         )}
       </div>
@@ -66,22 +68,22 @@ export default async function BookingsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={CalendarDays}
-          title="No bookings yet"
-          description="Bookings will appear here when residents reserve facilities."
+          title={t("ops.bookings_empty_title")}
+          description={t("ops.bookings_empty_desc")}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Facility</TableHead>
-                <TableHead>Resident</TableHead>
-                <TableHead>Start</TableHead>
-                <TableHead className="hidden md:table-cell">End</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden text-right lg:table-cell">Fee</TableHead>
-                <TableHead className="hidden lg:table-cell">Paid</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("ops.bookings_facility")}</TableHead>
+                <TableHead>{t("ops.bookings_resident")}</TableHead>
+                <TableHead>{t("ops.bookings_start")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("ops.bookings_end")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="hidden text-right lg:table-cell">{t("ops.bookings_fee")}</TableHead>
+                <TableHead className="hidden lg:table-cell">{t("ops.bookings_paid_col")}</TableHead>
+                <TableHead className="text-right">{t("common.actions_col")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -105,7 +107,7 @@ export default async function BookingsPage({
                     )}
                   </TableCell>
                   <TableCell className="hidden text-right tabular-nums lg:table-cell">
-                    {b.fee_amount > 0 ? formatCurrency(b.fee_amount) : "Free"}
+                    {b.fee_amount > 0 ? formatCurrency(b.fee_amount) : t("ops.bookings_free")}
                   </TableCell>
                   <TableCell className="hidden text-xs lg:table-cell">
                     {b.fee_amount > 0 ? (b.fee_paid ? "✓" : "—") : "—"}

@@ -44,9 +44,9 @@ export default async function ResidentsPage({
   return (
     <div>
       <PageHeader
-        title="Residents"
+        title={t("headers.residents_title")}
         titleKey="headers.residents_title"
-        description="Owners, tenants, family members, and guests across your compounds."
+        description={t("headers.residents_desc")}
         descKey="headers.residents_desc"
         actions={
           <Button asChild>
@@ -108,7 +108,7 @@ export default async function ResidentsPage({
                         {r.first_name} {r.last_name}
                       </Link>
                       {r.national_id && (
-                        <div className="text-xs font-mono text-muted-foreground">ID: {r.national_id}</div>
+                        <div className="text-xs font-mono text-muted-foreground">{t("details.national_id_value", { id: r.national_id })}</div>
                       )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{r.email ?? "—"}</TableCell>

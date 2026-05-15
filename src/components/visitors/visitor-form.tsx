@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { visitorSchema, type VisitorInput } from "@/lib/validations/operations";
 import { createVisitor } from "@/lib/api/visitors";
+import { useT } from "@/lib/i18n/client";
 
 interface ResidentOption { id: string; full_name: string; }
 
@@ -19,6 +20,7 @@ interface VisitorFormProps {
 
 export function VisitorForm({ residents }: VisitorFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Partial<Record<keyof VisitorInput | "form", string>>>({});
 
@@ -50,13 +52,13 @@ export function VisitorForm({ residents }: VisitorFormProps) {
     startTransition(async () => {
       try {
         const created = await createVisitor(parsed.data);
-        toast.success("Visitor registered", { description: `Pass: ${created.pass_code}` });
+        toast.success(t("forms.toast_visitor_registered"), { description: t("forms.toast_pass_code", { code: created.pass_code }) });
         router.push(`/visitors/${created.id}`);
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown";
+        const msg = err instanceof Error ? err.message : t("forms.unknown");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }
@@ -66,9 +68,9 @@ export function VisitorForm({ residents }: VisitorFormProps) {
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Resident (host)</Label>
+            <Label>{t("forms.resident_host")}</Label>
             <Select name="resident_id" required>
-              <SelectTrigger><SelectValue placeholder="Choose resident hosting the visitor" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t("forms.host_picker_placeholder")} /></SelectTrigger>
               <SelectContent>
                 {residents.map((r) => <SelectItem key={r.id} value={r.id}>{r.full_name}</SelectItem>)}
               </SelectContent>
@@ -77,53 +79,53 @@ export function VisitorForm({ residents }: VisitorFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Visitor full name</Label>
+            <Label>{t("forms.visitor_full_name")}</Label>
             <Input name="full_name" required />
             {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label>{t("forms.type")}</Label>
             <Select name="visitor_type" defaultValue="guest">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="guest">Guest</SelectItem>
-                <SelectItem value="delivery">Delivery</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="contractor">Contractor</SelectItem>
+                <SelectItem value="guest">{t("forms.visitor_type_guest")}</SelectItem>
+                <SelectItem value="delivery">{t("forms.visitor_type_delivery")}</SelectItem>
+                <SelectItem value="maintenance">{t("forms.visitor_type_maintenance")}</SelectItem>
+                <SelectItem value="contractor">{t("forms.visitor_type_contractor")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Mobile</Label>
+            <Label>{t("forms.mobile")}</Label>
             <Input name="mobile" />
           </div>
           <div className="space-y-2">
-            <Label>ID number</Label>
+            <Label>{t("forms.id_number")}</Label>
             <Input name="id_number" />
           </div>
 
           <div className="space-y-2">
-            <Label>Vehicle plate</Label>
-            <Input name="vehicle_plate" placeholder="e.g. DXB-A-12345" />
+            <Label>{t("forms.vehicle_plate")}</Label>
+            <Input name="vehicle_plate" placeholder={t("forms.vehicle_plate_placeholder")} />
           </div>
           <div className="space-y-2">
-            <Label>Visit purpose</Label>
-            <Input name="visit_purpose" placeholder="optional" />
+            <Label>{t("forms.visit_purpose")}</Label>
+            <Input name="visit_purpose" placeholder={t("forms.optional")} />
           </div>
 
           <div className="space-y-2">
-            <Label>Scheduled date</Label>
+            <Label>{t("forms.scheduled_date")}</Label>
             <Input type="date" name="scheduled_date" required />
             {errors.scheduled_date && <p className="text-xs text-destructive">{errors.scheduled_date}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Scheduled time</Label>
+            <Label>{t("forms.scheduled_time")}</Label>
             <Input type="time" name="scheduled_time" />
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("forms.notes")}</Label>
             <textarea name="notes" rows={2} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
         </CardContent>
@@ -136,8 +138,8 @@ export function VisitorForm({ residents }: VisitorFormProps) {
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Register visitor"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.register_visitor")}</Button>
       </div>
     </form>
   );

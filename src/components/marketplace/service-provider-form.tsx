@@ -14,12 +14,14 @@ import {
   PROVIDER_AVAILABILITY_STATUSES, COMMISSION_KINDS,
 } from "@/lib/validations/marketplace";
 import { createServiceProvider } from "@/lib/api/marketplace";
+import { useT } from "@/lib/i18n/client";
 
 interface OrgOption { id: string; name: string; }
 interface ServiceProviderFormProps { organizations: OrgOption[]; }
 
 export function ServiceProviderForm({ organizations }: ServiceProviderFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -55,12 +57,12 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
     startTransition(async () => {
       try {
         await createServiceProvider(parsed.data);
-        toast.success("Provider added");
+        toast.success(t("forms.toast_provider_added"));
         router.push("/service-providers");
         router.refresh();
       } catch (err) {
-        toast.error("Save failed", { description: err instanceof Error ? err.message : "" });
-        setErrors({ form: err instanceof Error ? err.message : "Unknown" });
+        toast.error(t("forms.toast_save_failed"), { description: err instanceof Error ? err.message : "" });
+        setErrors({ form: err instanceof Error ? err.message : t("forms.unknown") });
       }
     });
   }
@@ -70,7 +72,7 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
       <Card>
         <CardContent className="grid gap-6 p-6 md:grid-cols-2">
           <div className="md:col-span-2 space-y-2">
-            <Label>Organization</Label>
+            <Label>{t("forms.organization")}</Label>
             <Select name="organization_id" defaultValue={organizations[0]?.id} required>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -80,12 +82,12 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
           </div>
 
           <div className="space-y-2">
-            <Label>Provider name</Label>
-            <Input name="provider_name" required placeholder="e.g. Sami's Plumbing Co." />
+            <Label>{t("forms.provider_name")}</Label>
+            <Input name="provider_name" required placeholder={t("forms.provider_name_placeholder_service")} />
             {errors.provider_name && <p className="text-xs text-destructive">{errors.provider_name}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Kind</Label>
+            <Label>{t("forms.kind")}</Label>
             <Select name="provider_kind" defaultValue="other">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -95,29 +97,29 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label>Description</Label>
-            <Textarea name="description" rows={3} placeholder="What this provider offers and who they serve." />
+            <Label>{t("forms.description")}</Label>
+            <Textarea name="description" rows={3} placeholder={t("forms.description_placeholder_service")} />
           </div>
 
           <div className="space-y-2">
-            <Label>Mobile</Label>
+            <Label>{t("forms.mobile")}</Label>
             <Input name="mobile" />
           </div>
           <div className="space-y-2">
-            <Label>Email</Label>
+            <Label>{t("forms.email")}</Label>
             <Input type="email" name="email" />
           </div>
           <div className="space-y-2">
-            <Label>Website</Label>
+            <Label>{t("forms.website")}</Label>
             <Input name="website" />
           </div>
           <div className="space-y-2">
-            <Label>Address</Label>
+            <Label>{t("forms.address")}</Label>
             <Input name="address" />
           </div>
 
           <div className="space-y-2">
-            <Label>Verification status</Label>
+            <Label>{t("forms.verification_status")}</Label>
             <Select name="verification_status" defaultValue="unverified">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -126,7 +128,7 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Availability</Label>
+            <Label>{t("forms.availability")}</Label>
             <Select name="availability_status" defaultValue="open">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -136,7 +138,7 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
           </div>
 
           <div className="space-y-2">
-            <Label>Commission kind</Label>
+            <Label>{t("forms.commission_kind")}</Label>
             <Select name="default_commission_kind" defaultValue="percentage">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -145,10 +147,10 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Commission value</Label>
+            <Label>{t("forms.commission_value")}</Label>
             <Input name="default_commission_value" type="number" step="0.01" defaultValue={10} />
             <p className="text-[11px] text-muted-foreground">
-              Percentage (e.g. 10 = 10%) or flat amount per order, depending on kind.
+              {t("forms.commission_value_note")}
             </p>
           </div>
         </CardContent>
@@ -161,8 +163,8 @@ export function ServiceProviderForm({ organizations }: ServiceProviderFormProps)
       )}
 
       <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Add provider"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.saving") : t("forms.add_provider")}</Button>
       </div>
     </form>
   );

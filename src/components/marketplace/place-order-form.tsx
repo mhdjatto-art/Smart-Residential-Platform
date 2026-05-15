@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { placeOrderSchema } from "@/lib/validations/marketplace";
 import { placeOrder } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
+import { useT } from "@/lib/i18n/client";
 
 interface ProviderOption { id: string; name: string; }
 interface ItemOption { id: string; name: string; price: number; currency: string; provider_id: string; }
@@ -33,6 +34,7 @@ interface LineRow {
 
 export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [providerId, setProviderId] = useState<string>(providers[0]?.id ?? "");
   const [residentId, setResidentId] = useState<string>(residents[0]?.id ?? "");
@@ -70,7 +72,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (lines.length === 0 || lines.every((l) => !l.item_name.trim())) {
-      toast.error("Add at least one item");
+      toast.error(t("forms.toast_add_at_least_one"));
       return;
     }
     const candidate = {
@@ -95,17 +97,17 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
     };
     const parsed = placeOrderSchema.safeParse(candidate);
     if (!parsed.success) {
-      toast.error("Invalid order", { description: parsed.error.errors[0]?.message });
+      toast.error(t("forms.toast_invalid_order"), { description: parsed.error.errors[0]?.message });
       return;
     }
     startTransition(async () => {
       try {
         const id = await placeOrder(parsed.data);
-        toast.success("Order placed");
+        toast.success(t("forms.toast_order_placed"));
         router.push(`/orders/${id}`);
         router.refresh();
       } catch (err) {
-        toast.error("Failed", { description: err instanceof Error ? err.message : "" });
+        toast.error(t("forms.toast_failed"), { description: err instanceof Error ? err.message : "" });
       }
     });
   }
@@ -113,10 +115,10 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
       <Card>
-        <CardHeader><CardTitle>Order header</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("forms.order_header")}</CardTitle></CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-3">
           <div className="space-y-2">
-            <Label>Provider</Label>
+            <Label>{t("forms.provider")}</Label>
             <Select value={providerId} onValueChange={setProviderId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -125,7 +127,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Resident</Label>
+            <Label>{t("forms.resident")}</Label>
             <Select value={residentId} onValueChange={setResidentId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -134,7 +136,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Currency</Label>
+            <Label>{t("forms.currency")}</Label>
             <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -151,21 +153,21 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Items</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("forms.items_card")}</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           {lines.map((l, idx) => (
             <div key={idx} className="grid grid-cols-12 gap-3 items-end border-b pb-3">
               <div className="col-span-12 md:col-span-4 space-y-1">
-                <Label className="text-xs">Catalog item (optional)</Label>
+                <Label className="text-xs">{t("forms.catalog_item_optional")}</Label>
                 <Select
                   value={l.service_item_id ?? "__custom__"}
                   onValueChange={(v) => v === "__custom__"
                     ? setLines((prev) => prev.map((row, i) => i === idx ? { ...row, service_item_id: undefined } : row))
                     : pickItem(idx, v)}
                 >
-                  <SelectTrigger><SelectValue placeholder="Pick from catalog…" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("forms.pick_from_catalog")} /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__custom__">— Custom line item —</SelectItem>
+                    <SelectItem value="__custom__">{t("forms.custom_line_item")}</SelectItem>
                     {providerItems.map((p) => (
                       <SelectItem key={p.id} value={p.id}>
                         {p.name} — {formatCurrency(p.price, { currency: p.currency })}
@@ -175,7 +177,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
                 </Select>
               </div>
               <div className="col-span-12 md:col-span-3 space-y-1">
-                <Label className="text-xs">Name</Label>
+                <Label className="text-xs">{t("forms.name")}</Label>
                 <Input
                   value={l.item_name}
                   onChange={(e) => setLines((prev) => prev.map((row, i) => i === idx ? { ...row, item_name: e.target.value } : row))}
@@ -183,7 +185,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
                 />
               </div>
               <div className="col-span-4 md:col-span-2 space-y-1">
-                <Label className="text-xs">Qty</Label>
+                <Label className="text-xs">{t("forms.qty")}</Label>
                 <Input
                   type="number" step="0.01" min="0.001"
                   value={l.quantity}
@@ -191,7 +193,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
                 />
               </div>
               <div className="col-span-6 md:col-span-2 space-y-1">
-                <Label className="text-xs">Unit price</Label>
+                <Label className="text-xs">{t("forms.unit_price")}</Label>
                 <Input
                   type="number" step="0.01" min="0"
                   value={l.unit_price}
@@ -206,32 +208,32 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
             </div>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={addLine}>
-            <Plus className="h-4 w-4" />Add line
+            <Plus className="h-4 w-4" />{t("forms.add_line")}
           </Button>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Fees & delivery</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t("forms.fees_delivery")}</CardTitle></CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-3">
           <div className="space-y-2">
-            <Label>Service fee</Label>
+            <Label>{t("forms.service_fee")}</Label>
             <Input type="number" step="0.01" min="0" value={serviceFee} onChange={(e) => setServiceFee(Number(e.target.value))} />
           </div>
           <div className="space-y-2">
-            <Label>Delivery fee</Label>
+            <Label>{t("forms.delivery_fee")}</Label>
             <Input type="number" step="0.01" min="0" value={deliveryFee} onChange={(e) => setDeliveryFee(Number(e.target.value))} />
           </div>
           <div className="space-y-2">
-            <Label>Tax</Label>
+            <Label>{t("forms.tax")}</Label>
             <Input type="number" step="0.01" min="0" value={taxAmount} onChange={(e) => setTaxAmount(Number(e.target.value))} />
           </div>
           <div className="md:col-span-2 space-y-2">
-            <Label>Delivery address</Label>
+            <Label>{t("forms.delivery_address")}</Label>
             <Input value={deliveryAddress} onChange={(e) => setDeliveryAddress(e.target.value)} />
           </div>
           <div className="md:col-span-3 space-y-2">
-            <Label>Notes</Label>
+            <Label>{t("forms.notes")}</Label>
             <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
         </CardContent>
@@ -239,17 +241,17 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
 
       <Card className="max-w-md ml-auto">
         <CardContent className="p-4 text-sm space-y-1">
-          <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{formatCurrency(subtotal, { currency })}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Service fee</span><span>{formatCurrency(serviceFee, { currency })}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Delivery</span><span>{formatCurrency(deliveryFee, { currency })}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Tax</span><span>{formatCurrency(taxAmount, { currency })}</span></div>
-          <div className="flex justify-between border-t pt-2 font-semibold"><span>Total</span><span>{formatCurrency(total, { currency })}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">{t("forms.subtotal")}</span><span>{formatCurrency(subtotal, { currency })}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">{t("forms.service_fee")}</span><span>{formatCurrency(serviceFee, { currency })}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">{t("forms.delivery_fee")}</span><span>{formatCurrency(deliveryFee, { currency })}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">{t("forms.tax")}</span><span>{formatCurrency(taxAmount, { currency })}</span></div>
+          <div className="flex justify-between border-t pt-2 font-semibold"><span>{t("forms.total_label")}</span><span>{formatCurrency(total, { currency })}</span></div>
         </CardContent>
       </Card>
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>Cancel</Button>
-        <Button type="submit" disabled={pending}>{pending ? "Placing…" : "Place order"}</Button>
+        <Button type="button" variant="outline" onClick={() => router.back()} disabled={pending}>{t("actions.cancel")}</Button>
+        <Button type="submit" disabled={pending}>{pending ? t("forms.placing") : t("forms.place_order")}</Button>
       </div>
     </form>
   );

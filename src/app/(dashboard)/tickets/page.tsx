@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listTicketsPaged } from "@/lib/api/tickets";
 import { TICKET_CATEGORIES } from "@/lib/validations/operations";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -31,43 +32,42 @@ export default async function TicketsPage({
     page,
     pageSize: PAGE_SIZE,
   });
+  const { t } = await getT();
 
   return (
     <div>
       <PageHeader
-        title="Tickets"
         titleKey="headers.tickets_title"
-        description="Resident complaints, maintenance requests, and operational issues."
         descKey="headers.tickets_desc"
         actions={
           <Button asChild>
-            <Link href="/tickets/new"><Plus className="h-4 w-4" />New ticket</Link>
+            <Link href="/tickets/new"><Plus className="h-4 w-4" />{t("actions.new_ticket")}</Link>
           </Button>
         }
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2"><SearchBar placeholder="Search subject, description, ticket #…" /></div>
+        <div className="lg:col-span-2"><SearchBar placeholder={t("ops.tickets_search_ph")} /></div>
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("filters.status_placeholder")}
           options={[
-            { value: "open", label: "Open" },
-            { value: "assigned", label: "Assigned" },
-            { value: "in_progress", label: "In progress" },
-            { value: "pending", label: "Pending" },
-            { value: "resolved", label: "Resolved" },
-            { value: "closed", label: "Closed" },
+            { value: "open", label: t("ops.tickets_status_open") },
+            { value: "assigned", label: t("ops.tickets_status_assigned") },
+            { value: "in_progress", label: t("ops.tickets_status_in_progress") },
+            { value: "pending", label: t("ops.tickets_status_pending") },
+            { value: "resolved", label: t("ops.tickets_status_resolved") },
+            { value: "closed", label: t("ops.tickets_status_closed") },
           ]}
         />
         <FilterSelect
           paramName="priority"
-          placeholder="priority"
+          placeholder={t("ops.tickets_filter_priority")}
           options={[
-            { value: "low", label: "Low" },
-            { value: "medium", label: "Medium" },
-            { value: "high", label: "High" },
-            { value: "urgent", label: "Urgent" },
+            { value: "low", label: t("ops.tickets_priority_low") },
+            { value: "medium", label: t("ops.tickets_priority_medium") },
+            { value: "high", label: t("ops.tickets_priority_high") },
+            { value: "urgent", label: t("ops.tickets_priority_urgent") },
           ]}
         />
       </div>
@@ -75,7 +75,7 @@ export default async function TicketsPage({
       <div className="mb-4">
         <FilterSelect
           paramName="category"
-          placeholder="category"
+          placeholder={t("ops.tickets_filter_category")}
           options={TICKET_CATEGORIES.map((c) => ({ value: c, label: c }))}
         />
       </div>
@@ -83,38 +83,38 @@ export default async function TicketsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={Tag}
-          title="No tickets found"
-          description="When residents report issues, they'll appear here."
-          action={<Button asChild><Link href="/tickets/new">Open ticket</Link></Button>}
+          title={t("ops.tickets_no_results_title")}
+          description={t("ops.tickets_no_results_desc")}
+          action={<Button asChild><Link href="/tickets/new">{t("ops.tickets_open_btn")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ticket #</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>SLA</TableHead>
-                <TableHead className="text-right">Opened</TableHead>
+                <TableHead>{t("tables.ticket_number")}</TableHead>
+                <TableHead>{t("tables.subject")}</TableHead>
+                <TableHead>{t("ops.ticket_category")}</TableHead>
+                <TableHead>{t("tables.priority")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead>{t("ops.tickets_sla")}</TableHead>
+                <TableHead className="text-right">{t("ops.tickets_opened")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((t) => (
-                <TableRow key={t.id}>
+              {data.map((tt) => (
+                <TableRow key={tt.id}>
                   <TableCell>
-                    <Link href={`/tickets/${t.id}`} className="font-mono font-medium hover:underline">
-                      {t.ticket_number}
+                    <Link href={`/tickets/${tt.id}`} className="font-mono font-medium hover:underline">
+                      {tt.ticket_number}
                     </Link>
                   </TableCell>
-                  <TableCell className="max-w-xs truncate">{t.subject}</TableCell>
-                  <TableCell className="capitalize text-muted-foreground">{t.category}</TableCell>
-                  <TableCell><PriorityBadge priority={t.priority} /></TableCell>
-                  <TableCell><StatusBadge status={t.status} /></TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(t.sla_due_date)}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{formatDate(t.opened_at)}</TableCell>
+                  <TableCell className="max-w-xs truncate">{tt.subject}</TableCell>
+                  <TableCell className="capitalize text-muted-foreground">{tt.category}</TableCell>
+                  <TableCell><PriorityBadge priority={tt.priority} /></TableCell>
+                  <TableCell><StatusBadge status={tt.status} /></TableCell>
+                  <TableCell className="text-muted-foreground">{formatDate(tt.sla_due_date)}</TableCell>
+                  <TableCell className="text-right text-muted-foreground">{formatDate(tt.opened_at)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
