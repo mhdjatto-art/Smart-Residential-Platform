@@ -4,6 +4,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { TopupForm } from "@/components/wallet/topup-form";
+import { getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "Top up wallet" };
 export const dynamic = "force-dynamic";
@@ -12,6 +13,7 @@ export default async function MobileWalletTopupPage({
   searchParams,
 }: { searchParams: Promise<{ wallet?: string }> }) {
   const ctx = await getResidentContext();
+  const { t } = await getT();
   const sp = await searchParams;
   if (!sp.wallet) notFound();
 
@@ -27,7 +29,7 @@ export default async function MobileWalletTopupPage({
 
   return (
     <div>
-      <MobileTopbar title="Top up wallet" userId={ctx.user_id} unread={0} showBack />
+      <MobileTopbar title={t("wallet.topup_now")} userId={ctx.user_id} unread={0} showBack />
       <div className="p-4">
         <TopupForm
           walletId={(wallet as { id: string }).id}

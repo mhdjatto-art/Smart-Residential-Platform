@@ -14,15 +14,17 @@ import {
   type FeatureFlag,
   type RoleCapabilityOverride,
 } from "@/lib/api/master-permissions";
+import { useT } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n";
 
-const ROLE_LABELS_AR: Record<string, string> = {
-  super_admin:      "المدير الرئيسي",
-  developer_admin:  "مدير مطوّر",
-  compound_manager: "مدير المجمع",
-  finance_officer:  "مسؤول المالية",
-  maintenance_staff:"موظف الصيانة",
-  security_staff:   "موظف الأمن",
-  resident:         "ساكن",
+const ROLE_LABEL_KEYS: Record<string, string> = {
+  super_admin:      "permissions.role_super_admin",
+  developer_admin:  "permissions.role_developer_admin",
+  compound_manager: "permissions.role_compound_manager",
+  finance_officer:  "permissions.role_finance_officer",
+  maintenance_staff:"permissions.role_maintenance_staff",
+  security_staff:   "permissions.role_security_staff",
+  resident:         "permissions.role_resident",
 };
 
 const ROLE_COLORS: Record<string, string> = {
@@ -46,6 +48,9 @@ interface Props {
 export function MasterPermissionsClient({
   flags, overrides, defaultMatrix, roles, capabilities,
 }: Props) {
+  const { t } = useT();
+  const roleLabel = (r: string) =>
+    ROLE_LABEL_KEYS[r] ? t(ROLE_LABEL_KEYS[r] as TranslationKey) : r;
   const [tab, setTab]         = useState<"features" | "roles">("features");
   const [search, setSearch]   = useState("");
   const [pending, startTransition] = useTransition();
@@ -88,11 +93,11 @@ export function MasterPermissionsClient({
         setFlagsState((prev) =>
           prev.map((f) => (f.feature_key === flag.feature_key ? { ...f, enabled: newEnabled } : f))
         );
-        toast.success(newEnabled ? "تم تفعيل الميزة" : "تم إيقاف الميزة", {
+        toast.success(newEnabled ? t("permissions.feature_enabled_toast") : t("permissions.feature_disabled_toast"), {
           description: String(flag.metadata?.label_ar ?? flag.feature_key),
         });
       } catch (e) {
-        toast.error("فشل التحديث", {
+        toast.error(t("permissions.update_failed"), {
           description: e instanceof Error ? e.message : "Unknown",
         });
       }
@@ -123,11 +128,11 @@ export function MasterPermissionsClient({
             },
           ];
         });
-        toast.success(next ? "تم منح الصلاحية" : "تم سحب الصلاحية", {
-          description: `${ROLE_LABELS_AR[role] ?? role} · ${capability}`,
+        toast.success(next ? t("permissions.capability_granted_toast") : t("permissions.capability_revoked_toast"), {
+          description: `${roleLabel(role)} · ${capability}`,
         });
       } catch (e) {
-        toast.error("فشل التحديث", {
+        toast.error(t("permissions.update_failed"), {
           description: e instanceof Error ? e.message : "Unknown",
         });
       }
@@ -141,9 +146,9 @@ export function MasterPermissionsClient({
         setOverridesState((prev) =>
           prev.filter((o) => !(o.role === role && o.capability === capability))
         );
-        toast.info("تم استعادة الإعدادات الافتراضية");
+        toast.info(t("permissions.reset_to_default_toast"));
       } catch (e) {
-        toast.error("فشل التحديث", { description: e instanceof Error ? e.message : "Unknown" });
+        toast.error(t("permissions.update_failed"), { description: e instanceof Error ? e.message : "Unknown" });
       }
     });
   }
@@ -166,7 +171,7 @@ export function MasterPermissionsClient({
           }`}
         >
           <Sparkles className="h-4 w-4" />
-          الميزات (Feature Flags)
+          {t("permissions.tab_features")}
         </button>
         <button
           type="button"
@@ -178,13 +183,13 @@ export function MasterPermissionsClient({
           }`}
         >
           <Shield className="h-4 w-4" />
-          صلاحيات الأدوار
+          {t("permissions.tab_roles")}
         </button>
       </div>
 
       {/* Search */}
       <Input
-        placeholder={tab === "features" ? "ابحث في الميزات..." : "ابحث في الصلاحيات (مثل payment:write)..."}
+        placeholder={tab === "features" ? t("permissions.search_features") : t("permissions.search_capabilities")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -204,7 +209,7 @@ export function MasterPermissionsClient({
                       </CardTitle>
                       <p className="mt-1 font-mono text-[10px] text-muted-foreground">{flag.feature_key}</p>
                     </div>
-                    {isBeta && <Badge variant="muted" className="text-[10px]">تجريبي</Badge>}
+                    {isBeta && <Badge variant="muted" className="text-[10px]">{t("permissions.beta_badge")}</Badge>}
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -216,7 +221,7 @@ export function MasterPermissionsClient({
                         <XCircle className="h-5 w-5 text-muted-foreground" />
                       )}
                       <span className={`text-xs font-medium ${flag.enabled ? "text-emerald-600" : "text-muted-foreground"}`}>
-                        {flag.enabled ? "مُفعّل" : "مُعطّل"}
+                        {flag.enabled ? t("permissions.feature_enabled") : t("permissions.feature_disabled")}
                       </span>
                     </div>
                     <Button
@@ -226,7 +231,7 @@ export function MasterPermissionsClient({
                       disabled={pending}
                     >
                       {pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <ToggleLeft className="h-3 w-3" />}
-                      {flag.enabled ? "إيقاف" : "تفعيل"}
+                      {flag.enabled ? t("permissions.feature_turn_off") : t("permissions.feature_turn_on")}
                     </Button>
                   </div>
                 </CardContent>
@@ -235,7 +240,7 @@ export function MasterPermissionsClient({
           })}
           {filteredFlags.length === 0 && (
             <p className="col-span-full rounded-lg border bg-muted/20 p-8 text-center text-sm text-muted-foreground">
-              لا توجد ميزات تطابق البحث.
+              {t("permissions.no_features")}
             </p>
           )}
         </div>
@@ -249,11 +254,11 @@ export function MasterPermissionsClient({
               <table className="w-full text-xs">
                 <thead className="bg-muted/40 text-[10px] uppercase tracking-wide text-muted-foreground">
                   <tr>
-                    <th className="sticky right-0 z-10 bg-muted/40 px-3 py-2 text-right">الصلاحية</th>
+                    <th className="sticky right-0 z-10 bg-muted/40 px-3 py-2 text-right">{t("permissions.table_capability")}</th>
                     {roles.map((r) => (
                       <th key={r} className="px-2 py-2 text-center">
                         <span className={`inline-block whitespace-nowrap rounded px-2 py-0.5 ${ROLE_COLORS[r] ?? "bg-muted"}`}>
-                          {ROLE_LABELS_AR[r] ?? r}
+                          {roleLabel(r)}
                         </span>
                       </th>
                     ))}
@@ -274,7 +279,7 @@ export function MasterPermissionsClient({
                               type="button"
                               onClick={() => toggleCapability(r, cap, allowed)}
                               disabled={pending}
-                              title={overridden ? "مُعدّل (انقر للعودة للافتراضي)" : "افتراضي (انقر للتعديل)"}
+                              title={overridden ? t("permissions.title_overridden") : t("permissions.title_default")}
                               className={`group inline-flex h-7 w-7 items-center justify-center rounded transition ${
                                 allowed
                                   ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
@@ -289,7 +294,7 @@ export function MasterPermissionsClient({
                                 onClick={() => resetCapability(r, cap)}
                                 disabled={pending}
                                 className="ms-1 text-muted-foreground hover:text-foreground"
-                                title="استعادة الإعدادات الافتراضية"
+                                title={t("permissions.title_reset_default")}
                               >
                                 <RotateCcw className="h-3 w-3" />
                               </button>
@@ -308,12 +313,14 @@ export function MasterPermissionsClient({
 
       {tab === "roles" && (
         <div className="rounded-lg border bg-muted/20 p-3 text-xs text-muted-foreground">
-          <p className="font-medium text-foreground">💡 طريقة الاستخدام:</p>
+          <p className="font-medium text-foreground">💡 {t("permissions.how_to_use")}</p>
           <ul className="mt-1 list-inside list-disc space-y-1">
-            <li>✓ أخضر = مسموح، ✗ أحمر = ممنوع — اضغط للتبديل</li>
-            <li>الإطار البرتقالي يعني صلاحية معدّلة (مختلفة عن الافتراضي بالكود)</li>
-            <li>أيقونة الـ <RotateCcw className="inline h-3 w-3" /> تستعيد الإعداد الافتراضي</li>
-            <li>التغييرات فورية وتنطبق على كل المستخدمين بهذا الدور</li>
+            <li>{t("permissions.tip_legend")}</li>
+            <li>{t("permissions.tip_override")}</li>
+            <li>
+              <RotateCcw className="inline h-3 w-3" /> {t("permissions.tip_reset")}
+            </li>
+            <li>{t("permissions.tip_immediate")}</li>
           </ul>
         </div>
       )}

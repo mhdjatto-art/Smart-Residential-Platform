@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { topupWalletAction } from "@/lib/api/wallets";
 import { formatCurrency } from "@/lib/utils";
+import { useT } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n";
 
 const QUICK_AMOUNTS = [10000, 25000, 50000, 100000, 250000, 500000];
 
@@ -29,26 +31,31 @@ interface TopupFormProps {
 
 export function TopupForm({ walletId, utilityType, currentBalance, currency }: TopupFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [amount, setAmount] = useState<number>(50000);
   const [customAmount, setCustomAmount] = useState<string>("");
   const [method, setMethod] = useState<Method>("stripe");
   const [pending, startTransition] = useTransition();
 
-  const utilityLabelAr =
-    utilityType === "electricity" ? "كهرباء" :
-    utilityType === "water"       ? "ماء"   :
-    utilityType === "gas"         ? "غاز"   :
-    utilityType === "internet"    ? "إنترنت" : utilityType;
+  const utilityLabelKey: Record<string, string> = {
+    electricity: "wallet.utility_electricity",
+    water:       "wallet.utility_water",
+    gas:         "wallet.utility_gas",
+    internet:    "wallet.utility_internet",
+  };
+  const utilityLabel = utilityLabelKey[utilityType]
+    ? t(utilityLabelKey[utilityType] as TranslationKey)
+    : utilityType;
 
   function submit() {
     const a = customAmount ? Number(customAmount) : amount;
-    if (!a || a <= 0) { toast.error("Amount must be > 0"); return; }
-    if (a < 1000) { toast.error("Minimum top-up is 1,000 IQD"); return; }
+    if (!a || a <= 0) { toast.error(t("wallet.amount_must_be_positive")); return; }
+    if (a < 1000) { toast.error(t("wallet.min_topup")); return; }
 
     startTransition(async () => {
       try {
         if (method === "cash") {
-          toast.info("الدفع نقداً يحتاج إعتماد من المدير. تواصل مع مكتب الإدارة.");
+          toast.info(t("wallet.cash_needs_approval"));
           return;
         }
 
@@ -68,8 +75,8 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
             // not configured yet (returns 503). This lets you keep recording
             // top-ups in dev before credentials arrive.
             if (res.status === 503) {
-              toast.info(`بوابة ${method.toUpperCase()} غير مفعّلة بعد`, {
-                description: "سيتم تسجيل الدفعة مباشرة في النظام (وضع التطوير).",
+              toast.info(t("wallet.gateway_not_configured", { gateway: method.toUpperCase() }), {
+                description: t("wallet.gateway_dev_fallback"),
               });
               await directRecord(a, method);
               return;
@@ -85,7 +92,7 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
         // Unreachable — `method` is exhaustively handled above.
         toast.error("Unsupported method");
       } catch (e) {
-        toast.error("Top-up failed", { description: e instanceof Error ? e.message : "Unknown" });
+        toast.error(t("wallet.topup_failed"), { description: e instanceof Error ? e.message : "Unknown" });
       }
     });
   }
@@ -99,7 +106,7 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
       method: m,
       notes: `Dev top-up via ${m} (gateway not configured)`,
     });
-    toast.success("Top-up recorded", {
+    toast.success(t("wallet.topup_recorded"), {
       description: `Topup #${topupId.slice(0,8)} · +${formatCurrency(a, { currency })}`,
     });
     router.push("/m/wallet");
@@ -107,15 +114,16 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
   }
 
   // Per-method explanatory copy shown below the picker.
-  const methodNotice: Record<Method, string | null> = {
-    stripe:   "سيتم تحويلك إلى بوابة Stripe لإتمام الدفع.",
-    fastpay:  "سيتم تحويلك إلى تطبيق FastPay لإتمام الدفع.",
-    zaincash: "سيتم تحويلك إلى تطبيق ZainCash لإتمام الدفع.",
-    asiapay:  "سيتم تحويلك إلى AsiaHawala لإتمام الدفع.",
-    nass:     "سيتم تحويلك إلى تطبيق NASS Pay لإتمام الدفع. سيُحدّث رصيدك تلقائياً بعد الإتمام.",
-    qicard:   "أدخل رقم بطاقة Qi Card في الشاشة التالية لإتمام الدفع.",
+  const methodNoticeKey: Record<Method, string | null> = {
+    stripe:   "wallet.notice_stripe",
+    fastpay:  "wallet.notice_fastpay",
+    zaincash: "wallet.notice_zaincash",
+    asiapay:  "wallet.notice_asiapay",
+    nass:     "wallet.notice_nass",
+    qicard:   "wallet.notice_qicard",
     cash:     null,
   };
+  const notice = methodNoticeKey[method] ? t(methodNoticeKey[method] as TranslationKey) : null;
 
   return (
     <div className="space-y-4">
@@ -123,17 +131,17 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
       {/* Current balance summary */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">{utilityLabelAr}</CardTitle>
+          <CardTitle className="text-base">{utilityLabel}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-muted-foreground">الرصيد الحالي</p>
+          <p className="text-xs text-muted-foreground">{t("wallet.current_balance")}</p>
           <p className="mt-1 text-2xl font-bold tabular-nums">{formatCurrency(currentBalance, { currency })}</p>
         </CardContent>
       </Card>
 
       {/* Quick-pick amounts */}
       <div>
-        <Label className="text-xs uppercase tracking-wider text-muted-foreground">اختر مبلغاً</Label>
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground">{t("wallet.pick_amount")}</Label>
         <div className="mt-2 grid grid-cols-3 gap-2">
           {QUICK_AMOUNTS.map((a) => (
             <button
@@ -151,11 +159,11 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
           ))}
         </div>
         <div className="mt-3">
-          <Label htmlFor="custom-amount" className="text-xs">أو أدخل مبلغاً مخصصاً (IQD)</Label>
+          <Label htmlFor="custom-amount" className="text-xs">{t("wallet.custom_amount_label")}</Label>
           <Input
             id="custom-amount"
             inputMode="numeric"
-            placeholder="مثلاً: 75000"
+            placeholder={t("wallet.custom_amount_placeholder")}
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value.replace(/[^0-9]/g, ""))}
             className="mt-1 text-lg font-medium tabular-nums"
@@ -165,31 +173,33 @@ export function TopupForm({ walletId, utilityType, currentBalance, currency }: T
 
       {/* Payment method */}
       <div>
-        <Label className="text-xs uppercase tracking-wider text-muted-foreground">طريقة الدفع</Label>
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground">{t("wallet.payment_method")}</Label>
         <div className="mt-2 grid grid-cols-2 gap-2">
-          <MethodTile name="stripe"   icon={CreditCard} label="بطاقة ائتمان" sub="Stripe"      selected={method==="stripe"}   onClick={() => setMethod("stripe")} />
-          <MethodTile name="nass"     icon={Wallet}     label="NASS Pay"     sub="ناس باي"      selected={method==="nass"}     onClick={() => setMethod("nass")}    accentClass="text-orange-500" />
-          <MethodTile name="qicard"   icon={CreditCard} label="Qi Card"      sub="كي كارد"      selected={method==="qicard"}   onClick={() => setMethod("qicard")}  accentClass="text-blue-600" />
-          <MethodTile name="fastpay"  icon={Smartphone} label="FastPay"      sub="محفظة محلية"  selected={method==="fastpay"}  onClick={() => setMethod("fastpay")} />
-          <MethodTile name="zaincash" icon={Smartphone} label="ZainCash"     sub="محفظة محلية"  selected={method==="zaincash"} onClick={() => setMethod("zaincash")} />
-          <MethodTile name="asiapay"  icon={Smartphone} label="AsiaHawala"   sub="محفظة محلية"  selected={method==="asiapay"}  onClick={() => setMethod("asiapay")} />
-          <MethodTile name="cash"     icon={Banknote}   label="نقداً"        sub="عبر الإدارة"  selected={method==="cash"}     onClick={() => setMethod("cash")} />
+          <MethodTile name="stripe"   icon={CreditCard} label={t("wallet.method_card")} sub="Stripe"                        selected={method==="stripe"}   onClick={() => setMethod("stripe")} />
+          <MethodTile name="nass"     icon={Wallet}     label="NASS Pay"                sub={t("wallet.method_nass_sub")}    selected={method==="nass"}     onClick={() => setMethod("nass")}    accentClass="text-orange-500" />
+          <MethodTile name="qicard"   icon={CreditCard} label="Qi Card"                 sub={t("wallet.method_qicard_sub")}  selected={method==="qicard"}   onClick={() => setMethod("qicard")}  accentClass="text-blue-600" />
+          <MethodTile name="fastpay"  icon={Smartphone} label="FastPay"                 sub={t("wallet.method_fastpay_sub")} selected={method==="fastpay"}  onClick={() => setMethod("fastpay")} />
+          <MethodTile name="zaincash" icon={Smartphone} label="ZainCash"                sub={t("wallet.method_zaincash_sub")} selected={method==="zaincash"} onClick={() => setMethod("zaincash")} />
+          <MethodTile name="asiapay"  icon={Smartphone} label="AsiaHawala"              sub={t("wallet.method_asiapay_sub")} selected={method==="asiapay"}  onClick={() => setMethod("asiapay")} />
+          <MethodTile name="cash"     icon={Banknote}   label={t("wallet.method_cash")} sub={t("wallet.method_cash_sub")}    selected={method==="cash"}     onClick={() => setMethod("cash")} />
         </div>
 
-        {methodNotice[method] && (
+        {notice && (
           <p className="mt-2 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
-            {methodNotice[method]}
+            {notice}
           </p>
         )}
       </div>
 
       <Button onClick={submit} disabled={pending} className="w-full" size="lg">
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Building2 className="h-4 w-4" />}
-        {pending ? "جاري المعالجة..." : `شحن ${formatCurrency(customAmount ? Number(customAmount) : amount, { currency })}`}
+        {pending
+          ? t("wallet.processing")
+          : t("wallet.topup_button", { amount: formatCurrency(customAmount ? Number(customAmount) : amount, { currency }) })}
       </Button>
 
       <p className="text-center text-[10px] text-muted-foreground">
-        الخدمة تُستعاد تلقائياً فور وصول الدفع.
+        {t("wallet.auto_restore_note")}
       </p>
     </div>
   );

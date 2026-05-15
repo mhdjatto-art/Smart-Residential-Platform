@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface ProviderRow {
   id:              string;
@@ -35,12 +37,12 @@ const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = 
   generator:   Zap,
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  electricity: "الكهرباء",
-  water:       "الماء",
-  gas:         "الغاز",
-  internet:    "الإنترنت",
-  generator:   "المولدات",
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  electricity: "hardware.type_electricity",
+  water:       "hardware.type_water",
+  gas:         "hardware.type_gas",
+  internet:    "hardware.type_internet",
+  generator:   "hardware.type_generator",
 };
 
 const KIND_LABELS: Record<string, string> = {
@@ -54,15 +56,16 @@ const KIND_LABELS: Record<string, string> = {
   generic:  "Manual / Generic",
 };
 
-const OUTCOME_STYLE: Record<TestResult["outcome"], { color: string; Icon: typeof CheckCircle2; label: string }> = {
-  connected:     { color: "text-emerald-600", Icon: CheckCircle2, label: "متصل بنجاح" },
-  unreachable:   { color: "text-rose-600",    Icon: XCircle,      label: "غير قابل للاتصال" },
-  auth_failed:   { color: "text-amber-600",   Icon: AlertTriangle,label: "فشل المصادقة" },
-  simulated:     { color: "text-sky-600",     Icon: Info,         label: "وضع المحاكاة" },
-  misconfigured: { color: "text-violet-600",  Icon: AlertTriangle,label: "إعدادات ناقصة" },
+const OUTCOME_STYLE: Record<TestResult["outcome"], { color: string; Icon: typeof CheckCircle2; labelKey: string }> = {
+  connected:     { color: "text-emerald-600", Icon: CheckCircle2, labelKey: "hardware.outcome_connected" },
+  unreachable:   { color: "text-rose-600",    Icon: XCircle,      labelKey: "hardware.outcome_unreachable" },
+  auth_failed:   { color: "text-amber-600",   Icon: AlertTriangle,labelKey: "hardware.outcome_auth_failed" },
+  simulated:     { color: "text-sky-600",     Icon: Info,         labelKey: "hardware.outcome_simulated" },
+  misconfigured: { color: "text-violet-600",  Icon: AlertTriangle,labelKey: "hardware.outcome_misconfigured" },
 };
 
 export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) {
+  const { t } = useT();
   const [search,  setSearch]  = useState("");
   const [type,    setType]    = useState<string>("all");
   const [results, setResults] = useState<Record<string, TestResult>>({});
@@ -99,16 +102,16 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
         });
         const json = (await res.json()) as { result?: TestResult; error?: string };
         if (!res.ok || !json.result) {
-          toast.error("فشل الاختبار", { description: json.error ?? `HTTP ${res.status}` });
+          toast.error(t("hardware.test_failed"), { description: json.error ?? `HTTP ${res.status}` });
         } else {
           setResults((prev) => ({ ...prev, [providerId]: json.result! }));
           const style = OUTCOME_STYLE[json.result.outcome];
-          (json.result.outcome === "connected" ? toast.success : toast.info)(style.label, {
+          (json.result.outcome === "connected" ? toast.success : toast.info)(t(style.labelKey as TranslationKey), {
             description: json.result.message,
           });
         }
       } catch (e) {
-        toast.error("فشل غير متوقع", {
+        toast.error(t("hardware.test_unexpected"), {
           description: e instanceof Error ? e.message : "Unknown error",
         });
       } finally {
@@ -122,30 +125,32 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
       {/* Filters */}
       <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
         <Input
-          placeholder="ابحث باسم المزوّد أو الكود..."
+          placeholder={t("hardware.search_placeholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="flex flex-wrap gap-2">
-          {types.map((t) => (
+          {types.map((tp) => (
             <button
-              key={t}
+              key={tp}
               type="button"
-              onClick={() => setType(t)}
+              onClick={() => setType(tp)}
               className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                type === t
+                type === tp
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card hover:bg-muted"
               }`}
             >
-              {t === "all" ? "الكل" : (TYPE_LABELS[t] ?? t)}
+              {tp === "all"
+                ? t("hardware.filter_all")
+                : (TYPE_LABEL_KEYS[tp] ? t(TYPE_LABEL_KEYS[tp] as TranslationKey) : tp)}
             </button>
           ))}
         </div>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        {filtered.length} مزوّد. لاختبار جميع المزوّدين دفعة واحدة، انتظر دقيقة بين كل اختبار (الحد: 5/دقيقة لكل IP).
+        {t("hardware.count_summary", { count: filtered.length })}
       </p>
 
       {/* Provider grid */}
@@ -163,7 +168,9 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
                     <CardTitle className="truncate text-sm">{p.provider_name}</CardTitle>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
                       <Badge variant="muted" className="text-[10px]">
-                        {TYPE_LABELS[p.provider_type] ?? p.provider_type}
+                        {TYPE_LABEL_KEYS[p.provider_type]
+                          ? t(TYPE_LABEL_KEYS[p.provider_type] as TranslationKey)
+                          : p.provider_type}
                       </Badge>
                       <Badge variant="muted" className="text-[10px]">
                         {KIND_LABELS[p.adapter_kind ?? "generic"] ?? p.adapter_kind}
@@ -190,7 +197,7 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
                           <>
                             <ResultIcon className={`h-4 w-4 shrink-0 ${style.color}`} />
                             <span className={`text-xs font-semibold ${style.color}`}>
-                              {style.label}
+                              {t(style.labelKey as TranslationKey)}
                             </span>
                             {result.latencyMs !== undefined && (
                               <span className="ms-auto text-[10px] text-muted-foreground tabular-nums">
@@ -216,11 +223,11 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
                   disabled={isRunning || pending}
                 >
                   {isRunning ? (
-                    <><Loader2 className="me-1 h-3.5 w-3.5 animate-spin" />جاري الاختبار...</>
+                    <><Loader2 className="me-1 h-3.5 w-3.5 animate-spin" />{t("hardware.running")}</>
                   ) : result ? (
-                    "إعادة الاختبار"
+                    t("hardware.retest")
                   ) : (
-                    "اختبر الاتصال"
+                    t("hardware.test_connection")
                   )}
                 </Button>
               </CardContent>
@@ -231,7 +238,7 @@ export function HardwareTestClient({ providers }: { providers: ProviderRow[] }) 
 
       {filtered.length === 0 && (
         <p className="rounded-lg border bg-muted/20 p-8 text-center text-sm text-muted-foreground">
-          لا يوجد مزوّدون يطابقون البحث. جرّب تبسيط الفلتر أو أضف مزوّد جديد من <code>/providers</code>.
+          {t("hardware.no_providers")} <code>/providers</code>.
         </p>
       )}
     </div>

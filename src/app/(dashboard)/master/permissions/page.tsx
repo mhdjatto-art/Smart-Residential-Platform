@@ -33,8 +33,10 @@ export default async function MasterPermissionsPage() {
   return (
     <div>
       <PageHeader
-        title="مركز الصلاحيات الرئيسي"
-        description="تحكّم في تفعيل الميزات وتخصيص صلاحيات كل دور. التغييرات تنطبق فوراً على كل المستخدمين."
+        title="Master permissions center"
+        description="Control feature toggles and customize permissions for each role. Changes apply immediately to every user."
+        titleKey="permissions.page_title"
+        descKey="permissions.page_desc"
       />
       <MasterPermissionsClient
         flags={flags}

@@ -13,6 +13,16 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 import { enforceRateLimit } from "@/lib/rate-limit";
+import { getActiveLocale } from "@/lib/i18n/server";
+
+// Per-locale prefixes for search-hit titles. Falls back to English keywords
+// when the locale is missing. Kept inline (not in JSON) so the route stays
+// free of i18n imports beyond the locale resolver.
+const HIT_PREFIXES = {
+  en: { unit: "Unit",   contract: "Contract", payment: "Payment" },
+  ar: { unit: "وحدة",   contract: "عقد",      payment: "دفعة" },
+  ku: { unit: "یەکە",   contract: "گرێبەست",  payment: "پارەدان" },
+} as const;
 
 export const dynamic = "force-dynamic";
 
@@ -72,11 +82,13 @@ export async function GET(request: Request) {
       href:     `/residents/${r.id}`,
     });
   }
+  const locale = await getActiveLocale();
+  const prefixes = HIT_PREFIXES[locale] ?? HIT_PREFIXES.en;
   for (const u of units.data ?? []) {
     hits.push({
       type:     "unit",
       id:       u.id,
-      title:    `وحدة ${u.unit_number}`,
+      title:    `${prefixes.unit} ${u.unit_number}`,
       href:     `/units/${u.id}`,
     });
   }
@@ -84,7 +96,7 @@ export async function GET(request: Request) {
     hits.push({
       type:     "contract",
       id:       c.id,
-      title:    `عقد ${c.contract_number}`,
+      title:    `${prefixes.contract} ${c.contract_number}`,
       href:     `/contracts/${c.id}`,
     });
   }
@@ -92,7 +104,7 @@ export async function GET(request: Request) {
     hits.push({
       type:     "payment",
       id:       p.id,
-      title:    `دفعة ${p.payment_number}`,
+      title:    `${prefixes.payment} ${p.payment_number}`,
       subtitle: p.amount ? `${p.amount} IQD` : undefined,
       href:     `/payments/${p.id}`,
     });

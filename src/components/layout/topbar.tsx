@@ -134,7 +134,7 @@ export function Topbar({
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer" onSelect={() => router.push("/settings")}>
               <Settings className="me-2 h-4 w-4" />
-              الإعدادات
+              {t("common.settings")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import {
   Search, X, Loader2, User, Home, FileText, CreditCard, Wrench, Cable, ArrowRight,
 } from "lucide-react";
+import { useT } from "@/lib/i18n/client";
+import type { TranslationKey } from "@/lib/i18n";
 
 interface Hit {
   type:     "resident" | "unit" | "contract" | "payment" | "ticket" | "provider";
@@ -23,13 +25,13 @@ const TYPE_ICONS = {
   provider: Cable,
 };
 
-const TYPE_LABELS_AR: Record<Hit["type"], string> = {
-  resident: "الساكنون",
-  unit:     "الوحدات",
-  contract: "العقود",
-  payment:  "الدفعات",
-  ticket:   "تذاكر الصيانة",
-  provider: "المزوّدون",
+const TYPE_LABEL_KEYS: Record<Hit["type"], string> = {
+  resident: "search.type_resident",
+  unit:     "search.type_unit",
+  contract: "search.type_contract",
+  payment:  "search.type_payment",
+  ticket:   "search.type_ticket",
+  provider: "search.type_provider",
 };
 
 const TYPE_TONE: Record<Hit["type"], string> = {
@@ -43,6 +45,7 @@ const TYPE_TONE: Record<Hit["type"], string> = {
 
 export function GlobalSearch() {
   const router = useRouter();
+  const { t } = useT();
   const [open, setOpen]     = useState(false);
   const [query, setQuery]   = useState("");
   const [hits, setHits]     = useState<Hit[]>([]);
@@ -134,10 +137,10 @@ export function GlobalSearch() {
         type="button"
         onClick={() => setOpen(true)}
         className="group flex h-9 items-center gap-2 rounded-md border bg-muted/30 px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition w-full sm:w-72"
-        aria-label="بحث شامل"
+        aria-label={t("search.aria_global")}
       >
         <Search className="h-4 w-4 shrink-0" />
-        <span className="flex-1 text-right">بحث في النظام...</span>
+        <span className="flex-1 text-right">{t("search.trigger_label")}</span>
         <kbd className="hidden rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline">
           ⌘K
         </kbd>
@@ -161,7 +164,7 @@ export function GlobalSearch() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onListKey}
-                placeholder="ابحث عن ساكن، وحدة، عقد، دفعة، تذكرة..."
+                placeholder={t("search.placeholder_input")}
                 className="h-12 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
               />
               {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
@@ -169,7 +172,7 @@ export function GlobalSearch() {
                 type="button"
                 onClick={() => setOpen(false)}
                 className="text-muted-foreground hover:text-foreground"
-                aria-label="إغلاق"
+                aria-label={t("search.aria_close")}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -179,18 +182,20 @@ export function GlobalSearch() {
             <div className="max-h-[60vh] overflow-y-auto p-2">
               {!loading && query.trim().length >= 2 && hits.length === 0 && (
                 <p className="px-4 py-8 text-center text-sm text-muted-foreground">
-                  لا توجد نتائج مطابقة لـ &quot;{query}&quot;
+                  {t("search.no_results", { query })}
                 </p>
               )}
 
               {query.trim().length < 2 && (
                 <div className="px-4 py-6 text-center text-xs text-muted-foreground">
-                  <p>اكتب حرفين على الأقل للبحث</p>
-                  <p className="mt-2">يبحث في: الساكنون · الوحدات · العقود · الدفعات · التذاكر · المزوّدون</p>
+                  <p>{t("search.type_two_chars")}</p>
+                  <p className="mt-2">{t("search.searches_in")}</p>
                   <p className="mt-3 text-[10px]">
-                    💡 استخدم <kbd className="rounded border bg-muted px-1">↑</kbd>{" "}
-                    <kbd className="rounded border bg-muted px-1">↓</kbd> للتنقّل،{" "}
-                    <kbd className="rounded border bg-muted px-1">Enter</kbd> للفتح
+                    💡 {t("search.keyboard_hint", {
+                      up: "↑",
+                      down: "↓",
+                      enter: "Enter",
+                    })}
                   </p>
                 </div>
               )}
@@ -202,7 +207,7 @@ export function GlobalSearch() {
                 return (
                   <div key={type} className="mb-2">
                     <p className="px-2 py-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-                      {TYPE_LABELS_AR[type]}
+                      {t(TYPE_LABEL_KEYS[type] as TranslationKey)}
                     </p>
                     {items.map((hit) => {
                       const idx = hits.indexOf(hit);

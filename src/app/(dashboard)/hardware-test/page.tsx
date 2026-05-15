@@ -35,8 +35,10 @@ export default async function HardwareTestPage() {
   return (
     <div>
       <PageHeader
-        title="اختبار الأجهزة والمزوّدين"
-        description="اختر مزوّد خدمة من القائمة لاختبار اتصاله بدون أي تأثير على البيانات. يدعم MikroTik، UniFi، Modbus TCP، MQTT، REST، RADIUS، Webhooks."
+        title="Hardware & provider testing"
+        description="Pick a service provider from the list to test its connection — no data is affected. Supports MikroTik, UniFi, Modbus TCP, MQTT, REST, RADIUS, and webhooks."
+        titleKey="hardware.page_title"
+        descKey="hardware.page_desc"
       />
       <HardwareTestClient providers={rows} />
     </div>
