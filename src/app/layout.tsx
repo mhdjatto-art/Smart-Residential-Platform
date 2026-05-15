@@ -36,8 +36,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B1F3A" },
+    // Match the emerald primary so the Android status bar tints the same as the hero card
+    { media: "(prefers-color-scheme: light)", color: "#10b981" },
+    { media: "(prefers-color-scheme: dark)",  color: "#0B1F3A" },
   ],
   width: "device-width",
   initialScale: 1,
