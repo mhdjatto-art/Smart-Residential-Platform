@@ -18,6 +18,7 @@ interface OverrideRow {
   role:            string;
   capability:      string;
   enabled:         boolean;
+  updated_at?:     string;
 }
 
 /**
@@ -44,13 +45,15 @@ export async function getEffectiveCapabilities(
   if (!roles || roles.length === 0) return effective;
 
   try {
-    // 2. Load all overrides for these roles (org-specific + global)
+    // 2. Load all overrides for these roles (org-specific + global), most recent first.
+    // ORDER BY updated_at DESC ensures duplicates resolve to the freshest write.
     const supabase = await createClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase as any)
       .from("role_capability_overrides")
-      .select("organization_id, role, capability, enabled")
-      .in("role", roles);
+      .select("organization_id, role, capability, enabled, updated_at")
+      .in("role", roles)
+      .order("updated_at", { ascending: false });
 
     if (error) {
       console.error("[effective-permissions] read failed:", error.message ?? error);
@@ -58,17 +61,22 @@ export async function getEffectiveCapabilities(
     }
     if (!Array.isArray(data)) return effective;
 
-    // Group by (role, capability); org-specific wins.
+    // Group by (role, capability); org-specific wins over global, regardless of order.
     const byKey = new Map<string, OverrideRow>();
     for (const row of data as OverrideRow[]) {
       if (!row || typeof row.role !== "string" || typeof row.capability !== "string") continue;
       const key = `${row.role}::${row.capability}`;
       const existing = byKey.get(key);
-      if (!existing) {
-        byKey.set(key, row);
+
+      // Always prefer org-specific (vs. global), regardless of order
+      if (orgId !== null && row.organization_id === orgId) {
+        if (!existing || existing.organization_id === null) {
+          byKey.set(key, row);
+        }
         continue;
       }
-      if (row.organization_id === orgId && existing.organization_id === null) {
+      // Global row: only set if nothing yet (data is ordered DESC, so first is freshest)
+      if (!existing) {
         byKey.set(key, row);
       }
     }

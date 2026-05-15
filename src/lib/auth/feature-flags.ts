@@ -22,6 +22,7 @@ interface FlagRow {
   organization_id: string | null;
   feature_key:     string;
   enabled:         boolean;
+  updated_at?:     string;
 }
 
 /**
@@ -35,10 +36,14 @@ interface FlagRow {
 export async function getEnabledFeatures(orgId: string | null): Promise<Set<string>> {
   try {
     const supabase = await createClient();
+    // ORDER BY updated_at DESC so the MOST RECENT row of any duplicate group
+    // comes first. Combined with the "first wins" dedupe logic below, this
+    // means we always use the freshest write.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase as any)
       .from("feature_flags")
-      .select("organization_id, feature_key, enabled");
+      .select("organization_id, feature_key, enabled, updated_at")
+      .order("updated_at", { ascending: false });
 
     if (error) {
       console.error("[feature-flags] read failed:", error.message ?? error);
@@ -48,21 +53,31 @@ export async function getEnabledFeatures(orgId: string | null): Promise<Set<stri
       return new Set<string>(); // no rows yet → default-open via size check upstream
     }
 
-    // Group by feature_key; org-specific wins over global.
-    // When org-specific resolves to enabled=false explicitly, we MUST drop the key,
-    // not fall back to global. So we track explicit state.
+    // Resolution policy: per feature_key, pick the BEST row in this order:
+    //   1. Org-specific (organization_id === orgId), most recently updated
+    //   2. Global (organization_id IS NULL), most recently updated
+    // Since data is ordered by updated_at DESC, the first encountered global row
+    // for each key is the most recent — and an org-specific row should replace it.
     const byKey = new Map<string, FlagRow>();
     for (const row of data as FlagRow[]) {
       if (!row || typeof row.feature_key !== "string") continue;
       const existing = byKey.get(row.feature_key);
-      if (!existing) {
-        byKey.set(row.feature_key, row);
+
+      // Always prefer org-specific over global, regardless of existing state.
+      if (orgId !== null && row.organization_id === orgId) {
+        // Replace if existing was global, or this is more recent org-specific row
+        if (!existing || existing.organization_id === null) {
+          byKey.set(row.feature_key, row);
+        }
         continue;
       }
-      // Prefer org-specific over global
-      if (row.organization_id === orgId && existing.organization_id === null) {
+
+      // Global row: only set if nothing yet, AND nothing org-specific has won
+      if (!existing) {
         byKey.set(row.feature_key, row);
       }
+      // else: skip — either we already have an org-specific row, or an older
+      // global row was kept (shouldn't happen given DESC order, but safe).
     }
 
     const enabled = new Set<string>();

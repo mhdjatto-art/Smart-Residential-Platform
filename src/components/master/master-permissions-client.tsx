@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, Loader2, ToggleLeft, Sparkles, Shield, RotateCcw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,6 +49,7 @@ interface Props {
 export function MasterPermissionsClient({
   flags, overrides, defaultMatrix, roles, capabilities,
 }: Props) {
+  const router = useRouter();
   const { t } = useT();
   const roleLabel = (r: string) =>
     ROLE_LABEL_KEYS[r] ? t(ROLE_LABEL_KEYS[r] as TranslationKey) : r;
@@ -96,6 +98,9 @@ export function MasterPermissionsClient({
         toast.success(newEnabled ? t("permissions.feature_enabled_toast") : t("permissions.feature_disabled_toast"), {
           description: String(flag.metadata?.label_ar ?? flag.feature_key),
         });
+        // Force Next.js to re-fetch all server data for the active route,
+        // including parent layouts (so the Sidebar/MobileNav refresh).
+        router.refresh();
       } catch (e) {
         toast.error(t("permissions.update_failed"), {
           description: e instanceof Error ? e.message : "Unknown",
@@ -131,6 +136,7 @@ export function MasterPermissionsClient({
         toast.success(next ? t("permissions.capability_granted_toast") : t("permissions.capability_revoked_toast"), {
           description: `${roleLabel(role)} · ${capability}`,
         });
+        router.refresh();
       } catch (e) {
         toast.error(t("permissions.update_failed"), {
           description: e instanceof Error ? e.message : "Unknown",
@@ -147,6 +153,7 @@ export function MasterPermissionsClient({
           prev.filter((o) => !(o.role === role && o.capability === capability))
         );
         toast.info(t("permissions.reset_to_default_toast"));
+        router.refresh();
       } catch (e) {
         toast.error(t("permissions.update_failed"), { description: e instanceof Error ? e.message : "Unknown" });
       }
