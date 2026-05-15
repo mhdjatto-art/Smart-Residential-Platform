@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/guards";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
@@ -7,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getActiveLocale } from "@/lib/i18n/server";
 import { getEffectiveCapabilities } from "@/lib/auth/effective-permissions";
 import { getEnabledFeatures } from "@/lib/auth/feature-flags";
+import { getPostLoginPath, ROUTES } from "@/lib/auth/post-login-redirect";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,15 @@ export const dynamic = "force-dynamic";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
   const locale = await getActiveLocale();
+
+  const roleNames = user.roles.map((r) => r.role);
+  // Residents (and ONLY residents) should never see the admin dashboard.
+  // Redirect them to the mobile shell. Super admins / staff with the resident
+  // role alongside admin roles still see the dashboard.
+  const landing = getPostLoginPath(roleNames);
+  if (landing === ROUTES.RESIDENT_HOME) {
+    redirect(ROUTES.RESIDENT_HOME);
+  }
 
   const primaryRole = user.roles[0]?.role ?? null;
   const primaryOrgId =
@@ -51,7 +62,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
     console.error("[dashboard-layout] unread count failed:", e instanceof Error ? e.message : String(e));
   }
 
-  const roleNames = user.roles.map((r) => r.role);
   const branding = await getActiveBranding(primaryOrgId);
   const logoUrl = branding?.logo_path ?? null;
 

@@ -166,6 +166,17 @@ export function MasterPermissionsClient({
 
   return (
     <div className="space-y-4">
+      {/* Info banner — explains how toggles behave for different role tiers */}
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs dark:border-amber-900/50 dark:bg-amber-950/30">
+        <p className="font-medium text-amber-900 dark:text-amber-200">
+          💡 {t("permissions.banner_title")}
+        </p>
+        <ul className="mt-1 list-inside list-disc space-y-0.5 text-amber-800 dark:text-amber-300/90">
+          <li>{t("permissions.banner_super")}</li>
+          <li>{t("permissions.banner_others")}</li>
+        </ul>
+      </div>
+
       {/* Tabs */}
       <div className="flex gap-2 border-b">
         <button

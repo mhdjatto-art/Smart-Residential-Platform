@@ -643,7 +643,10 @@
     "role_finance_officer": "Finance officer",
     "role_maintenance_staff": "Maintenance staff",
     "role_security_staff": "Security staff",
-    "role_resident": "Resident"
+    "role_resident": "Resident",
+    "banner_title": "How permission toggles behave",
+    "banner_super": "Super admins see disabled features in the sidebar with a 🔒 indicator (so you don't lock yourself out).",
+    "banner_others": "Other users have those features hidden completely."
   },
   "contract_types": {
     "property_sale": "Property sale",

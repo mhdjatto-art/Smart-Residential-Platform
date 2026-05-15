@@ -42,10 +42,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Authenticated users on /login → /dashboard
+  // Authenticated users on /login → role-aware landing route.
+  // We can't safely query user_roles from the edge without an extra round-trip,
+  // so we redirect to "/" and let the root page resolve the correct destination.
+  // This keeps middleware fast and avoids duplicating the role lookup logic.
   if (user && pathname === "/login") {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/";
     url.search = "";
     return NextResponse.redirect(url);
   }

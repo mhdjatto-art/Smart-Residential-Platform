@@ -643,7 +643,10 @@
     "role_finance_officer": "مسؤول المالية",
     "role_maintenance_staff": "موظف الصيانة",
     "role_security_staff": "موظف الأمن",
-    "role_resident": "ساكن"
+    "role_resident": "ساكن",
+    "banner_title": "كيف تعمل مفاتيح الصلاحيات",
+    "banner_super": "المسؤولون الرئيسيون يرون الميزات المعطّلة في القائمة مع علامة 🔒 (لتجنّب قفل أنفسهم).",
+    "banner_others": "المستخدمون الآخرون لا يرون هذه الميزات نهائياً."
   },
   "contract_types": {
     "property_sale": "بيع عقار",

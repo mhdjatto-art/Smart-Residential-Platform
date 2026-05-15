@@ -57,7 +57,10 @@ export function LoginForm() {
       }
 
       toast.success("Welcome back");
-      const redirect = search.get("redirect") || "/dashboard";
+      // If user came from a deep-link, honor it. Otherwise send to "/" which is
+      // a server-side redirect to the role-appropriate home (/m for residents,
+      // /dashboard for admins).
+      const redirect = search.get("redirect") || "/";
       router.replace(redirect);
       router.refresh();
     });

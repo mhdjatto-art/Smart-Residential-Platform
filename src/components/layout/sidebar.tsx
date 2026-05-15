@@ -6,10 +6,11 @@ import { navigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { hasCapability, type Capability } from "@/lib/auth/permissions";
+import { getRoleTheme } from "@/lib/auth/role-theme";
 import { useT } from "@/lib/i18n/client";
 import type { TranslationKey } from "@/lib/i18n";
 import type { AppRole } from "@/types";
-import { Home } from "lucide-react";
+import { Home, Lock } from "lucide-react";
 
 // Items that should ALWAYS be visible to super_admin / saas-level users —
 // these are the platform/admin tools. Feature-flag gating doesn't apply to them.
@@ -90,6 +91,7 @@ interface SidebarProps {
 export function Sidebar({ roles, isSuperAdmin, effectiveCapabilities, enabledFeatures }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useT();
+  const roleTheme = getRoleTheme(roles[0] ?? null);
 
   const effSet = effectiveCapabilities ? new Set<Capability>(effectiveCapabilities) : null;
   const featSet = enabledFeatures ? new Set<string>(enabledFeatures) : null;
@@ -120,7 +122,10 @@ export function Sidebar({ roles, isSuperAdmin, effectiveCapabilities, enabledFea
   return (
     <aside className="hidden h-screen w-64 shrink-0 flex-col border-r bg-card lg:flex">
       <div className="flex h-16 items-center gap-3 px-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <div className={cn(
+          "flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground ring-4 transition-all",
+          roleTheme.logoRing,
+        )}>
           <Home className="h-5 w-5" />
         </div>
         <div className="flex flex-col">
@@ -133,32 +138,47 @@ export function Sidebar({ roles, isSuperAdmin, effectiveCapabilities, enabledFea
 
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
         {navigation.map((section) => {
-          const visible = section.items.filter(
-            (it) => can(it.requiredCapability) && featureAllowed(it.href, it.feature),
-          );
-          if (visible.length === 0) return null;
+          // For super_admin: show ALL items (so they feel the feature toggle take effect
+          // via a "disabled" indicator) but keep capability gating.
+          // For everyone else: hide both capability-denied AND feature-disabled items.
+          const items = section.items
+            .filter((it) => can(it.requiredCapability))
+            .map((it) => ({ ...it, _disabled: !featureAllowed(it.href, it.feature) }))
+            .filter((it) => isSuperAdmin || !it._disabled);
+
+          if (items.length === 0) return null;
           return (
             <div key={section.title}>
               <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {tr(section.i18nKey, section.title)}
               </div>
               <ul className="space-y-1">
-                {visible.map((item) => {
+                {items.map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   const Icon = item.icon;
+                  const disabled = item._disabled;
                   return (
                     <li key={item.href}>
                       <Link
                         href={item.href}
+                        title={disabled ? `Feature disabled by admin · ${item.feature}` : undefined}
                         className={cn(
-                          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                          "group relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                           active
-                            ? "bg-primary text-primary-foreground"
-                            : "text-foreground/70 hover:bg-muted hover:text-foreground",
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : disabled
+                              ? "text-muted-foreground/60 hover:bg-muted/40"
+                              : "text-foreground/70 hover:bg-muted hover:text-foreground",
                         )}
                       >
-                        <Icon className="h-4 w-4" />
-                        {tr(NAV_KEYS[item.href] ?? item.i18nKey, item.title)}
+                        {active && (
+                          <span className={cn("absolute inset-y-1 start-0 w-0.5 rounded-full", roleTheme.activeDot)} aria-hidden />
+                        )}
+                        <Icon className={cn("h-4 w-4 shrink-0", disabled && "opacity-50")} />
+                        <span className={cn("flex-1 truncate", disabled && "line-through opacity-60")}>
+                          {tr(NAV_KEYS[item.href] ?? item.i18nKey, item.title)}
+                        </span>
+                        {disabled && <Lock className="h-3 w-3 opacity-60" aria-label="Feature disabled" />}
                       </Link>
                     </li>
                   );

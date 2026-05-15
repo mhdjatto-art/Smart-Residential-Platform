@@ -21,6 +21,7 @@ import { createClient } from "@/lib/supabase/client";
 import { ROLE_LABEL_KEYS } from "@/lib/constants";
 import { initials } from "@/lib/utils";
 import { useT } from "@/lib/i18n/client";
+import { getRoleTheme } from "@/lib/auth/role-theme";
 import type { LocaleCode } from "@/lib/i18n";
 import type { AppRole } from "@/types";
 
@@ -76,7 +77,7 @@ export function Topbar({
       {/* Right: notifications, language, sign out, account */}
       <div className="flex items-center gap-1 shrink-0">
         {primaryRole && (
-          <span className="hidden text-xs text-muted-foreground lg:inline-block">
+          <span className={`hidden rounded-full px-2.5 py-0.5 text-[11px] font-medium lg:inline-block ${getRoleTheme(primaryRole).chip}`}>
             {t(ROLE_LABEL_KEYS[primaryRole])}
           </span>
         )}
