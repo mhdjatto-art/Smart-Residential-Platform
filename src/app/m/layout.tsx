@@ -3,6 +3,7 @@ import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { BrandingProvider, getActiveBranding } from "@/components/layout/branding-provider";
 import { requireSession } from "@/lib/auth/guards";
 import { getResidentContext } from "@/lib/api/resident-mobile";
+import { getEnabledFeatures } from "@/lib/auth/feature-flags";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,15 @@ export default async function MobileLayout({ children }: { children: React.React
   const branding = await getActiveBranding(orgId);
   const logoUrl = branding?.logo_path ?? null;
 
+  // Phase 17 — bottom-nav must reflect the active feature flags
+  let enabledFeatures: readonly string[] = [];
+  try {
+    const enabled = await getEnabledFeatures(orgId);
+    enabledFeatures = Array.from(enabled);
+  } catch {
+    // Soft-fail → bottom-nav defaults to showing all
+  }
+
   return (
     <BrandingProvider orgId={orgId}>
       <div className="min-h-screen bg-background pb-20">
@@ -42,7 +52,7 @@ export default async function MobileLayout({ children }: { children: React.React
           {children}
         </div>
         <InstallPrompt />
-        <BottomNav />
+        <BottomNav enabledFeatures={enabledFeatures} />
       </div>
     </BrandingProvider>
   );

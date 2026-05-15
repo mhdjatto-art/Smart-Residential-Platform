@@ -6,6 +6,7 @@ import { MobileTopbar } from "@/components/mobile/topbar";
 import { LiveDashboardWidgets } from "@/components/mobile/live-dashboard-widgets";
 import { getMobileDashboard } from "@/lib/api/resident-mobile";
 import { getActiveBranding } from "@/components/layout/branding-provider";
+import { getEnabledFeatures } from "@/lib/auth/feature-flags";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
 
@@ -20,6 +21,28 @@ export default async function MobileHome() {
   const heroStyle = branding?.primary_color
     ? { backgroundImage: `linear-gradient(135deg, ${branding.primary_color}, ${branding.accent_color ?? branding.primary_color})` }
     : undefined;
+
+  // Phase 17 — read enabled feature flags so we can hide disabled modules from
+  // the resident's home tiles. Same source as the desktop sidebar.
+  const enabledRaw = await getEnabledFeatures(ctx.organization_id);
+  // Treat "no rows at all" as default-open (show everything)
+  const isEnabled = (key: string) => enabledRaw.size === 0 || enabledRaw.has(key);
+
+  // Full tile list, each tagged with the feature_flag key it depends on.
+  // Tiles without a `feature` are always shown (wallet, payments, notifications).
+  const tiles: { href: string; icon: typeof Wallet; label: string; tone: string; feature?: string }[] = [
+    { href: "/m/wallet",        icon: Wallet,        label: "Wallet",    tone: "emerald", feature: "wallets" },
+    { href: "/m/payments",      icon: Wallet,        label: "Pay",       tone: "blue" },
+    { href: "/m/utilities",     icon: Zap,           label: "Utility",   tone: "amber",   feature: "utilities" },
+    { href: "/m/internet",      icon: Wifi,          label: "Internet",  tone: "cyan",    feature: "utilities" },
+    { href: "/m/complaints",    icon: ClipboardList, label: "Complaint", tone: "rose",    feature: "tickets" },
+    { href: "/m/visitors",      icon: UserPlus,      label: "Visitor",   tone: "violet",  feature: "visitors" },
+    { href: "/m/bookings",      icon: CalendarClock, label: "Book",      tone: "indigo",  feature: "facilities" },
+    { href: "/m/marketplace",   icon: ShoppingBag,   label: "Shop",      tone: "pink",    feature: "marketplace" },
+    { href: "/m/contracts",     icon: FileSignature, label: "Contracts", tone: "teal",    feature: "contracts" },
+    { href: "/m/notifications", icon: AlertOctagon,  label: "Alerts",    tone: "orange" },
+  ];
+  const visibleTiles = tiles.filter((t) => !t.feature || isEnabled(t.feature));
 
   return (
     <div>
@@ -64,24 +87,31 @@ export default async function MobileHome() {
           </div>
         </div>
 
-        {/* Live widgets (real-time) */}
-        <LiveDashboardWidgets initial={dash} />
+        {/* Live widgets (real-time) — filter cards by feature flags too */}
+        <LiveDashboardWidgets
+          initial={dash}
+          showUtility={isEnabled("utilities")}
+          showComplaints={isEnabled("tickets")}
+          showVisitors={isEnabled("visitors")}
+          showOrders={isEnabled("marketplace")}
+        />
 
-        {/* Module shortcuts — colorful, larger tap targets */}
-        <div>
-          <div className="grid grid-cols-4 gap-3">
-            <ModTile href="/m/wallet"        icon={Wallet}        label="Wallet"     tone="emerald" />
-            <ModTile href="/m/payments"      icon={Wallet}        label="Pay"        tone="blue" />
-            <ModTile href="/m/utilities"     icon={Zap}           label="Utility"    tone="amber" />
-            <ModTile href="/m/internet"      icon={Wifi}          label="Internet"   tone="cyan" />
-            <ModTile href="/m/complaints"    icon={ClipboardList} label="Complaint"  tone="rose" />
-            <ModTile href="/m/visitors"      icon={UserPlus}      label="Visitor"    tone="violet" />
-            <ModTile href="/m/bookings"      icon={CalendarClock} label="Book"       tone="indigo" />
-            <ModTile href="/m/marketplace"   icon={ShoppingBag}   label="Shop"       tone="pink" />
-            <ModTile href="/m/contracts"     icon={FileSignature} label="Contracts"  tone="teal" />
-            <ModTile href="/m/notifications" icon={AlertOctagon}  label="Alerts"     tone="orange" />
+        {/* Module shortcuts — colorful, larger tap targets. Filtered by feature flags. */}
+        {visibleTiles.length > 0 && (
+          <div>
+            <div className="grid grid-cols-4 gap-3">
+              {visibleTiles.map((tile) => (
+                <ModTile
+                  key={tile.href}
+                  href={tile.href}
+                  icon={tile.icon}
+                  label={tile.label}
+                  tone={tile.tone as keyof typeof TONE_CLASSES}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -10,6 +10,11 @@ import type { MobileDashboard } from "@/lib/api/resident-mobile";
 
 interface LiveDashboardWidgetsProps {
   initial: MobileDashboard;
+  /** Phase 17 feature flags — when false, the corresponding widget card is hidden */
+  showUtility?:    boolean;
+  showComplaints?: boolean;
+  showVisitors?:   boolean;
+  showOrders?:     boolean;
 }
 
 /**
@@ -17,7 +22,13 @@ interface LiveDashboardWidgetsProps {
  * change. Counts always converge to server truth on next page load — these
  * subscriptions just keep them fresh in-session.
  */
-export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
+export function LiveDashboardWidgets({
+  initial,
+  showUtility    = true,
+  showComplaints = true,
+  showVisitors   = true,
+  showOrders     = true,
+}: LiveDashboardWidgetsProps) {
   const { ctx } = initial;
   const { t } = useT();
   const [tickets, setTickets] = useState(initial.active_tickets);
@@ -100,10 +111,18 @@ export function LiveDashboardWidgets({ initial }: LiveDashboardWidgetsProps) {
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <Widget href="/m/utilities"  icon={Zap}            label={t("nav.utility_bills")}      primary={String(utility.count)} secondary={formatCurrency(utility.amount, { currency: ctx.currency })} tone="amber" />
-      <Widget href="/m/complaints" icon={ClipboardList}  label={t("mobile.active_complaints")} primary={String(tickets)}      secondary={tickets ? t("actions.view_all") : t("common.all_clear")}  tone="sky" />
-      <Widget href="/m/visitors"   icon={UserPlus}       label={t("mobile.visitors_pending")}  primary={String(visitors)}     secondary={visitors ? t("actions.view_all") : t("common.no")}        tone="violet" />
-      <Widget href="/m/marketplace/orders" icon={ShoppingBag} label={t("mobile.active_orders")} primary={String(orders)}       secondary={orders ? t("actions.view_all") : t("mobile.browse_marketplace")} tone="emerald" />
+      {showUtility && (
+        <Widget href="/m/utilities"  icon={Zap}            label={t("nav.utility_bills")}      primary={String(utility.count)} secondary={formatCurrency(utility.amount, { currency: ctx.currency })} tone="amber" />
+      )}
+      {showComplaints && (
+        <Widget href="/m/complaints" icon={ClipboardList}  label={t("mobile.active_complaints")} primary={String(tickets)}      secondary={tickets ? t("actions.view_all") : t("common.all_clear")}  tone="sky" />
+      )}
+      {showVisitors && (
+        <Widget href="/m/visitors"   icon={UserPlus}       label={t("mobile.visitors_pending")}  primary={String(visitors)}     secondary={visitors ? t("actions.view_all") : t("common.no")}        tone="violet" />
+      )}
+      {showOrders && (
+        <Widget href="/m/marketplace/orders" icon={ShoppingBag} label={t("mobile.active_orders")} primary={String(orders)}       secondary={orders ? t("actions.view_all") : t("mobile.browse_marketplace")} tone="emerald" />
+      )}
       {initial.unread_notifications > 0 && (
         <Link href="/m/notifications" className="col-span-2 flex items-center gap-3 rounded-xl border bg-rose-50 p-3 text-sm dark:bg-rose-950/40">
           <AlertOctagon className="h-5 w-5 text-rose-500" />
