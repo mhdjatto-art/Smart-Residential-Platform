@@ -5,6 +5,8 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { BrandingProvider, getActiveBranding } from "@/components/layout/branding-provider";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveLocale } from "@/lib/i18n/server";
+import { getEffectiveCapabilities } from "@/lib/auth/effective-permissions";
+import { getEnabledFeatures } from "@/lib/auth/feature-flags";
 
 export const dynamic = "force-dynamic";
 
@@ -53,14 +55,39 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const branding = await getActiveBranding(primaryOrgId);
   const logoUrl = branding?.logo_path ?? null;
 
+  // Phase 17 — load effective capability set and enabled features so the
+  // Sidebar / MobileNav can gate items by both role overrides and feature flags.
+  let effectiveCaps: readonly import("@/lib/auth/permissions").Capability[] = [];
+  let enabledFeatures: readonly string[] = [];
+  try {
+    const [caps, feats] = await Promise.all([
+      getEffectiveCapabilities(roleNames, primaryOrgId),
+      getEnabledFeatures(primaryOrgId),
+    ]);
+    effectiveCaps = Array.from(caps);
+    enabledFeatures = Array.from(feats);
+  } catch (e) {
+    console.error("[dashboard-layout] phase17 enforcement load failed:", e instanceof Error ? e.message : String(e));
+  }
+
   return (
     <BrandingProvider orgId={primaryOrgId}>
       <div className="flex min-h-screen bg-muted/30">
-        <Sidebar roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
+        <Sidebar
+          roles={roleNames}
+          isSuperAdmin={user.isSuperAdmin}
+          effectiveCapabilities={effectiveCaps}
+          enabledFeatures={enabledFeatures}
+        />
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center lg:hidden">
             <div className="px-2">
-              <MobileNav roles={roleNames} isSuperAdmin={user.isSuperAdmin} />
+              <MobileNav
+                roles={roleNames}
+                isSuperAdmin={user.isSuperAdmin}
+                effectiveCapabilities={effectiveCaps}
+                enabledFeatures={enabledFeatures}
+              />
             </div>
             <div className="flex-1">
               <Topbar email={user.email} primaryRole={primaryRole} orgName={orgName} locale={locale} userId={user.id} initialUnread={initialUnread} logoUrl={logoUrl} />

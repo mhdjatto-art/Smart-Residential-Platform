@@ -7,11 +7,18 @@ import { Menu, X, Home } from "lucide-react";
 import { navigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
-import { hasCapability } from "@/lib/auth/permissions";
+import { hasCapability, type Capability } from "@/lib/auth/permissions";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n/client";
 import type { TranslationKey } from "@/lib/i18n";
 import type { AppRole } from "@/types";
+
+const PLATFORM_HREFS = new Set([
+  "/master/permissions",
+  "/saas-console",
+  "/saas-console/plans",
+  "/saas-console/features",
+]);
 
 const NAV_KEYS: Record<string, string> = {
   "/dashboard":"nav.dashboard","/operations":"nav.operations","/residents":"nav.residents",
@@ -33,20 +40,36 @@ const NAV_KEYS: Record<string, string> = {
 interface MobileNavProps {
   roles: AppRole[];
   isSuperAdmin: boolean;
+  effectiveCapabilities?: readonly Capability[];
+  enabledFeatures?: readonly string[];
 }
 
 /**
  * Drawer-style nav for screens below `lg`. Renders the same items as the
  * desktop Sidebar but in a slide-in panel triggered from the topbar area.
  */
-export function MobileNav({ roles, isSuperAdmin }: MobileNavProps) {
+export function MobileNav({ roles, isSuperAdmin, effectiveCapabilities, enabledFeatures }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { t } = useT();
   const tr = (k: string | undefined, fb: string) => k ? (t(k as TranslationKey, {}) || fb) : fb;
 
-  const can = (cap: Parameters<typeof hasCapability>[1]) =>
-    isSuperAdmin || hasCapability(roles, cap);
+  const effSet = effectiveCapabilities ? new Set<Capability>(effectiveCapabilities) : null;
+  const featSet = enabledFeatures ? new Set<string>(enabledFeatures) : null;
+
+  const can = (cap: Capability) => {
+    if (isSuperAdmin) return true;
+    if (effSet) return effSet.has(cap);
+    return hasCapability(roles, cap);
+  };
+
+  const featureAllowed = (href: string, feature: string | undefined) => {
+    if (!feature) return true;
+    if (PLATFORM_HREFS.has(href)) return true;
+    if (!featSet) return true;
+    if (featSet.size === 0) return true;
+    return featSet.has(feature);
+  };
 
   return (
     <>
@@ -81,7 +104,9 @@ export function MobileNav({ roles, isSuperAdmin }: MobileNavProps) {
             </div>
             <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
               {navigation.map((section) => {
-                const visible = section.items.filter((it) => can(it.requiredCapability));
+                const visible = section.items.filter(
+                  (it) => can(it.requiredCapability) && featureAllowed(it.href, it.feature),
+                );
                 if (visible.length === 0) return null;
                 return (
                   <div key={section.title}>

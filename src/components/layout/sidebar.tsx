@@ -11,6 +11,15 @@ import type { TranslationKey } from "@/lib/i18n";
 import type { AppRole } from "@/types";
 import { Home } from "lucide-react";
 
+// Items that should ALWAYS be visible to super_admin / saas-level users —
+// these are the platform/admin tools. Feature-flag gating doesn't apply to them.
+const PLATFORM_HREFS = new Set([
+  "/master/permissions",
+  "/saas-console",
+  "/saas-console/plans",
+  "/saas-console/features",
+]);
+
 // href → i18n key under `nav.*`. Missing entries fall back to `item.title`.
 const NAV_KEYS: Record<string, string> = {
   "/dashboard": "nav.dashboard",
@@ -65,15 +74,45 @@ const NAV_KEYS: Record<string, string> = {
 interface SidebarProps {
   roles: AppRole[];
   isSuperAdmin: boolean;
+  /**
+   * Effective capabilities (defaults ∪ DB overrides). When provided, this is
+   * the authoritative source. Falls back to ROLE_CAPABILITIES if absent.
+   */
+  effectiveCapabilities?: readonly Capability[];
+  /**
+   * Set of feature_key strings currently enabled for the active org. Items
+   * with `feature: "<key>"` in `navigation.ts` are hidden when key is absent.
+   * Empty set → no rows yet → default-open (everything visible).
+   */
+  enabledFeatures?: readonly string[];
 }
 
-export function Sidebar({ roles, isSuperAdmin }: SidebarProps) {
+export function Sidebar({ roles, isSuperAdmin, effectiveCapabilities, enabledFeatures }: SidebarProps) {
   const pathname = usePathname();
   const { t } = useT();
 
+  const effSet = effectiveCapabilities ? new Set<Capability>(effectiveCapabilities) : null;
+  const featSet = enabledFeatures ? new Set<string>(enabledFeatures) : null;
+
   // super_admin sees everything regardless of roles array contents
-  const can = (capability: Capability) =>
-    isSuperAdmin || hasCapability(roles, capability);
+  const can = (capability: Capability) => {
+    if (isSuperAdmin) return true;
+    if (effSet) return effSet.has(capability);
+    return hasCapability(roles, capability);
+  };
+
+  // Returns true if a nav item is allowed by the active feature flags.
+  // - No `feature` declared → always allowed
+  // - Platform/admin hrefs → always allowed (so super_admin can't lock themselves out)
+  // - `featSet` is null (no data) → fail-open (allowed)
+  // - `featSet.size === 0` → no flag rows exist anywhere → default-open
+  const featureAllowed = (href: string, feature: string | undefined) => {
+    if (!feature) return true;
+    if (PLATFORM_HREFS.has(href)) return true;
+    if (!featSet) return true;
+    if (featSet.size === 0) return true;
+    return featSet.has(feature);
+  };
 
   const tr = (key: string | undefined, fallback: string) =>
     key ? (t(key as TranslationKey, {}) || fallback) : fallback;
@@ -94,7 +133,9 @@ export function Sidebar({ roles, isSuperAdmin }: SidebarProps) {
 
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
         {navigation.map((section) => {
-          const visible = section.items.filter((it) => can(it.requiredCapability));
+          const visible = section.items.filter(
+            (it) => can(it.requiredCapability) && featureAllowed(it.href, it.feature),
+          );
           if (visible.length === 0) return null;
           return (
             <div key={section.title}>
