@@ -33,36 +33,47 @@ interface FlagRow {
  * request at the layout level.
  */
 export async function getEnabledFeatures(orgId: string | null): Promise<Set<string>> {
-  const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabase as any)
-    .from("feature_flags")
-    .select("organization_id, feature_key, enabled");
+  try {
+    const supabase = await createClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from("feature_flags")
+      .select("organization_id, feature_key, enabled");
 
-  if (error || !data) {
-    // On error, fail-open — enable everything (default behaviour)
+    if (error) {
+      console.error("[feature-flags] read failed:", error.message ?? error);
+      return new Set<string>(); // fail-open
+    }
+    if (!Array.isArray(data) || data.length === 0) {
+      return new Set<string>(); // no rows yet → default-open via size check upstream
+    }
+
+    // Group by feature_key; org-specific wins over global.
+    // When org-specific resolves to enabled=false explicitly, we MUST drop the key,
+    // not fall back to global. So we track explicit state.
+    const byKey = new Map<string, FlagRow>();
+    for (const row of data as FlagRow[]) {
+      if (!row || typeof row.feature_key !== "string") continue;
+      const existing = byKey.get(row.feature_key);
+      if (!existing) {
+        byKey.set(row.feature_key, row);
+        continue;
+      }
+      // Prefer org-specific over global
+      if (row.organization_id === orgId && existing.organization_id === null) {
+        byKey.set(row.feature_key, row);
+      }
+    }
+
+    const enabled = new Set<string>();
+    for (const [key, row] of byKey) {
+      if (row.enabled) enabled.add(key);
+    }
+    return enabled;
+  } catch (e) {
+    console.error("[feature-flags] unexpected error:", e instanceof Error ? e.message : String(e));
     return new Set<string>();
   }
-
-  // Group by feature_key; org-specific wins.
-  const byKey = new Map<string, FlagRow>();
-  for (const row of data as FlagRow[]) {
-    const existing = byKey.get(row.feature_key);
-    if (!existing) {
-      byKey.set(row.feature_key, row);
-      continue;
-    }
-    // Prefer org-specific over global
-    if (row.organization_id === orgId && existing.organization_id === null) {
-      byKey.set(row.feature_key, row);
-    }
-  }
-
-  const enabled = new Set<string>();
-  for (const [key, row] of byKey) {
-    if (row.enabled) enabled.add(key);
-  }
-  return enabled;
 }
 
 /**

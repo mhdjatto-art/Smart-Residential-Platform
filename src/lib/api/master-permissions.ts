@@ -108,7 +108,7 @@ export async function setFeatureFlag(
   }
 
   revalidatePath("/master/permissions");
-  revalidatePath("/", "layout"); // bust the dashboard layout cache so the sidebar refreshes
+  revalidatePath("/dashboard");
 }
 
 /* ─── role_capability_overrides ──────────────────────────────────────────── */
@@ -170,7 +170,7 @@ export async function setRoleCapabilityOverride(
   }
 
   revalidatePath("/master/permissions");
-  revalidatePath("/", "layout"); // bust dashboard layout cache so sidebar refreshes
+  revalidatePath("/dashboard");
 }
 
 /** Wipe an override so the code default takes over again. */
@@ -191,7 +191,7 @@ export async function clearRoleCapabilityOverride(
   const { error } = await q;
   if (error) throw new Error(error.message);
   revalidatePath("/master/permissions");
-  revalidatePath("/", "layout"); // bust dashboard layout cache so sidebar refreshes
+  revalidatePath("/dashboard");
 }
 
 /* ─── Lightweight feature-check (used by other pages to gate UI) ────────── */

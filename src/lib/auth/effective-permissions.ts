@@ -33,43 +33,56 @@ export async function getEffectiveCapabilities(
   roles: AppRole[],
   orgId: string | null,
 ): Promise<Set<Capability>> {
-  // 1. Start with defaults
+  // 1. Start with defaults (works even if `roles` is empty)
   const effective = new Set<Capability>();
-  for (const role of roles) {
+  for (const role of roles ?? []) {
     const caps = ROLE_CAPABILITIES[role] ?? [];
     for (const c of caps) effective.add(c);
   }
 
-  // 2. Load all overrides for these roles (org-specific + global)
-  const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (supabase as any)
-    .from("role_capability_overrides")
-    .select("organization_id, role, capability, enabled")
-    .in("role", roles);
+  // No roles → return defaults (empty). Don't bother querying.
+  if (!roles || roles.length === 0) return effective;
 
-  if (error || !data) return effective;
+  try {
+    // 2. Load all overrides for these roles (org-specific + global)
+    const supabase = await createClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from("role_capability_overrides")
+      .select("organization_id, role, capability, enabled")
+      .in("role", roles);
 
-  // Group by (role, capability); org-specific wins.
-  const byKey = new Map<string, OverrideRow>();
-  for (const row of data as OverrideRow[]) {
-    const key = `${row.role}::${row.capability}`;
-    const existing = byKey.get(key);
-    if (!existing) {
-      byKey.set(key, row);
-      continue;
+    if (error) {
+      console.error("[effective-permissions] read failed:", error.message ?? error);
+      return effective; // fall back to defaults
     }
-    if (row.organization_id === orgId && existing.organization_id === null) {
-      byKey.set(key, row);
+    if (!Array.isArray(data)) return effective;
+
+    // Group by (role, capability); org-specific wins.
+    const byKey = new Map<string, OverrideRow>();
+    for (const row of data as OverrideRow[]) {
+      if (!row || typeof row.role !== "string" || typeof row.capability !== "string") continue;
+      const key = `${row.role}::${row.capability}`;
+      const existing = byKey.get(key);
+      if (!existing) {
+        byKey.set(key, row);
+        continue;
+      }
+      if (row.organization_id === orgId && existing.organization_id === null) {
+        byKey.set(key, row);
+      }
     }
-  }
 
-  // 3. Apply overrides
-  for (const [, row] of byKey) {
-    const cap = row.capability as Capability;
-    if (row.enabled) effective.add(cap);
-    else effective.delete(cap);
-  }
+    // 3. Apply overrides
+    for (const [, row] of byKey) {
+      const cap = row.capability as Capability;
+      if (row.enabled) effective.add(cap);
+      else effective.delete(cap);
+    }
 
-  return effective;
+    return effective;
+  } catch (e) {
+    console.error("[effective-permissions] unexpected error:", e instanceof Error ? e.message : String(e));
+    return effective;
+  }
 }
