@@ -47,7 +47,14 @@ export async function listFeatureFlags(orgId: string | null): Promise<FeatureFla
   return (data ?? []) as FeatureFlag[];
 }
 
-/** Toggle a feature for an org (creates the row if missing). */
+/**
+ * Toggle a feature for an org (creates the row if missing).
+ *
+ * IMPORTANT: PostgreSQL treats `NULL ≠ NULL` in UNIQUE constraints, so a plain
+ * `upsert` with onConflict="organization_id,feature_key" creates duplicate rows
+ * when `organization_id IS NULL`. We work around that by doing an explicit
+ * UPDATE-then-INSERT when targeting the global row.
+ */
 export async function setFeatureFlag(
   orgId:      string | null,
   featureKey: string,
@@ -56,19 +63,52 @@ export async function setFeatureFlag(
 ): Promise<void> {
   await requireRole(["super_admin","developer_admin"]);
   const supabase = await createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any).from("feature_flags").upsert(
-    {
-      organization_id: orgId,
-      feature_key:     featureKey,
-      enabled,
-      metadata,
-      updated_at:      new Date().toISOString(),
-    },
-    { onConflict: "organization_id,feature_key" },
-  );
-  if (error) throw new Error(error.message);
+
+  if (orgId === null) {
+    // Explicit two-step path for global rows (NULL org_id)
+    const now = new Date().toISOString();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = supabase as any;
+
+    const { data: existing, error: selErr } = await sb
+      .from("feature_flags")
+      .select("id")
+      .is("organization_id", null)
+      .eq("feature_key", featureKey)
+      .limit(1)
+      .maybeSingle();
+    if (selErr) throw new Error(selErr.message);
+
+    if (existing?.id) {
+      const { error: updErr } = await sb
+        .from("feature_flags")
+        .update({ enabled, metadata, updated_at: now })
+        .eq("id", existing.id);
+      if (updErr) throw new Error(updErr.message);
+    } else {
+      const { error: insErr } = await sb
+        .from("feature_flags")
+        .insert({ organization_id: null, feature_key: featureKey, enabled, metadata, updated_at: now });
+      if (insErr) throw new Error(insErr.message);
+    }
+  } else {
+    // Per-org rows: regular upsert works because (orgId, featureKey) are both non-null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).from("feature_flags").upsert(
+      {
+        organization_id: orgId,
+        feature_key:     featureKey,
+        enabled,
+        metadata,
+        updated_at:      new Date().toISOString(),
+      },
+      { onConflict: "organization_id,feature_key" },
+    );
+    if (error) throw new Error(error.message);
+  }
+
   revalidatePath("/master/permissions");
+  revalidatePath("/", "layout"); // bust the dashboard layout cache so the sidebar refreshes
 }
 
 /* ─── role_capability_overrides ──────────────────────────────────────────── */
@@ -93,19 +133,44 @@ export async function setRoleCapabilityOverride(
 ): Promise<void> {
   await requireRole(["super_admin","developer_admin"]);
   const supabase = await createClient();
+  const now = new Date().toISOString();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any).from("role_capability_overrides").upsert(
-    {
-      organization_id: orgId,
-      role,
-      capability,
-      enabled,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "organization_id,role,capability" },
-  );
-  if (error) throw new Error(error.message);
+  const sb = supabase as any;
+
+  if (orgId === null) {
+    // Same NULL-uniqueness workaround as setFeatureFlag
+    const { data: existing, error: selErr } = await sb
+      .from("role_capability_overrides")
+      .select("id")
+      .is("organization_id", null)
+      .eq("role", role)
+      .eq("capability", capability)
+      .limit(1)
+      .maybeSingle();
+    if (selErr) throw new Error(selErr.message);
+
+    if (existing?.id) {
+      const { error: updErr } = await sb
+        .from("role_capability_overrides")
+        .update({ enabled, updated_at: now })
+        .eq("id", existing.id);
+      if (updErr) throw new Error(updErr.message);
+    } else {
+      const { error: insErr } = await sb
+        .from("role_capability_overrides")
+        .insert({ organization_id: null, role, capability, enabled, updated_at: now });
+      if (insErr) throw new Error(insErr.message);
+    }
+  } else {
+    const { error } = await sb.from("role_capability_overrides").upsert(
+      { organization_id: orgId, role, capability, enabled, updated_at: now },
+      { onConflict: "organization_id,role,capability" },
+    );
+    if (error) throw new Error(error.message);
+  }
+
   revalidatePath("/master/permissions");
+  revalidatePath("/", "layout"); // bust dashboard layout cache so sidebar refreshes
 }
 
 /** Wipe an override so the code default takes over again. */
@@ -126,6 +191,7 @@ export async function clearRoleCapabilityOverride(
   const { error } = await q;
   if (error) throw new Error(error.message);
   revalidatePath("/master/permissions");
+  revalidatePath("/", "layout"); // bust dashboard layout cache so sidebar refreshes
 }
 
 /* ─── Lightweight feature-check (used by other pages to gate UI) ────────── */
