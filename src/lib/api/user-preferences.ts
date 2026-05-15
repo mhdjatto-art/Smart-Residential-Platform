@@ -1,28 +1,14 @@
-/**
- * Phase 18 — per-user UI preferences (theme, accent color, locale, notification mutes).
- */
 "use server";
+
+/**
+ * Phase 18 — server actions for user preferences.
+ * Pure types/constants are in user-preferences-types.ts (Next.js 15 doesn't
+ * allow non-async exports in "use server" modules).
+ */
 
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
-
-export interface UserPreferences {
-  theme:         "light" | "dark" | "system";
-  accent_color:  string | null;
-  locale_pref:   string | null;
-  notify_email:  boolean;
-  notify_push:   boolean;
-  notify_in_app: boolean;
-}
-
-export const DEFAULT_PREFERENCES: UserPreferences = {
-  theme:         "system",
-  accent_color:  null,
-  locale_pref:   null,
-  notify_email:  true,
-  notify_push:   true,
-  notify_in_app: true,
-};
+import { DEFAULT_PREFERENCES, type UserPreferences } from "./user-preferences-types";
 
 /** Returns the active user's preferences, with sensible defaults if absent. */
 export async function getMyPreferences(): Promise<UserPreferences> {

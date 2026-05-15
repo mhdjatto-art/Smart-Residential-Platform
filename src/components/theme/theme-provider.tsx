@@ -13,7 +13,7 @@
  */
 
 import { createContext, useContext, useEffect, useState } from "react";
-import type { UserPreferences } from "@/lib/api/user-preferences";
+import type { UserPreferences } from "@/lib/api/user-preferences-types";
 
 type ThemeMode = "light" | "dark" | "system";
 

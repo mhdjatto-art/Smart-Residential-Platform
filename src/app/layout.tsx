@@ -8,7 +8,8 @@ import { ThemeProvider } from "@/components/theme/theme-provider";
 import { siteConfig } from "@/config/site";
 import { getActiveLocale } from "@/lib/i18n/server";
 import { htmlDir } from "@/lib/i18n";
-import { getMyPreferences, DEFAULT_PREFERENCES } from "@/lib/api/user-preferences";
+import { getMyPreferences } from "@/lib/api/user-preferences";
+import { DEFAULT_PREFERENCES } from "@/lib/api/user-preferences-types";
 
 const inter = Inter({
   subsets: ["latin"],
