@@ -154,6 +154,7 @@ export const navigation: NavSection[] = [
       { title: "Branding",      href: "/settings/branding", icon: Palette,    requiredCapability: "branding:write" },
       { title: "Domains",       href: "/settings/domains",  icon: Globe,      requiredCapability: "domains:write" },
       { title: "Billing",       href: "/settings/billing",  icon: CreditCard, requiredCapability: "billing:read" },
+      { title: "Preferences",   href: "/settings/preferences", icon: Palette, requiredCapability: "compound:read" },
       { title: "Settings",      href: "/settings",      icon: Settings,  requiredCapability: "compound:read" },
     ],
   },

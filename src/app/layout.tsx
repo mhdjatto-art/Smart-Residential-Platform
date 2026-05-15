@@ -4,9 +4,11 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SwRegister } from "@/components/pwa/sw-register";
 import { CookieBanner } from "@/components/legal/cookie-banner";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { siteConfig } from "@/config/site";
 import { getActiveLocale } from "@/lib/i18n/server";
 import { htmlDir } from "@/lib/i18n";
+import { getMyPreferences, DEFAULT_PREFERENCES } from "@/lib/api/user-preferences";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,13 +60,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   } catch {
     /* swallowed */
   }
+
+  // Phase 18 — load user preferences (theme/accent). Falls back to defaults
+  // when unauthenticated or the table doesn't exist yet.
+  const prefs = await getMyPreferences().catch(() => DEFAULT_PREFERENCES);
+
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
-        {children}
-        <Toaster />
-        <SwRegister />
-        <CookieBanner />
+        <ThemeProvider initial={prefs}>
+          {children}
+          <Toaster />
+          <SwRegister />
+          <CookieBanner />
+        </ThemeProvider>
       </body>
     </html>
   );

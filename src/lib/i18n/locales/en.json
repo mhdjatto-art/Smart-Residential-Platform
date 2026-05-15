@@ -1440,5 +1440,24 @@
     "new_maintenance_desc": "Create a work order.",
     "new_maintenance_desc_full": "Create a corrective, preventive, or emergency work order. Assign a technician now or later.",
     "new_maintenance_no_compounds": "No compounds yet — create one first."
+  },
+  "settings": {
+    "prefs_title": "My preferences",
+    "prefs_desc": "Personalize your theme, accent color, and notifications.",
+    "theme_title": "Theme",
+    "theme_desc": "Choose how the interface looks.",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System",
+    "accent_title": "Accent color",
+    "accent_desc": "Pick a personal accent. Org branding still wins for hero areas.",
+    "reset_default": "Reset",
+    "notifications_title": "Notifications",
+    "notifications_desc": "Mute channels you don't need.",
+    "notify_email": "Email",
+    "notify_push": "Push notifications",
+    "notify_in_app": "In-app",
+    "saved": "Saved",
+    "save_failed": "Save failed"
   }
 }

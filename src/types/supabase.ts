@@ -6446,6 +6446,39 @@ export type Database = {
           },
         ]
       }
+      user_preferences: {
+        Row: {
+          accent_color: string | null
+          locale_pref: string | null
+          notify_email: boolean
+          notify_in_app: boolean
+          notify_push: boolean
+          theme: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accent_color?: string | null
+          locale_pref?: string | null
+          notify_email?: boolean
+          notify_in_app?: boolean
+          notify_push?: boolean
+          theme?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accent_color?: string | null
+          locale_pref?: string | null
+          notify_email?: boolean
+          notify_in_app?: boolean
+          notify_push?: boolean
+          theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           compound_id: string | null
@@ -8273,6 +8306,32 @@ export type Database = {
       reverse_payment: {
         Args: { p_payment_id: string; p_reason: string }
         Returns: undefined
+      }
+      set_user_preferences: {
+        Args: {
+          p_accent_color?: string
+          p_locale_pref?: string
+          p_notify_email?: boolean
+          p_notify_in_app?: boolean
+          p_notify_push?: boolean
+          p_theme?: string
+        }
+        Returns: {
+          accent_color: string | null
+          locale_pref: string | null
+          notify_email: boolean
+          notify_in_app: boolean
+          notify_push: boolean
+          theme: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_preferences"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }

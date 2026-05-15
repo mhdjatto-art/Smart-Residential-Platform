@@ -1440,5 +1440,24 @@
     "new_maintenance_desc": "أنشئ أمر عمل.",
     "new_maintenance_desc_full": "أنشئ أمر عمل تصحيحياً أو وقائياً أو طارئاً. أسند فنياً الآن أو لاحقاً.",
     "new_maintenance_no_compounds": "لا توجد مجمعات بعد — أنشئ واحداً أولاً."
+  },
+  "settings": {
+    "prefs_title": "تفضيلاتي",
+    "prefs_desc": "خصّص الثيم واللون الرئيسي والإشعارات.",
+    "theme_title": "الثيم",
+    "theme_desc": "اختر مظهر الواجهة.",
+    "theme_light": "فاتح",
+    "theme_dark": "داكن",
+    "theme_system": "حسب الجهاز",
+    "accent_title": "اللون المميز",
+    "accent_desc": "اختر لوناً شخصياً. هوية المنظمة تبقى للأقسام الرئيسية.",
+    "reset_default": "إعادة الافتراضي",
+    "notifications_title": "الإشعارات",
+    "notifications_desc": "اكتم القنوات التي لا تحتاجها.",
+    "notify_email": "البريد الإلكتروني",
+    "notify_push": "إشعارات الجوال",
+    "notify_in_app": "داخل التطبيق",
+    "saved": "تم الحفظ",
+    "save_failed": "فشل الحفظ"
   }
 }
