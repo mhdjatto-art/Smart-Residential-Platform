@@ -9,10 +9,12 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { ReadingForm, GenerateBillButton } from "@/components/meters/reading-form";
 import { getMeter, listReadings } from "@/lib/api/utilities";
 import { formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function MeterDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("utility:read");
   const { id } = await params;
   const meter = await getMeter(id);
   if (!meter) notFound();

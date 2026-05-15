@@ -13,6 +13,7 @@ import { listUtilityBills } from "@/lib/api/utilities";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
 import type { TranslationKey } from "@/lib/i18n";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -22,6 +23,7 @@ export default async function UtilityBillsPage({
 }: {
   searchParams: Promise<{ status?: string; utility_type?: string; page?: string }>;
 }) {
+  await requireCapability("utility:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listUtilityBills({

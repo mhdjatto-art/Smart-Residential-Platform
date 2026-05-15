@@ -11,10 +11,12 @@ import { getCompound } from "@/lib/api/compounds";
 import { listBuildingsPaged } from "@/lib/api/buildings";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function CompoundDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("compound:read");
   const { id } = await params;
   const compound = await getCompound(id);
   if (!compound) notFound();

@@ -8,10 +8,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { listMeters } from "@/lib/api/utilities";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function MetersPage() {
+  await requireCapability("utility:read");
   const meters = await listMeters();
   return (
     <div>

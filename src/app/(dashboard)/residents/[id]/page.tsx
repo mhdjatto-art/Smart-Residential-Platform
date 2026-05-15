@@ -15,6 +15,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate, initials } from "@/lib/utils";
 import { DocumentSection } from "@/components/documents/document-section";
 import { getT, type T } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default async function ResidentDetailPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ tab?: string }>;
 }) {
+  await requireCapability("resident:read");
   const { id } = await params;
   const { tab } = await searchParams;
   const resident = await getResident(id);

@@ -13,6 +13,7 @@ import { listUnitsPaged } from "@/lib/api/units";
 import { listCompoundOptions } from "@/lib/api/compounds";
 import { listBuildingOptions } from "@/lib/api/buildings";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,7 @@ export default async function UnitsPage({
     page?: string;
   }>;
 }) {
+  await requireCapability("unit:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { t } = await getT();

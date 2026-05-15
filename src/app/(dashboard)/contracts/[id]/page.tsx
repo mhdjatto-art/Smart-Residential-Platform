@@ -15,10 +15,12 @@ import { ActivityTimeline } from "@/components/audit/activity-timeline";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ContractDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("contract:read");
   const { id } = await params;
   const contract = await getContract(id);
   if (!contract) notFound();

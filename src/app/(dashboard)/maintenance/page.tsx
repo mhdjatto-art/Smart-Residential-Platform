@@ -11,6 +11,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listMaintenanceJobs } from "@/lib/api/maintenance";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -20,6 +21,7 @@ export default async function MaintenancePage({
 }: {
   searchParams: Promise<{ status?: string; type?: string; page?: string }>;
 }) {
+  await requireCapability("ticket:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listMaintenanceJobs({

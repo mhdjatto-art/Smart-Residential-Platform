@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { DeviceLiveRow } from "@/components/devices/device-live-row";
 import { listDevices } from "@/lib/api/iot";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function DevicesPage() {
+  await requireCapability("devices:read");
   const devices = await listDevices();
 
   // Group by kind for visual chunking

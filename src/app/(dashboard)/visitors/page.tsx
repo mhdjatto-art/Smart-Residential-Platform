@@ -14,6 +14,7 @@ import { VisitorQr } from "@/components/visitors/visitor-qr";
 import { listVisitorsPaged } from "@/lib/api/visitors";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -23,6 +24,7 @@ export default async function VisitorsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; visitor_type?: string; page?: string }>;
 }) {
+  await requireCapability("visitor:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listVisitorsPaged({

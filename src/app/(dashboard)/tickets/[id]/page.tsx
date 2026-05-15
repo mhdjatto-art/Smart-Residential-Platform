@@ -8,13 +8,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { StatusChanger, CommentBox } from "@/components/tickets/ticket-actions";
 import { getTicket, listComments } from "@/lib/api/tickets";
-import { requireUser, isStaff } from "@/lib/auth/guards";
+import { requireUser, isStaff, requireCapability } from "@/lib/auth/guards";
 import { formatDate, initials } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function TicketDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("ticket:read");
   const { id } = await params;
   const user = await requireUser();
   const [ticket, comments] = await Promise.all([getTicket(id), listComments(id)]);

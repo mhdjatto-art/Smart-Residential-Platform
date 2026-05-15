@@ -1,13 +1,14 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { ROLE_LABEL_KEYS } from "@/lib/constants";
 import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
+  await requireCapability("compound:read");
   const user = await requireUser();
   const { t } = await getT();
 

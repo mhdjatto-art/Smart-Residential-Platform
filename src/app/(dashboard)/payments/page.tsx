@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listPaymentsPaged } from "@/lib/api/payments";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -21,6 +22,7 @@ export default async function PaymentsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; method?: string; page?: string }>;
 }) {
+  await requireCapability("payment:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { t } = await getT();

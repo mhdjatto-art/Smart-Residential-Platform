@@ -5,10 +5,12 @@ import { getPayment, getReceiptForPayment, listAllocations } from "@/lib/api/pay
 import { createClient } from "@/lib/supabase/server";
 import { siteConfig } from "@/config/site";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ReceiptPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("payment:read");
   const { id } = await params;
   const [payment, receipt, allocations] = await Promise.all([
     getPayment(id),

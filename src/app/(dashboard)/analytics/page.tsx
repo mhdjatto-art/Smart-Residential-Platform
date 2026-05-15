@@ -11,6 +11,7 @@ import { RevenueChart } from "@/components/analytics/revenue-chart";
 import { UtilityChart } from "@/components/analytics/utility-chart";
 import { getAnalyticsData } from "@/lib/api/analytics-dashboard";
 import { formatCurrency } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Analytics" };
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ const TICKET_COLORS: Record<string, string> = {
 };
 
 export default async function AnalyticsPage() {
+  await requireCapability("analytics:read");
   const a = await getAnalyticsData();
   const totalTickets = a.ticket_by_status.reduce((s, t) => s + t.count, 0);
 

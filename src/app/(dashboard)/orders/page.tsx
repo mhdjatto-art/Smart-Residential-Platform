@@ -9,10 +9,12 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { listMarketplaceOrders } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
+  await requireCapability("marketplace:read");
   const orders = await listMarketplaceOrders();
   const { t } = await getT();
   return (

@@ -9,10 +9,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getServiceProvider, listServiceItems, listReviews } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ServiceProviderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("marketplace:read");
   const { id } = await params;
   const provider = await getServiceProvider(id);
   if (!provider) notFound();

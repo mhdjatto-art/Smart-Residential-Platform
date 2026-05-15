@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { ROLE_LABEL_KEYS } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { getDashboardStats } from "@/lib/api/stats";
@@ -19,6 +19,7 @@ import type { ResidentRow } from "@/lib/api/residents";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
+  await requireCapability("compound:read");
   const user = await requireUser();
   const supabase = await createClient();
   const { t } = await getT();

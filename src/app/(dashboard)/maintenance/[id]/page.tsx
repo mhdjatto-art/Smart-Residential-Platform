@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { StatusButtons } from "@/components/maintenance/status-buttons";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
@@ -34,6 +34,7 @@ interface JobDetail {
 }
 
 export default async function MaintenanceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("ticket:read");
   await requireUser();
   const { id } = await params;
   const supabase = await createClient();

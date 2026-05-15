@@ -8,10 +8,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listServiceProviders } from "@/lib/api/marketplace";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ServiceProvidersPage() {
+  await requireCapability("marketplace:read");
   const providers = await listServiceProviders();
   const { t } = await getT();
   return (

@@ -11,11 +11,13 @@ import { getWalletDetail } from "@/lib/api/wallets";
 import { ActivityTimeline } from "@/components/audit/activity-timeline";
 import { ManagerTopupButton } from "@/components/wallet/manager-topup-button";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Wallet" };
 export const dynamic = "force-dynamic";
 
 export default async function WalletDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("utility:read");
   const { id } = await params;
   const detail = await getWalletDetail(id);
   if (!detail) notFound();

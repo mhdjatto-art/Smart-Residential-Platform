@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { Activity } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { AccessLogsFeed, type AccessLog } from "@/components/devices/access-logs-feed";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Access logs" };
 export const dynamic = "force-dynamic";
 
 export default async function AccessLogsPage() {
+  await requireCapability("access:read");
   await requireUser();
   const supabase = await createClient();
 

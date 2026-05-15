@@ -9,10 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { listFacilities } from "@/lib/api/facilities";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function FacilitiesPage() {
+  await requireCapability("facility:read");
   const facilities = await listFacilities();
   const { t } = await getT();
 

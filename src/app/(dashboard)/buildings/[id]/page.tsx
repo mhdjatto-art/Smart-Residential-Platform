@@ -12,10 +12,12 @@ import { getBuilding } from "@/lib/api/buildings";
 import { listFloors } from "@/lib/api/floors";
 import { listUnitsPaged } from "@/lib/api/units";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("compound:read");
   const { id } = await params;
   const building = await getBuilding(id);
   if (!building) notFound();

@@ -10,6 +10,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listAuditLog } from "@/lib/api/audit";
 import { diffKeys } from "@/lib/audit/diff";
 import { formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Audit log" };
 export const dynamic = "force-dynamic";
@@ -51,6 +52,7 @@ export default async function AuditPage({
 }: {
   searchParams: Promise<{ q?: string; table?: string; action?: string; page?: string }>;
 }) {
+  await requireCapability("audit:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listAuditLog({

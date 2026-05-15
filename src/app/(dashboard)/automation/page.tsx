@@ -9,10 +9,12 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { AutomationRowActions } from "@/components/automation/automation-row-actions";
 import { ExecuteRulesButton } from "@/components/automation/execute-rules-button";
 import { listAutomationRules } from "@/lib/api/automation";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function AutomationPage() {
+  await requireCapability("automation:read");
   const rules = await listAutomationRules();
   return (
     <div>

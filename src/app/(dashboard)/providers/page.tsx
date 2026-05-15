@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ProvidersBrowser } from "@/components/providers/providers-browser";
 import { listProviders } from "@/lib/api/utilities";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProvidersPage() {
+  await requireCapability("utility:read");
   const providers = await listProviders();
   return (
     <div>

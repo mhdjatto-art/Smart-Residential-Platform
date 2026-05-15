@@ -9,6 +9,7 @@ import { FilterSelect } from "@/components/shared/filter-select";
 import { Pagination } from "@/components/shared/pagination";
 import { listWallets } from "@/lib/api/wallets";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Wallets" };
 export const dynamic = "force-dynamic";
@@ -21,6 +22,7 @@ export default async function WalletsPage({
     utility?: string; status?: string; service?: string; low?: string; page?: string;
   }>;
 }) {
+  await requireCapability("utility:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
 

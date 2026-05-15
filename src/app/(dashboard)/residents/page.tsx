@@ -13,6 +13,7 @@ import { listResidentsPaged } from "@/lib/api/residents";
 import { listCompoundOptions } from "@/lib/api/compounds";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export default async function ResidentsPage({
     q?: string; status?: string; tenancy?: string; compound?: string; page?: string;
   }>;
 }) {
+  await requireCapability("resident:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { t } = await getT();

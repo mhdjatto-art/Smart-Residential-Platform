@@ -7,10 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listErpIntegrations } from "@/lib/api/erp";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ErpPage() {
+  await requireCapability("erp:read");
   const integrations = await listErpIntegrations();
   return (
     <div>

@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { IntegrationsBrowser } from "@/components/integrations/integrations-browser";
 import { listIntegrations } from "@/lib/api/pricing";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function IntegrationsPage() {
+  await requireCapability("integrations:read");
   const integrations = await listIntegrations();
   return (
     <div>

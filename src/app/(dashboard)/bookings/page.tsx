@@ -12,6 +12,7 @@ import { BookingActions } from "@/components/bookings/booking-actions";
 import { listBookings } from "@/lib/api/facilities";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -27,6 +28,7 @@ export default async function BookingsPage({
 }: {
   searchParams: Promise<{ status?: string; page?: string }>;
 }) {
+  await requireCapability("facility:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listBookings({ status: sp.status, page, pageSize: PAGE_SIZE });

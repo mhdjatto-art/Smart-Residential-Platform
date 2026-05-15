@@ -107,6 +107,37 @@ export async function requireRole(allowed: AppRole[]): Promise<CurrentUser> {
   return user;
 }
 
+/**
+ * Phase 19 — Require that the current user holds a specific *capability*.
+ *
+ * Looks up the effective capability set (defaults ∪ DB overrides). Redirects
+ * the user away if they don't have it.
+ *
+ * This is the recommended guard for admin pages: instead of repeating long
+ * role allow-lists like `requireRole(["super_admin","developer_admin","compound_manager","finance_officer"])`,
+ * just say `requireCapability("payment:read")`. Defaults stay in code,
+ * overrides live in DB, both honoured.
+ */
+export async function requireCapability(
+  capability: import("./permissions").Capability,
+): Promise<CurrentUser> {
+  const user = await requireUser();
+  if (user.isSuperAdmin) return user;
+
+  // Lazy import — avoids a top-level cycle since effective-permissions also imports server-only.
+  const { getEffectiveCapabilities } = await import("./effective-permissions");
+  const roleNames = user.roles.map((r) => r.role);
+  const primaryOrgId =
+    user.roles.find((r) => r.is_primary)?.organization_id ?? user.organizationIds[0] ?? null;
+
+  const effective = await getEffectiveCapabilities(roleNames, primaryOrgId);
+  if (effective.has(capability)) return user;
+
+  // Redirect to the role-appropriate home
+  const isResident = user.roles.some((r) => r.role === "resident");
+  redirect(isResident ? "/m" : "/dashboard");
+}
+
 /** True if the user has any management (non-resident) role. */
 export function isStaff(user: CurrentUser): boolean {
   if (user.isSuperAdmin) return true;

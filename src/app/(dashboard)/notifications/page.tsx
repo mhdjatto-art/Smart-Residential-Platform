@@ -7,10 +7,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { listMyNotifications } from "@/lib/api/notifications";
 import { MarkAllReadButton, MarkOneReadButton } from "@/components/notifications/notification-actions";
 import { formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function NotificationsPage() {
+  await requireCapability("compound:read");
   const items = await listMyNotifications(false);
   const unread = items.filter((n) => !n.read_at).length;
 

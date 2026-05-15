@@ -5,10 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EmptyState } from "@/components/shared/empty-state";
 import { AlertActions } from "@/components/control-center/alert-actions";
 import { listAlerts } from "@/lib/api/analytics";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function AlertsPage() {
+  await requireCapability("alerts:read");
   const alerts = await listAlerts(["open","acknowledged","snoozed","resolved"]);
   return (
     <div>

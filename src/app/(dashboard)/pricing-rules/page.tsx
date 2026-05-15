@@ -8,10 +8,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listPricingRules } from "@/lib/api/pricing";
 import { formatCurrency } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function PricingRulesPage() {
+  await requireCapability("utility:read");
   const rules = await listPricingRules();
   return (
     <div>

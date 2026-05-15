@@ -5,10 +5,12 @@ import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { listReviews, listServiceProviders } from "@/lib/api/marketplace";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function ReviewsPage() {
+  await requireCapability("marketplace:read");
   const [reviews, providers] = await Promise.all([listReviews(), listServiceProviders()]);
   const providerById = new Map(providers.map((p) => [p.id, p.provider_name]));
   return (

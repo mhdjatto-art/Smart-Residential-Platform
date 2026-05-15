@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookingForm } from "@/components/bookings/booking-form";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { listFacilities } from "@/lib/api/facilities";
 import { listResidentOptions } from "@/lib/api/residents";
 import { getT } from "@/lib/i18n/server";
@@ -13,6 +13,7 @@ export const metadata: Metadata = { title: "New booking" };
 export const dynamic = "force-dynamic";
 
 export default async function NewBookingPage() {
+  await requireCapability("facility:read");
   await requireUser();
   const [facilities, residents] = await Promise.all([
     listFacilities(),

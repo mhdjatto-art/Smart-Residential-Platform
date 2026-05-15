@@ -10,10 +10,12 @@ import { ReverseButton } from "@/components/payments/reverse-button";
 import { getPayment, getReceiptForPayment, listAllocations } from "@/lib/api/payments";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function PaymentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("payment:read");
   const { id } = await params;
   const payment = await getPayment(id);
   if (!payment) notFound();

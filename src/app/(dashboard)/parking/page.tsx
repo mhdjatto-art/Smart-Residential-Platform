@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { AssignSpotDialog, PlateBadge } from "@/components/parking/assign-spot-dialog";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { listEnrichedParking } from "@/lib/api/iot";
 import { listResidentOptions } from "@/lib/api/residents";
 
@@ -20,6 +20,7 @@ const KIND_BADGE: Record<string, string> = {
 };
 
 export default async function ParkingPage() {
+  await requireCapability("parking:read");
   const user = await requireUser();
   const [spots, residents] = await Promise.all([
     listEnrichedParking(),

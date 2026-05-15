@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listCompoundsPaged } from "@/lib/api/compounds";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,7 @@ export default async function CompoundsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 }) {
+  await requireCapability("compound:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { t } = await getT();

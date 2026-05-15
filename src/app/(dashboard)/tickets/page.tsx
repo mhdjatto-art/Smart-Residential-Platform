@@ -13,6 +13,7 @@ import { listTicketsPaged } from "@/lib/api/tickets";
 import { TICKET_CATEGORIES } from "@/lib/validations/operations";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -22,6 +23,7 @@ export default async function TicketsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; priority?: string; category?: string; page?: string }>;
 }) {
+  await requireCapability("ticket:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listTicketsPaged({

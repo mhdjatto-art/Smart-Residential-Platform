@@ -4,13 +4,14 @@ import { ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SeedDemoButton } from "@/components/admin/seed-demo-button";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireRole } from "@/lib/auth/guards";
 import { DEMO_SEED_INFO } from "@/lib/seed/demo";
 
 export const metadata: Metadata = { title: "Demo data seed" };
 export const dynamic = "force-dynamic";
 
 export default async function SeedDemoPage() {
+  await requireRole(["super_admin", "developer_admin"]);
   const user = await requireUser();
   if (!user.isSuperAdmin) {
     redirect("/dashboard");

@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listContractsPaged } from "@/lib/api/contracts";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -21,6 +22,7 @@ export default async function ContractsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string; contract_type?: string; page?: string }>;
 }) {
+  await requireCapability("contract:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { t } = await getT();

@@ -11,6 +11,7 @@ import { GenerateButton, DismissButton } from "@/components/reminders/reminder-a
 import { listReminders } from "@/lib/api/reminders";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 50;
@@ -20,6 +21,7 @@ export default async function RemindersPage({
 }: {
   searchParams: Promise<{ status?: string; kind?: string; page?: string }>;
 }) {
+  await requireCapability("payment:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
 

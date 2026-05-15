@@ -9,10 +9,12 @@ import { VisitorActions } from "@/components/visitors/visitor-actions";
 import { getVisitor } from "@/lib/api/visitors";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function VisitorDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("visitor:read");
   const { id } = await params;
   const visitor = await getVisitor(id);
   if (!visitor) notFound();

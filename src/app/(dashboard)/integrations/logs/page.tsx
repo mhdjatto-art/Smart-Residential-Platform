@@ -5,10 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listIntegrationLogs } from "@/lib/api/pricing";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function IntegrationLogsPage() {
+  await requireCapability("integrations:read");
   const logs = await listIntegrationLogs();
   return (
     <div>

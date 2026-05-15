@@ -4,10 +4,12 @@ import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EmptyState } from "@/components/shared/empty-state";
 import { listAccountMappings, listErpIntegrations } from "@/lib/api/erp";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function AccountMappingsPage() {
+  await requireCapability("erp:read");
   const [integrations, mappings] = await Promise.all([listErpIntegrations(), listAccountMappings()]);
   const integrationName = new Map(integrations.map((i) => [i.id, i.name]));
 

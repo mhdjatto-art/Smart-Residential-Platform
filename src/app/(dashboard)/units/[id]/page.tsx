@@ -13,10 +13,12 @@ import { listResidentOptions } from "@/lib/api/residents";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function UnitDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("unit:read");
   const { id } = await params;
   const unit = await getUnit(id);
   if (!unit) notFound();

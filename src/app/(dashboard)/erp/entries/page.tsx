@@ -6,10 +6,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listJournalEntries } from "@/lib/api/erp";
 import { formatCurrency } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function JournalEntriesPage() {
+  await requireCapability("erp:read");
   const entries = await listJournalEntries();
   return (
     <div>

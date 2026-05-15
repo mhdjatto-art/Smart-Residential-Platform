@@ -7,6 +7,7 @@ import { listContractTemplates, renderContract } from "@/lib/api/contract-templa
 import { getContract } from "@/lib/api/contracts";
 import { ContractPrintClient } from "@/components/contracts/contract-print-client";
 import { getActiveBranding } from "@/components/layout/branding-provider";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Print contract" };
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ export default async function PrintContractPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ template?: string; locale?: string }>;
 }) {
+  await requireCapability("contract:read");
   const { id } = await params;
   const sp = await searchParams;
 

@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import { getUnit } from "@/lib/api/units";
 import { createClient } from "@/lib/supabase/server";
 import { UnitBarcodeClient } from "@/components/units/unit-barcode-client";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Unit barcode" };
 export const dynamic = "force-dynamic";
 
 export default async function UnitBarcodePage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("unit:read");
   const { id } = await params;
   const unit = await getUnit(id);
   if (!unit) notFound();

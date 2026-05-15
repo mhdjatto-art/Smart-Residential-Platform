@@ -5,10 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { EmptyState } from "@/components/shared/empty-state";
 import { RecomputeRiskButton } from "@/components/control-center/recompute-risk-button";
 import { listOverdueRisk } from "@/lib/api/analytics";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function OverdueRiskPage() {
+  await requireCapability("analytics:read");
   const rows = await listOverdueRisk();
   return (
     <div>

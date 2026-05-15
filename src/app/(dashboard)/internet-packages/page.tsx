@@ -7,10 +7,12 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { listInternetPackages } from "@/lib/api/utilities";
 import { formatCurrency } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function InternetPackagesPage() {
+  await requireCapability("utility:read");
   const packages = await listInternetPackages();
 
   return (

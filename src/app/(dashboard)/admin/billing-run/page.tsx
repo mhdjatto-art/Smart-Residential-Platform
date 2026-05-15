@@ -4,13 +4,14 @@ import { Calendar, Code2 } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BillingRunController } from "@/components/admin/billing-run-controller";
-import { requireUser } from "@/lib/auth/guards";
+import { requireUser, requireCapability } from "@/lib/auth/guards";
 import { previewDueSubscriptions } from "@/lib/api/billing-run";
 
 export const metadata: Metadata = { title: "Auto-billing run" };
 export const dynamic = "force-dynamic";
 
 export default async function BillingRunPage() {
+  await requireCapability("payment:write");
   const user = await requireUser();
   const allowed = user.isSuperAdmin || user.roles.some((r) => ["developer_admin", "finance_officer"].includes(r.role));
   if (!allowed) redirect("/dashboard");

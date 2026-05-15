@@ -6,12 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { listAnnouncements } from "@/lib/api/announcements";
-import { isStaff, requireUser } from "@/lib/auth/guards";
+import { isStaff, requireUser, requireCapability } from "@/lib/auth/guards";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function AnnouncementsPage() {
+  await requireCapability("compound:read");
   const user = await requireUser();
   const announcements = await listAnnouncements();
   const staff = isStaff(user);

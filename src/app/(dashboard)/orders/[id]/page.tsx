@@ -10,10 +10,12 @@ import {
 } from "@/lib/api/marketplace";
 import { formatCurrency } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  await requireCapability("marketplace:read");
   const { id } = await params;
   const order = await getMarketplaceOrder(id);
   if (!order) notFound();

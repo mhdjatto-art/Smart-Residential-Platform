@@ -9,6 +9,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { listAllDocuments } from "@/lib/api/documents";
 import { formatDate } from "@/lib/utils";
+import { requireCapability } from "@/lib/auth/guards";
 
 export const metadata: Metadata = { title: "Documents" };
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function DocumentsPage({
 }: {
   searchParams: Promise<{ q?: string; entity_type?: string; kind?: string; page?: string }>;
 }) {
+  await requireCapability("compound:read");
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
   const { data, total } = await listAllDocuments({
