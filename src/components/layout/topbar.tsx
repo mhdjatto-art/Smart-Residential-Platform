@@ -18,7 +18,7 @@ import { LanguagePicker } from "@/components/i18n/language-picker";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { GlobalSearch } from "@/components/layout/global-search";
 import { createClient } from "@/lib/supabase/client";
-import { ROLE_LABELS } from "@/lib/constants";
+import { ROLE_LABEL_KEYS } from "@/lib/constants";
 import { initials } from "@/lib/utils";
 import { useT } from "@/lib/i18n/client";
 import type { LocaleCode } from "@/lib/i18n";
@@ -77,7 +77,7 @@ export function Topbar({
       <div className="flex items-center gap-1 shrink-0">
         {primaryRole && (
           <span className="hidden text-xs text-muted-foreground lg:inline-block">
-            {ROLE_LABELS[primaryRole]}
+            {t(ROLE_LABEL_KEYS[primaryRole])}
           </span>
         )}
         {userId && <NotificationBell userId={userId} initialUnread={initialUnread} />}
@@ -123,7 +123,7 @@ export function Topbar({
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{display}</p>
                 {primaryRole && (
-                  <p className="truncate text-[11px] text-muted-foreground">{ROLE_LABELS[primaryRole]}</p>
+                  <p className="truncate text-[11px] text-muted-foreground">{t(ROLE_LABEL_KEYS[primaryRole])}</p>
                 )}
               </div>
             </DropdownMenuLabel>

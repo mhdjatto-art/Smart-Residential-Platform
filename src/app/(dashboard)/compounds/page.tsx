@@ -11,6 +11,7 @@ import { FilterSelect } from "@/components/shared/filter-select";
 import { Pagination } from "@/components/shared/pagination";
 import { listCompoundsPaged } from "@/lib/api/compounds";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,7 @@ export default async function CompoundsPage({
 }) {
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
+  const { t } = await getT();
 
   const { data, total } = await listCompoundsPaged({
     search: sp.q,
@@ -42,7 +44,7 @@ export default async function CompoundsPage({
           <Button asChild>
             <Link href="/compounds/new">
               <Plus className="h-4 w-4" />
-              Add compound
+              {t("actions.add")}
             </Link>
           </Button>
         }
@@ -50,15 +52,15 @@ export default async function CompoundsPage({
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-1 max-w-md">
-          <SearchBar placeholder="Search by name, city, code…" className="w-full" />
+          <SearchBar placeholder={t("actions.search") + "…"} className="w-full" />
         </div>
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("tables.status")}
           options={[
-            { value: "active", label: "Active" },
-            { value: "inactive", label: "Inactive" },
-            { value: "archived", label: "Archived" },
+            { value: "active", label: t("unit_status.active") },
+            { value: "inactive", label: t("unit_status.inactive") },
+            { value: "archived", label: t("unit_status.archived") },
           ]}
         />
       </div>
@@ -66,11 +68,11 @@ export default async function CompoundsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={Warehouse}
-          title="No compounds found"
-          description="Add your first compound to begin tracking properties."
+          title={t("common.empty")}
+          description={t("common.empty")}
           action={
             <Button asChild>
-              <Link href="/compounds/new">Add compound</Link>
+              <Link href="/compounds/new">{t("actions.add")}</Link>
             </Button>
           }
         />
@@ -79,13 +81,13 @@ export default async function CompoundsPage({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Code</TableHead>
-                <TableHead>City</TableHead>
-                <TableHead className="text-right">Buildings</TableHead>
-                <TableHead className="text-right">Units</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Created</TableHead>
+                <TableHead>{t("tables.name")}</TableHead>
+                <TableHead>{t("tables.code")}</TableHead>
+                <TableHead>{t("tables.city")}</TableHead>
+                <TableHead className="text-right">{t("tables.buildings")}</TableHead>
+                <TableHead className="text-right">{t("tables.units")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.created")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

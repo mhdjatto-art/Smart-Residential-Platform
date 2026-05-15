@@ -2,12 +2,14 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { requireUser } from "@/lib/auth/guards";
-import { ROLE_LABELS } from "@/lib/constants";
+import { ROLE_LABEL_KEYS } from "@/lib/constants";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const user = await requireUser();
+  const { t } = await getT();
 
   return (
     <div>
@@ -31,19 +33,19 @@ export default async function SettingsPage() {
             <CardDescription>Where you're allowed to operate.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            {user.isSuperAdmin && <Badge>Super admin</Badge>}
+            {user.isSuperAdmin && <Badge>{t("roles.super_admin_platform_wide")}</Badge>}
             {user.roles.length === 0 && !user.isSuperAdmin && (
-              <p className="text-muted-foreground">No roles assigned yet.</p>
+              <p className="text-muted-foreground">{t("roles.no_roles_assigned")}</p>
             )}
             {user.roles.map((r) => (
               <div key={r.id} className="rounded-md border bg-muted/40 p-3">
-                <p className="font-medium">{ROLE_LABELS[r.role]}</p>
+                <p className="font-medium">{t(ROLE_LABEL_KEYS[r.role])}</p>
                 <p className="text-xs text-muted-foreground">
                   {r.compound_id
-                    ? "Compound-scoped"
+                    ? t("roles.scope_compound")
                     : r.organization_id
-                      ? "Organization-wide"
-                      : "Platform-wide"}
+                      ? t("roles.scope_organization")
+                      : t("roles.scope_platform")}
                 </p>
               </div>
             ))}

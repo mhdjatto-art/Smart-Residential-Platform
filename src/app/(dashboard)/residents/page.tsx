@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listResidentsPaged } from "@/lib/api/residents";
 import { listCompoundOptions } from "@/lib/api/compounds";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ export default async function ResidentsPage({
 }) {
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
+  const { t } = await getT();
 
   const [{ data, total }, compounds] = await Promise.all([
     listResidentsPaged({
@@ -48,26 +50,26 @@ export default async function ResidentsPage({
         descKey="headers.residents_desc"
         actions={
           <Button asChild>
-            <Link href="/residents/new"><Plus className="h-4 w-4" />Add resident</Link>
+            <Link href="/residents/new"><Plus className="h-4 w-4" />{t("actions.add")}</Link>
           </Button>
         }
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2"><SearchBar placeholder="Search by name, email, mobile, ID…" /></div>
+        <div className="lg:col-span-2"><SearchBar placeholder={t("actions.search") + "…"} /></div>
         <FilterSelect
           paramName="compound"
-          placeholder="compound"
+          placeholder={t("nav.compounds")}
           options={compounds.map((c) => ({ value: c.id, label: c.name }))}
         />
         <FilterSelect
           paramName="tenancy"
-          placeholder="tenancy"
+          placeholder={t("tables.tenancy")}
           options={[
-            { value: "owner", label: "Owner" },
-            { value: "tenant", label: "Tenant" },
-            { value: "family_member", label: "Family member" },
-            { value: "guest", label: "Guest" },
+            { value: "owner", label: t("tenancy.owner") },
+            { value: "tenant", label: t("tenancy.tenant") },
+            { value: "family_member", label: t("tenancy.family_member") },
+            { value: "guest", label: t("tenancy.guest") },
           ]}
         />
       </div>
@@ -75,41 +77,48 @@ export default async function ResidentsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={Users}
-          title="No residents found"
-          description="Add residents to start tracking who lives in each unit."
-          action={<Button asChild><Link href="/residents/new">Add resident</Link></Button>}
+          title={t("common.empty")}
+          description={t("dashboard.no_residents_yet")}
+          action={<Button asChild><Link href="/residents/new">{t("actions.add")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Mobile</TableHead>
-                <TableHead>Tenancy</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Added</TableHead>
+                <TableHead>{t("tables.name")}</TableHead>
+                <TableHead>{t("tables.email")}</TableHead>
+                <TableHead>{t("tables.mobile")}</TableHead>
+                <TableHead>{t("tables.tenancy")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.added")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((r) => (
-                <TableRow key={r.id}>
-                  <TableCell>
-                    <Link href={`/residents/${r.id}`} className="font-medium hover:underline">
-                      {r.first_name} {r.last_name}
-                    </Link>
-                    {r.national_id && (
-                      <div className="text-xs font-mono text-muted-foreground">ID: {r.national_id}</div>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{r.email ?? "—"}</TableCell>
-                  <TableCell className="text-muted-foreground">{r.mobile ?? r.phone ?? "—"}</TableCell>
-                  <TableCell className="capitalize">{r.tenancy_type.replace("_", " ")}</TableCell>
-                  <TableCell><StatusBadge status={r.status} /></TableCell>
-                  <TableCell className="text-right text-muted-foreground">{formatDate(r.created_at)}</TableCell>
-                </TableRow>
-              ))}
+              {data.map((r) => {
+                const tenancyKey = `tenancy.${r.tenancy_type}` as Parameters<typeof t>[0];
+                const tenancyOut = t(tenancyKey);
+                const tenancyLabel = tenancyOut === tenancyKey
+                  ? r.tenancy_type.replace("_", " ")
+                  : tenancyOut;
+                return (
+                  <TableRow key={r.id}>
+                    <TableCell>
+                      <Link href={`/residents/${r.id}`} className="font-medium hover:underline">
+                        {r.first_name} {r.last_name}
+                      </Link>
+                      {r.national_id && (
+                        <div className="text-xs font-mono text-muted-foreground">ID: {r.national_id}</div>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{r.email ?? "—"}</TableCell>
+                    <TableCell className="text-muted-foreground">{r.mobile ?? r.phone ?? "—"}</TableCell>
+                    <TableCell>{tenancyLabel}</TableCell>
+                    <TableCell><StatusBadge status={r.status} /></TableCell>
+                    <TableCell className="text-right text-muted-foreground">{formatDate(r.created_at)}</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
           <Pagination total={total} pageSize={PAGE_SIZE} page={page} />

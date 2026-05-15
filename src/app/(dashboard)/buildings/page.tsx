@@ -12,6 +12,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { listBuildingsPaged } from "@/lib/api/buildings";
 import { listCompoundOptions } from "@/lib/api/compounds";
 import { formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default async function BuildingsPage({
 }) {
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
+  const { t } = await getT();
 
   const [{ data, total }, compounds] = await Promise.all([
     listBuildingsPaged({ search: sp.q, status: sp.status, compoundId: sp.compound, page, pageSize: PAGE_SIZE }),
@@ -39,26 +41,26 @@ export default async function BuildingsPage({
         descKey="headers.buildings_desc"
         actions={
           <Button asChild>
-            <Link href="/buildings/new"><Plus className="h-4 w-4" />Add building</Link>
+            <Link href="/buildings/new"><Plus className="h-4 w-4" />{t("actions.add")}</Link>
           </Button>
         }
       />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <SearchBar placeholder="Search by name or code…" className="sm:max-w-md sm:flex-1" />
+        <SearchBar placeholder={t("actions.search") + "…"} className="sm:max-w-md sm:flex-1" />
         <div className="flex gap-2">
           <FilterSelect
             paramName="compound"
-            placeholder="compound"
+            placeholder={t("nav.compounds")}
             options={compounds.map((c) => ({ value: c.id, label: c.name }))}
           />
           <FilterSelect
             paramName="status"
-            placeholder="status"
+            placeholder={t("tables.status")}
             options={[
-              { value: "active", label: "Active" },
-              { value: "inactive", label: "Inactive" },
-              { value: "under_construction", label: "Under construction" },
+              { value: "active", label: t("unit_status.active") },
+              { value: "inactive", label: t("unit_status.inactive") },
+              { value: "under_construction", label: t("unit_status.under_construction") },
             ]}
           />
         </div>
@@ -67,10 +69,10 @@ export default async function BuildingsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={Building2}
-          title="No buildings found"
-          description="Add buildings to start organizing your compound."
+          title={t("common.empty")}
+          description={t("common.empty")}
           action={
-            <Button asChild><Link href="/buildings/new">Add building</Link></Button>
+            <Button asChild><Link href="/buildings/new">{t("actions.add")}</Link></Button>
           }
         />
       ) : (
@@ -78,12 +80,12 @@ export default async function BuildingsPage({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Code</TableHead>
-                <TableHead className="text-right">Floors</TableHead>
-                <TableHead className="text-right">Units</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Created</TableHead>
+                <TableHead>{t("tables.name")}</TableHead>
+                <TableHead>{t("tables.code")}</TableHead>
+                <TableHead className="text-right">{t("tables.floors")}</TableHead>
+                <TableHead className="text-right">{t("tables.units")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.created")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -2,13 +2,14 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { LanguagePicker } from "@/components/i18n/language-picker";
-import { getActiveLocale } from "@/lib/i18n/server";
+import { getActiveLocale, getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   let locale: "en" | "ar" | "ku" = "en";
   try { locale = await getActiveLocale(); } catch { /* swallowed */ }
+  const { t } = await getT();
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col justify-between p-8 lg:p-12">
@@ -37,7 +38,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
       <div className="hidden bg-primary lg:flex lg:flex-col lg:justify-between lg:p-12">
         <div />
         <div className="space-y-6 text-primary-foreground">
-          <h2 className="text-4xl font-bold leading-tight">{siteConfig.tagline}</h2>
+          <h2 className="text-4xl font-bold leading-tight">{t("app.tagline_long")}</h2>
           <p className="max-w-md text-sm text-primary-foreground/80">
             {siteConfig.description}
           </p>

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useT } from "@/lib/i18n/client";
 
 interface FilterSelectProps {
   paramName: string;
@@ -15,6 +16,7 @@ export function FilterSelect({ paramName, placeholder, options, className }: Fil
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const { t } = useT();
   const current = params.get(paramName) ?? "all";
 
   function onChange(value: string) {
@@ -31,7 +33,7 @@ export function FilterSelect({ paramName, placeholder, options, className }: Fil
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All {placeholder}</SelectItem>
+          <SelectItem value="all">{t("common.all")} {placeholder}</SelectItem>
           {options.map((o) => (
             <SelectItem key={o.value} value={o.value}>
               {o.label}

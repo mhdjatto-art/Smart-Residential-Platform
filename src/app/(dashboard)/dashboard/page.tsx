@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { requireUser } from "@/lib/auth/guards";
-import { ROLE_LABELS } from "@/lib/constants";
+import { ROLE_LABEL_KEYS } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { getDashboardStats } from "@/lib/api/stats";
+import { getT } from "@/lib/i18n/server";
 import { formatDate } from "@/lib/utils";
+import type { TranslationKey } from "@/lib/i18n";
 import type { ResidentRow } from "@/lib/api/residents";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +21,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const user = await requireUser();
   const supabase = await createClient();
+  const { t } = await getT();
 
   // Defensive: never let one failure crash the whole dashboard.
   const stats = await getDashboardStats().catch((e) => {
@@ -47,47 +50,61 @@ export default async function DashboardPage() {
 
   const occupancyRate = stats.units > 0 ? Math.round((stats.occupied_units / stats.units) * 100) : 0;
   const primaryRole = user.roles[0]?.role;
+  const userName = user.email ? user.email.split("@")[0] : null;
+  const roleLabel = primaryRole ? t(ROLE_LABEL_KEYS[primaryRole]) : null;
+
+  // Map tenancy_type to its i18n key (falls back to raw value if unmapped).
+  function tenancyLabel(raw: string | null | undefined): string {
+    if (!raw) return "—";
+    const key = `tenancy.${raw}` as TranslationKey;
+    const out = t(key);
+    // makeT returns the key path when missing; show the raw word in that case.
+    return out === key ? raw.toString().replace(/_/g, " ") : out;
+  }
 
   return (
     <div>
       <PageHeader
-        title={`Welcome back${user.email ? `, ${user.email.split("@")[0]}` : ""}`}
-        titleKey="headers.dashboard_title"
+        title={userName ? t("dashboard.welcome_back_named", { name: userName }) : t("dashboard.welcome_back")}
         description={
-          primaryRole
-            ? `Signed in as ${ROLE_LABELS[primaryRole]}.`
-            : "Your account is set up — ask your administrator to assign a role."
+          roleLabel
+            ? t("roles.signed_in_as", { role: roleLabel })
+            : t("roles.no_roles")
         }
-        descKey="headers.dashboard_desc"
       />
 
       {/* Primary KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Compounds" value={stats.compounds} icon={Warehouse} />
-        <StatCard label="Buildings" value={stats.buildings} icon={Building2} />
-        <StatCard label="Units" value={stats.units} icon={Home} />
-        <StatCard label="Active residents" value={stats.residents} icon={Users} />
+        <StatCard label={t("stats.total_compounds")} value={stats.compounds} icon={Warehouse} />
+        <StatCard label={t("stats.total_buildings")} value={stats.buildings} icon={Building2} />
+        <StatCard label={t("stats.total_units")} value={stats.units} icon={Home} />
+        <StatCard label={t("stats.active_residents")} value={stats.residents} icon={Users} />
       </div>
 
       {/* Occupancy + tenant mix */}
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Occupied" value={stats.occupied_units} icon={ShieldCheck} trend={{ value: `${occupancyRate}% occupancy`, positive: occupancyRate >= 50 }} />
-        <StatCard label="Vacant" value={stats.vacant_units} icon={Home} />
-        <StatCard label="Owners" value={stats.owners} icon={UserCheck} />
-        <StatCard label="Tenants" value={stats.tenants} icon={Users} />
+        <StatCard
+          label={t("stats.occupied")}
+          value={stats.occupied_units}
+          icon={ShieldCheck}
+          trend={{ value: t("stats.occupancy_pct", { pct: occupancyRate }), positive: occupancyRate >= 50 }}
+        />
+        <StatCard label={t("stats.vacant")} value={stats.vacant_units} icon={Home} />
+        <StatCard label={t("stats.owners")} value={stats.owners} icon={UserCheck} />
+        <StatCard label={t("stats.tenants")} value={stats.tenants} icon={Users} />
       </div>
 
       {/* Recent activity */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Move-ins (30d)" value={stats.recent_move_ins} icon={LogIn} />
-        <StatCard label="Move-outs (30d)" value={stats.recent_move_outs} icon={LogOut} />
+        <StatCard label={t("stats.move_ins_30d")} value={stats.recent_move_ins} icon={LogIn} />
+        <StatCard label={t("stats.move_outs_30d")} value={stats.recent_move_outs} icon={LogOut} />
         <Card className="sm:col-span-2 lg:col-span-2">
-          <CardHeader className="pb-2"><CardTitle className="text-base">Quick actions</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-base">{t("dashboard.quick_actions")}</CardTitle></CardHeader>
           <CardContent className="flex flex-wrap gap-2 pb-6">
-            <Button asChild size="sm"><Link href="/compounds/new">+ Compound</Link></Button>
-            <Button asChild size="sm" variant="outline"><Link href="/buildings/new">+ Building</Link></Button>
-            <Button asChild size="sm" variant="outline"><Link href="/units/new">+ Unit</Link></Button>
-            <Button asChild size="sm" variant="outline"><Link href="/residents/new">+ Resident</Link></Button>
+            <Button asChild size="sm"><Link href="/compounds/new">{t("dashboard.add_compound")}</Link></Button>
+            <Button asChild size="sm" variant="outline"><Link href="/buildings/new">{t("dashboard.add_building")}</Link></Button>
+            <Button asChild size="sm" variant="outline"><Link href="/units/new">{t("dashboard.add_unit")}</Link></Button>
+            <Button asChild size="sm" variant="outline"><Link href="/residents/new">{t("dashboard.add_resident")}</Link></Button>
           </CardContent>
         </Card>
       </div>
@@ -96,11 +113,11 @@ export default async function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Recent residents</CardTitle>
-              <CardDescription>The five most recently added residents in your scope.</CardDescription>
+              <CardTitle>{t("dashboard.recent_residents")}</CardTitle>
+              <CardDescription>{t("dashboard.recent_residents_desc")}</CardDescription>
             </div>
             <Button asChild variant="outline" size="sm">
-              <Link href="/residents">View all <ArrowRight className="h-4 w-4" /></Link>
+              <Link href="/residents">{t("actions.view_all")} <ArrowRight className="h-4 w-4" /></Link>
             </Button>
           </CardHeader>
           <CardContent className="p-0">
@@ -108,11 +125,11 @@ export default async function DashboardPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Tenancy</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Added</TableHead>
+                    <TableHead>{t("tables.name")}</TableHead>
+                    <TableHead>{t("tables.email")}</TableHead>
+                    <TableHead>{t("tables.tenancy")}</TableHead>
+                    <TableHead>{t("tables.status")}</TableHead>
+                    <TableHead className="text-right">{t("tables.added")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -124,7 +141,7 @@ export default async function DashboardPage() {
                         </Link>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{r.email ?? "—"}</TableCell>
-                      <TableCell className="capitalize text-muted-foreground">{(r.tenancy_type ?? "").toString().replace(/_/g, " ")}</TableCell>
+                      <TableCell className="text-muted-foreground">{tenancyLabel(r.tenancy_type)}</TableCell>
                       <TableCell><StatusBadge status={r.status} /></TableCell>
                       <TableCell className="text-right text-muted-foreground">{formatDate(r.created_at)}</TableCell>
                     </TableRow>
@@ -132,35 +149,39 @@ export default async function DashboardPage() {
                 </TableBody>
               </Table>
             ) : (
-              <p className="p-6 text-sm text-muted-foreground">No residents yet — add one from the Residents page.</p>
+              <p className="p-6 text-sm text-muted-foreground">{t("dashboard.no_residents_yet")}</p>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Your access</CardTitle>
-            <CardDescription>Roles linked to your account.</CardDescription>
+            <CardTitle>{t("dashboard.your_access")}</CardTitle>
+            <CardDescription>{t("dashboard.roles_linked")}</CardDescription>
           </CardHeader>
           <CardContent>
             {user.isSuperAdmin && (
-              <div className="mb-3"><Badge>Super admin (platform-wide)</Badge></div>
+              <div className="mb-3"><Badge>{t("roles.super_admin_platform_wide")}</Badge></div>
             )}
             {user.roles.length === 0 && !user.isSuperAdmin && (
               <p className="text-sm text-muted-foreground">
-                No roles assigned yet. Ask your administrator to give you access.
+                {t("roles.no_roles_assigned")}
               </p>
             )}
             <ul className="space-y-2">
               {user.roles.map((r) => (
                 <li key={r.id} className="flex items-center justify-between rounded-md border bg-muted/40 p-3">
                   <div>
-                    <p className="text-sm font-medium">{ROLE_LABELS[r.role]}</p>
+                    <p className="text-sm font-medium">{t(ROLE_LABEL_KEYS[r.role])}</p>
                     <p className="text-[11px] text-muted-foreground">
-                      {r.compound_id ? "Compound-scoped" : r.organization_id ? "Organization-wide" : "Platform"}
+                      {r.compound_id
+                        ? t("roles.scope_compound")
+                        : r.organization_id
+                          ? t("roles.scope_organization")
+                          : t("roles.scope_platform")}
                     </p>
                   </div>
-                  {r.is_primary && <Badge variant="muted">Primary</Badge>}
+                  {r.is_primary && <Badge variant="muted">{t("roles.primary")}</Badge>}
                 </li>
               ))}
             </ul>

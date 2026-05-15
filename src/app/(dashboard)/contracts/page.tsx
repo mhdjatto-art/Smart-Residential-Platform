@@ -11,6 +11,7 @@ import { FilterSelect } from "@/components/shared/filter-select";
 import { Pagination } from "@/components/shared/pagination";
 import { listContractsPaged } from "@/lib/api/contracts";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -22,6 +23,7 @@ export default async function ContractsPage({
 }) {
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
+  const { t } = await getT();
   const { data, total } = await listContractsPaged({
     search: sp.q,
     status: sp.status,
@@ -40,20 +42,20 @@ export default async function ContractsPage({
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/api/exports/contracts.csv"><Download className="h-4 w-4" />Export CSV</Link>
+              <Link href="/api/exports/contracts.csv"><Download className="h-4 w-4" />{t("actions.export")}</Link>
             </Button>
             <Button asChild>
-              <Link href="/contracts/new"><Plus className="h-4 w-4" />New contract</Link>
+              <Link href="/contracts/new"><Plus className="h-4 w-4" />{t("actions.new")}</Link>
             </Button>
           </div>
         }
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2"><SearchBar placeholder="Search by contract number…" /></div>
+        <div className="lg:col-span-2"><SearchBar placeholder={t("actions.search") + "…"} /></div>
         <FilterSelect
           paramName="contract_type"
-          placeholder="type"
+          placeholder={t("tables.type")}
           options={[
             { value: "property_sale", label: "Property sale" },
             { value: "rental", label: "Rental" },
@@ -62,13 +64,13 @@ export default async function ContractsPage({
         />
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("tables.status")}
           options={[
-            { value: "draft", label: "Draft" },
-            { value: "active", label: "Active" },
-            { value: "completed", label: "Completed" },
-            { value: "cancelled", label: "Cancelled" },
-            { value: "defaulted", label: "Defaulted" },
+            { value: "draft", label: t("status.draft") },
+            { value: "active", label: t("status.active") },
+            { value: "completed", label: t("status.completed") },
+            { value: "cancelled", label: t("status.cancelled") },
+            { value: "defaulted", label: t("status.overdue") },
           ]}
         />
       </div>
@@ -76,22 +78,22 @@ export default async function ContractsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={FileText}
-          title="No contracts found"
-          description="Create your first installment contract."
-          action={<Button asChild><Link href="/contracts/new">New contract</Link></Button>}
+          title={t("common.empty")}
+          description={t("common.empty")}
+          action={<Button asChild><Link href="/contracts/new">{t("actions.new")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Contract #</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Total price</TableHead>
-                <TableHead className="text-right">Financed</TableHead>
-                <TableHead className="text-right">Monthly</TableHead>
-                <TableHead className="text-right">Start</TableHead>
+                <TableHead>{t("tables.contract_number")}</TableHead>
+                <TableHead>{t("tables.type")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.total_price")}</TableHead>
+                <TableHead className="text-right">{t("tables.financed")}</TableHead>
+                <TableHead className="text-right">{t("tables.monthly")}</TableHead>
+                <TableHead className="text-right">{t("tables.start")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

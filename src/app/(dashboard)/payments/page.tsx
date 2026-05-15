@@ -11,6 +11,7 @@ import { FilterSelect } from "@/components/shared/filter-select";
 import { Pagination } from "@/components/shared/pagination";
 import { listPaymentsPaged } from "@/lib/api/payments";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
@@ -22,6 +23,7 @@ export default async function PaymentsPage({
 }) {
   const sp = await searchParams;
   const page = Number(sp.page ?? "1") || 1;
+  const { t } = await getT();
   const { data, total } = await listPaymentsPaged({
     search: sp.q,
     status: sp.status,
@@ -40,29 +42,29 @@ export default async function PaymentsPage({
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/api/exports/payments.csv"><Download className="h-4 w-4" />Export CSV</Link>
+              <Link href="/api/exports/payments.csv"><Download className="h-4 w-4" />{t("actions.export")}</Link>
             </Button>
             <Button asChild>
-              <Link href="/payments/new"><Plus className="h-4 w-4" />Record payment</Link>
+              <Link href="/payments/new"><Plus className="h-4 w-4" />{t("actions.new")}</Link>
             </Button>
           </div>
         }
       />
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2"><SearchBar placeholder="Search by reference…" /></div>
+        <div className="lg:col-span-2"><SearchBar placeholder={t("actions.search") + "…"} /></div>
         <FilterSelect
           paramName="status"
-          placeholder="status"
+          placeholder={t("tables.status")}
           options={[
-            { value: "confirmed", label: "Confirmed" },
-            { value: "reversed", label: "Reversed" },
-            { value: "refunded", label: "Refunded" },
+            { value: "confirmed", label: t("status.confirmed") },
+            { value: "reversed", label: t("status.cancelled") },
+            { value: "refunded", label: t("status.refunded") },
           ]}
         />
         <FilterSelect
           paramName="method"
-          placeholder="method"
+          placeholder={t("tables.method")}
           options={[
             { value: "cash", label: "Cash" },
             { value: "bank_transfer", label: "Bank transfer" },
@@ -76,20 +78,20 @@ export default async function PaymentsPage({
       {data.length === 0 ? (
         <EmptyState
           icon={DollarSign}
-          title="No payments recorded"
-          description="Record payments against active contracts."
-          action={<Button asChild><Link href="/payments/new">Record payment</Link></Button>}
+          title={t("common.empty")}
+          description={t("common.empty")}
+          action={<Button asChild><Link href="/payments/new">{t("actions.new")}</Link></Button>}
         />
       ) : (
         <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Reference</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>{t("tables.reference")}</TableHead>
+                <TableHead>{t("tables.date")}</TableHead>
+                <TableHead>{t("tables.method")}</TableHead>
+                <TableHead>{t("tables.status")}</TableHead>
+                <TableHead className="text-right">{t("tables.amount")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -129,7 +129,7 @@ export function Sidebar({ roles, isSuperAdmin }: SidebarProps) {
       </nav>
 
       <div className="border-t p-4 text-[11px] text-muted-foreground">
-        {siteConfig.tagline}
+        {tr("app.tagline_long", siteConfig.tagline)}
       </div>
     </aside>
   );

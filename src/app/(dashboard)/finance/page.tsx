@@ -12,12 +12,14 @@ import { getMonthlyChart, getAgingBuckets } from "@/lib/api/finance-charts";
 import { requireRole, requireUser } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getT } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function FinancePage() {
   await requireRole(["super_admin", "developer_admin", "compound_manager", "finance_officer"]);
   const user = await requireUser();
+  const { t } = await getT();
 
   const [stats, topOverdue, monthly, aging] = await Promise.all([
     getFinanceStats(),
@@ -42,47 +44,47 @@ export default async function FinancePage() {
   return (
     <div>
       <PageHeader
-        title="Finance"
-        description="Collections, outstanding balances, overdue trackers, and analytics."
+        titleKey="headers.finance_title"
+        descKey="headers.finance_desc"
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
-              <Link href="/api/exports/payments.csv?status=confirmed"><Download className="h-4 w-4" />Export</Link>
+              <Link href="/api/exports/payments.csv?status=confirmed"><Download className="h-4 w-4" />{t("tables.export")}</Link>
             </Button>
-            <Button asChild><Link href="/payments/new"><DollarSign className="h-4 w-4" />Record payment</Link></Button>
+            <Button asChild><Link href="/payments/new"><DollarSign className="h-4 w-4" />{t("tables.record_payment")}</Link></Button>
           </div>
         }
       />
 
       {/* KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total collected" value={formatCurrency(stats.total_collected, { currency: displayCurrency })} icon={Wallet} />
-        <StatCard label="Outstanding" value={formatCurrency(stats.outstanding_balance, { currency: displayCurrency })} icon={FileText} />
+        <StatCard label={t("stats.total_collected")} value={formatCurrency(stats.total_collected, { currency: displayCurrency })} icon={Wallet} />
+        <StatCard label={t("stats.outstanding")} value={formatCurrency(stats.outstanding_balance, { currency: displayCurrency })} icon={FileText} />
         <StatCard
-          label="Overdue"
+          label={t("stats.overdue")}
           value={formatCurrency(stats.overdue_balance, { currency: displayCurrency })}
           icon={AlertOctagon}
         />
         <StatCard
-          label="Collection rate"
+          label={t("stats.collection_rate")}
           value={`${stats.collection_rate}%`}
           icon={TrendingUp}
-          trend={{ value: stats.collection_rate >= 80 ? "healthy" : "needs attention", positive: stats.collection_rate >= 80 }}
+          trend={{ value: stats.collection_rate >= 80 ? t("dashboard.healthy") : t("dashboard.needs_attention"), positive: stats.collection_rate >= 80 }}
         />
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active contracts" value={stats.active_contracts} icon={FileText} />
-        <StatCard label="Monthly revenue (30d)" value={formatCurrency(stats.monthly_revenue, { currency: displayCurrency })} icon={DollarSign} />
-        <StatCard label="Due in 30 days" value={formatCurrency(stats.upcoming_30d_amount, { currency: displayCurrency })} icon={CalendarClock} />
+        <StatCard label={t("stats.active_contracts")} value={stats.active_contracts} icon={FileText} />
+        <StatCard label={t("stats.monthly_revenue_30d")} value={formatCurrency(stats.monthly_revenue, { currency: displayCurrency })} icon={DollarSign} />
+        <StatCard label={t("stats.due_in_30d")} value={formatCurrency(stats.upcoming_30d_amount, { currency: displayCurrency })} icon={CalendarClock} />
       </div>
 
       {/* Charts */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Monthly collections vs expected</CardTitle>
-            <CardDescription>Rolling 12 months · {displayCurrency}</CardDescription>
+            <CardTitle>{t("headers.monthly_collections_title")}</CardTitle>
+            <CardDescription>{t("headers.monthly_collections_desc", { currency: displayCurrency })}</CardDescription>
           </CardHeader>
           <CardContent>
             <MonthlyChart data={monthly} currency={displayCurrency} />
@@ -91,8 +93,8 @@ export default async function FinancePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Outstanding aging</CardTitle>
-            <CardDescription>How long unpaid amounts have been outstanding</CardDescription>
+            <CardTitle>{t("headers.outstanding_aging_title")}</CardTitle>
+            <CardDescription>{t("headers.outstanding_aging_desc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <AgingChart data={aging} currency={displayCurrency} />
@@ -104,21 +106,21 @@ export default async function FinancePage() {
       <div className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Top overdue contracts</CardTitle>
-            <CardDescription>Highest unpaid balances first.</CardDescription>
+            <CardTitle>{t("headers.top_overdue_title")}</CardTitle>
+            <CardDescription>{t("headers.top_overdue_desc")}</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {topOverdue.length === 0 ? (
-              <p className="p-6 text-sm text-muted-foreground">No overdue balances — everything is current.</p>
+              <p className="p-6 text-sm text-muted-foreground">{t("headers.top_overdue_empty")}</p>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Contract</TableHead>
-                    <TableHead>Resident</TableHead>
-                    <TableHead>Unit</TableHead>
-                    <TableHead>Since</TableHead>
-                    <TableHead className="text-right">Overdue</TableHead>
+                    <TableHead>{t("tables.contract")}</TableHead>
+                    <TableHead>{t("tables.resident")}</TableHead>
+                    <TableHead>{t("tables.unit")}</TableHead>
+                    <TableHead>{t("tables.since")}</TableHead>
+                    <TableHead className="text-right">{t("tables.overdue")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
