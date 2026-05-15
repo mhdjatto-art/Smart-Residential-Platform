@@ -568,7 +568,13 @@
     "marketplace_food_groceries": "طعام وبقالة",
     "marketplace_wellbeing": "العناية وقضاء الحاجات",
     "marketplace_other": "أخرى",
-    "marketplace_no_providers": "لا يوجد مزوّدون في مجمعك حالياً."
+    "marketplace_no_providers": "لا يوجد مزوّدون في مجمعك حالياً.",
+    "hero_outstanding_installments": "الأقساط المستحقة",
+    "hero_outstanding_rent": "الإيجار المستحق",
+    "rent_section": "الإيجار",
+    "no_rent": "لا يوجد إيجار مستحق.",
+    "rent_period_n": "إيجار رقم {n}",
+    "rent_count": "{count} فاتورة إيجار"
   },
   "search": {
     "placeholder_input": "ابحث عن ساكن، وحدة، عقد، دفعة، تذكرة…",

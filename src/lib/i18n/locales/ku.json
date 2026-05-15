@@ -568,7 +568,13 @@
     "marketplace_food_groceries": "خواردن و سۆپ",
     "marketplace_wellbeing": "تەندروستی و کاروبار",
     "marketplace_other": "هیتر",
-    "marketplace_no_providers": "هێشتا هیچ دابینکەرێک لە کۆمپاوندەکەت نییە."
+    "marketplace_no_providers": "هێشتا هیچ دابینکەرێک لە کۆمپاوندەکەت نییە.",
+    "hero_outstanding_installments": "قیستە بەرپێدراوەکان",
+    "hero_outstanding_rent": "کرێی بەرپێدراو",
+    "rent_section": "کرێ",
+    "no_rent": "هیچ کرێیەکی بەرپێدراو نییە.",
+    "rent_period_n": "کرێی ژمارە {n}",
+    "rent_count": "{count} پسوولەی کرێ"
   },
   "search": {
     "placeholder_input": "بگەڕێ بۆ دانیشتوو، یەکە، گرێبەست، پارەدان، تیکێت…",

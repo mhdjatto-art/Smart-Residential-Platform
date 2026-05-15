@@ -11,6 +11,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
 
+export type TenancyType = "owner" | "tenant" | "family_member" | "guest";
+
 export interface ResidentContext {
   user_id: string;
   resident_id: string | null;
@@ -19,6 +21,8 @@ export interface ResidentContext {
   compound_id: string | null;
   unit_id: string | null;
   currency: string;
+  /** owner | tenant | family_member | guest — drives which payment flows show */
+  tenancy_type: TenancyType | null;
 }
 
 async function loadResidentContext(): Promise<ResidentContext> {
@@ -26,10 +30,18 @@ async function loadResidentContext(): Promise<ResidentContext> {
   const supabase = await createClient();
   const { data: r } = await supabase
     .from("residents")
-    .select("id,first_name,last_name,organization_id,compound_id,unit_id")
+    .select("id,first_name,last_name,organization_id,compound_id,unit_id,tenancy_type")
     .eq("user_id", user.id)
     .maybeSingle();
-  const residentRow = r as { id: string; first_name: string | null; last_name: string | null; organization_id: string; compound_id: string | null; unit_id: string | null } | null;
+  const residentRow = r as {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    organization_id: string;
+    compound_id: string | null;
+    unit_id: string | null;
+    tenancy_type: TenancyType | null;
+  } | null;
   const fullName = residentRow
     ? [residentRow.first_name, residentRow.last_name].filter(Boolean).join(" ") || null
     : null;
@@ -46,14 +58,28 @@ async function loadResidentContext(): Promise<ResidentContext> {
     compound_id: residentRow?.compound_id ?? null,
     unit_id: residentRow?.unit_id ?? null,
     currency,
+    tenancy_type: residentRow?.tenancy_type ?? null,
   };
 }
 
 export interface MobileDashboard {
   ctx: ResidentContext;
+  /**
+   * Total outstanding across the resident's primary obligation:
+   * - owner with installments → sum of remaining installments
+   * - tenant with rental contract → sum of unpaid rent invoices
+   * - else → 0 (utility bills are tracked separately below)
+   */
   outstanding_balance: number;
+  /** Discriminator so the UI knows which kind of obligation outstanding_balance represents */
+  primary_obligation: "installments" | "rent" | "none";
+  /** Next-due amount + date for that obligation */
   upcoming_installment_amount: number;
   upcoming_installment_due_date: string | null;
+  /** True if the resident has any installment_contract attached to them */
+  has_installments: boolean;
+  /** True if the resident has any active rental contract */
+  has_rental: boolean;
   unpaid_utility_bills: number;
   unpaid_utility_amount: number;
   active_tickets: number;
@@ -69,8 +95,11 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
   const empty: MobileDashboard = {
     ctx,
     outstanding_balance: 0,
+    primary_obligation: "none",
     upcoming_installment_amount: 0,
     upcoming_installment_due_date: null,
+    has_installments: false,
+    has_rental: false,
     unpaid_utility_bills: 0,
     unpaid_utility_amount: 0,
     active_tickets: 0,
@@ -89,12 +118,24 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
     return { ...empty, unread_notifications: unread ?? 0 };
   }
 
-  const [installments, utilityBills, tickets, visitors, orders, unread] = await Promise.all([
+  // Owners see installment schedules (cash sales have no installments → empty)
+  // Tenants see rent payment schedules (rental contracts may also use the same
+  // installment_schedules table, indexed by contract_type=rental).
+  const [installments, rentalContracts, utilityBills, tickets, visitors, orders, unread] = await Promise.all([
+    // Installments tied to a property_sale or lease_to_own contract for this resident
     supabase
       .from("installment_schedules")
-      .select("total_due,penalty_amount,paid_amount,due_date,status,installment_contracts!inner(resident_id)")
+      .select("total_due,penalty_amount,paid_amount,due_date,status,installment_contracts!inner(resident_id,contract_type)")
       .eq("installment_contracts.resident_id", ctx.resident_id)
       .neq("status", "paid"),
+    // Active rental contracts for this resident (used to detect rent-bearing tenants)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase as any)
+      .from("installment_contracts")
+      .select("id,contract_type,monthly_amount,contract_status")
+      .eq("resident_id", ctx.resident_id)
+      .eq("contract_type", "rental")
+      .neq("contract_status", "terminated"),
     supabase
       .from("utility_bills")
       .select("total_amount,paid_amount,status")
@@ -122,16 +163,54 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
       .is("read_at", null),
   ]);
 
-  type InstallmentRow = { total_due: number; penalty_amount: number; paid_amount: number; due_date: string; status: string };
+  type InstallmentRow = { total_due: number; penalty_amount: number; paid_amount: number; due_date: string; status: string;
+    installment_contracts?: { contract_type?: string } | { contract_type?: string }[] };
   type UtilityBillRow = { total_amount: number; paid_amount: number; status: string };
 
   const installmentRows = (installments.data ?? []) as unknown as InstallmentRow[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rentalRows      = (rentalContracts.data ?? []) as Array<{ id: string; contract_type: string; monthly_amount: number; contract_status: string }>;
   const utilRows        = (utilityBills.data ?? []) as UtilityBillRow[];
 
   const remaining = (r: InstallmentRow) =>
     Math.max(0, Number(r.total_due) + Number(r.penalty_amount ?? 0) - Number(r.paid_amount));
-  const outstanding = installmentRows.reduce((s, r) => s + remaining(r), 0);
-  const nextDue = installmentRows
+
+  // Split the installment_schedules rows by contract_type so we can distinguish
+  // property-sale installments from rental payment schedules.
+  const ctypeOf = (r: InstallmentRow): string | undefined => {
+    const c = r.installment_contracts;
+    if (!c) return undefined;
+    if (Array.isArray(c)) return c[0]?.contract_type;
+    return c.contract_type;
+  };
+  const propInstallments = installmentRows.filter((r) => {
+    const t = ctypeOf(r);
+    return t === "property_sale" || t === "lease_to_own";
+  });
+  const rentInstallments = installmentRows.filter((r) => ctypeOf(r) === "rental");
+
+  const isOwner   = ctx.tenancy_type === "owner";
+  const hasInst   = propInstallments.length > 0;
+  // Tenant rent counts if either there's a rental contract OR there are
+  // rent-typed installment rows
+  const hasRental = rentalRows.length > 0 || rentInstallments.length > 0;
+
+  // Primary obligation: what the hero card shows.
+  // Owner with property installments → installments.
+  // Tenant with rent → rent.
+  // Else (cash-paid owner, off-platform tenant) → none.
+  let primary: "installments" | "rent" | "none" = "none";
+  let primaryRows: InstallmentRow[] = [];
+  if (isOwner && hasInst) {
+    primary = "installments";
+    primaryRows = propInstallments;
+  } else if (!isOwner && hasRental) {
+    primary = "rent";
+    primaryRows = rentInstallments;
+  }
+
+  const outstanding = primaryRows.reduce((s, r) => s + remaining(r), 0);
+  const nextDue = primaryRows
     .filter((r) => r.due_date)
     .sort((a, b) => a.due_date.localeCompare(b.due_date))[0];
   const utilOutstanding = utilRows.reduce((s, r) => s + Math.max(0, Number(r.total_amount) - Number(r.paid_amount)), 0);
@@ -139,8 +218,11 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
   return {
     ctx,
     outstanding_balance: outstanding,
+    primary_obligation: primary,
     upcoming_installment_amount: nextDue ? remaining(nextDue) : 0,
     upcoming_installment_due_date: nextDue?.due_date ?? null,
+    has_installments: hasInst,
+    has_rental: hasRental,
     unpaid_utility_bills: utilRows.length,
     unpaid_utility_amount: utilOutstanding,
     active_tickets: tickets.count ?? 0,

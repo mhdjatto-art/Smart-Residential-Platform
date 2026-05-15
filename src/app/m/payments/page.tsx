@@ -30,18 +30,22 @@ interface UtilityBillRow {
   currency: string;
 }
 
+type InstallmentRowWithContract = InstallmentRow & {
+  installment_contracts?: { contract_type?: string } | { contract_type?: string }[];
+};
+
 export default async function MobilePaymentsPage() {
   const ctx = await getResidentContext();
   const supabase = await createClient();
   const { t } = await getT();
 
-  let installments: InstallmentRow[] = [];
+  let installmentsAll: InstallmentRowWithContract[] = [];
   let utilityBills: UtilityBillRow[] = [];
 
   if (ctx.resident_id) {
     const [inst, bills] = await Promise.all([
       supabase.from("installment_schedules")
-        .select("id,installment_number,total_due,penalty_amount,paid_amount,due_date,status,installment_contracts!inner(resident_id)")
+        .select("id,installment_number,total_due,penalty_amount,paid_amount,due_date,status,installment_contracts!inner(resident_id,contract_type)")
         .eq("installment_contracts.resident_id", ctx.resident_id)
         .neq("status", "paid")
         .order("due_date")
@@ -53,9 +57,31 @@ export default async function MobilePaymentsPage() {
         .order("due_date", { ascending: true, nullsFirst: false })
         .limit(20),
     ]);
-    installments = (inst.data ?? []) as unknown as InstallmentRow[];
-    utilityBills = (bills.data ?? []) as UtilityBillRow[];
+    installmentsAll = (inst.data ?? []) as unknown as InstallmentRowWithContract[];
+    utilityBills    = (bills.data ?? []) as UtilityBillRow[];
   }
+
+  // Split rows by contract_type so we render the right section based on tenancy.
+  const ctypeOf = (r: InstallmentRowWithContract): string | undefined => {
+    const c = r.installment_contracts;
+    if (!c) return undefined;
+    if (Array.isArray(c)) return c[0]?.contract_type;
+    return c.contract_type;
+  };
+  const propertyInstallments = installmentsAll.filter((r) => {
+    const c = ctypeOf(r);
+    return c === "property_sale" || c === "lease_to_own";
+  });
+  const rentInstallments = installmentsAll.filter((r) => ctypeOf(r) === "rental");
+
+  const isOwner = ctx.tenancy_type === "owner";
+  // Owner sees property installments; tenant sees rent. Both see utility bills.
+  const installments: InstallmentRow[] = isOwner ? propertyInstallments : rentInstallments;
+  const sectionTitle = isOwner ? t("mobile.installments_section") : t("mobile.rent_section");
+  const sectionEmpty = isOwner ? t("mobile.no_installments")    : t("mobile.no_rent");
+  const itemLabel    = (n: number) => isOwner
+    ? t("mobile.installment_n", { n })
+    : t("mobile.rent_period_n", { n });
 
   const remaining = (r: InstallmentRow) => Math.max(0, Number(r.total_due) + Number(r.penalty_amount ?? 0) - Number(r.paid_amount));
   const totalDue =
@@ -75,18 +101,18 @@ export default async function MobilePaymentsPage() {
             <p className="text-[11px] uppercase tracking-widest opacity-90">{t("mobile.total_due")}</p>
             <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">{formatCurrency(totalDue, { currency: ctx.currency })}</p>
             <p className="mt-2 text-xs opacity-90">
-              {t("mobile.installments_count", { count: installments.length })} · {t("mobile.utility_bills_count", { count: utilityBills.length })}
+              {(isOwner ? t("mobile.installments_count", { count: installments.length }) : t("mobile.rent_count", { count: installments.length }))} · {t("mobile.utility_bills_count", { count: utilityBills.length })}
             </p>
           </div>
         </div>
 
-        {/* Installments */}
+        {/* Installments (owner) OR Rent (tenant) */}
         <section>
-          <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("mobile.installments_section")}</h2>
+          <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{sectionTitle}</h2>
           {installments.length === 0 ? (
             <div className="rounded-2xl border border-dashed bg-card/50 p-6 text-center">
               <FileText className="mx-auto h-7 w-7 text-muted-foreground/40" />
-              <p className="mt-2 text-sm text-muted-foreground">{t("mobile.no_installments")}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{sectionEmpty}</p>
             </div>
           ) : (
             <ul className="space-y-2">
@@ -100,7 +126,7 @@ export default async function MobilePaymentsPage() {
                       <CalendarClock className="h-5 w-5" strokeWidth={2.25} />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold">{t("mobile.installment_n", { n: r.installment_number })}</p>
+                      <p className="truncate text-sm font-semibold">{itemLabel(r.installment_number)}</p>
                       <p className="text-xs text-muted-foreground">{new Date(r.due_date).toLocaleDateString()}</p>
                     </div>
                   </div>

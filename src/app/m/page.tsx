@@ -49,43 +49,60 @@ export default async function MobileHome() {
       <MobileTopbar title={t("mobile.hi", { name: firstName })} userId={ctx.user_id} unread={dash.unread_notifications} />
 
       <div className="p-4 space-y-5">
-        {/* Hero balance card — branded gradient overrides default emerald */}
-        <div
-          className={`relative overflow-hidden rounded-3xl p-6 text-white shadow-xl shadow-emerald-500/20 ${heroStyle ? "" : "bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700"}`}
-          style={heroStyle}
-        >
-          {/* Decorative circle accents */}
-          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" aria-hidden />
-          <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-white/5 blur-3xl" aria-hidden />
+        {/* Hero balance card — content varies by tenancy_type:
+            - owner with installments → "Outstanding installments"
+            - tenant with rental contract → "Outstanding rent"
+            - otherwise → "Outstanding balance" (utilities + marketplace)         */}
+        {(() => {
+          const heroLabel =
+            dash.primary_obligation === "installments" ? t("mobile.hero_outstanding_installments")
+          : dash.primary_obligation === "rent"         ? t("mobile.hero_outstanding_rent")
+          : t("mobile.outstanding_balance");
+          // For "none" we surface utility outstanding as the hero number so the user always
+          // sees a meaningful balance.
+          const heroAmount =
+            dash.primary_obligation === "none" ? dash.unpaid_utility_amount : dash.outstanding_balance;
+          const showPayCTA = heroAmount > 0;
+          return (
+            <div
+              className={`relative overflow-hidden rounded-3xl p-6 text-white shadow-xl shadow-emerald-500/20 ${heroStyle ? "" : "bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700"}`}
+              style={heroStyle}
+            >
+              <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" aria-hidden />
+              <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-white/5 blur-3xl" aria-hidden />
 
-          <div className="relative">
-            <p className="text-[11px] uppercase tracking-widest opacity-90">{t("mobile.outstanding_balance")}</p>
-            <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">{formatCurrency(dash.outstanding_balance, { currency: ctx.currency })}</p>
-            {dash.upcoming_installment_due_date && (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur">
-                <CalendarClock className="h-3.5 w-3.5" />
-                {t("mobile.next_due", {
-                  amount: formatCurrency(dash.upcoming_installment_amount, { currency: ctx.currency }),
-                  date: new Date(dash.upcoming_installment_due_date).toLocaleDateString(),
-                })}
-              </p>
-            )}
-            <div className="mt-5 flex gap-2">
-              <Link
-                href="/m/payments"
-                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-emerald-700 shadow-md transition-all active:scale-95 hover:shadow-lg"
-              >
-                {t("actions.pay_now")}
-              </Link>
-              <Link
-                href="/m/payments/history"
-                className="rounded-full border border-white/30 bg-white/10 px-5 py-2 text-sm font-medium backdrop-blur transition-all active:scale-95 hover:bg-white/20"
-              >
-                {t("actions.history")}
-              </Link>
+              <div className="relative">
+                <p className="text-[11px] uppercase tracking-widest opacity-90">{heroLabel}</p>
+                <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">{formatCurrency(heroAmount, { currency: ctx.currency })}</p>
+                {dash.upcoming_installment_due_date && (
+                  <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur">
+                    <CalendarClock className="h-3.5 w-3.5" />
+                    {t("mobile.next_due", {
+                      amount: formatCurrency(dash.upcoming_installment_amount, { currency: ctx.currency }),
+                      date: new Date(dash.upcoming_installment_due_date).toLocaleDateString(),
+                    })}
+                  </p>
+                )}
+                {showPayCTA && (
+                  <div className="mt-5 flex gap-2">
+                    <Link
+                      href="/m/payments"
+                      className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-emerald-700 shadow-md transition-all active:scale-95 hover:shadow-lg"
+                    >
+                      {t("actions.pay_now")}
+                    </Link>
+                    <Link
+                      href="/m/payments/history"
+                      className="rounded-full border border-white/30 bg-white/10 px-5 py-2 text-sm font-medium backdrop-blur transition-all active:scale-95 hover:bg-white/20"
+                    >
+                      {t("actions.history")}
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* Live widgets (real-time) — filter cards by feature flags too */}
         <LiveDashboardWidgets

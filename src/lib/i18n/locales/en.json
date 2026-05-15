@@ -568,7 +568,13 @@
     "marketplace_food_groceries": "Food & groceries",
     "marketplace_wellbeing": "Wellbeing & errands",
     "marketplace_other": "Other",
-    "marketplace_no_providers": "No providers in your compound yet."
+    "marketplace_no_providers": "No providers in your compound yet.",
+    "hero_outstanding_installments": "Outstanding installments",
+    "hero_outstanding_rent": "Outstanding rent",
+    "rent_section": "Rent",
+    "no_rent": "No rent due.",
+    "rent_period_n": "Rent #{n}",
+    "rent_count": "{count} rent invoices"
   },
   "search": {
     "placeholder_input": "Search for a resident, unit, contract, payment, ticket…",
