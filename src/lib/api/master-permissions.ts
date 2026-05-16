@@ -64,52 +64,21 @@ export async function setFeatureFlag(
   await requireRole(["super_admin","developer_admin"]);
   const supabase = await createClient();
 
-  if (orgId === null) {
-    // Explicit two-step path for global rows (NULL org_id)
-    const now = new Date().toISOString();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sb = supabase as any;
-
-    const { data: existing, error: selErr } = await sb
-      .from("feature_flags")
-      .select("id")
-      .is("organization_id", null)
-      .eq("feature_key", featureKey)
-      .limit(1)
-      .maybeSingle();
-    if (selErr) throw new Error(selErr.message);
-
-    if (existing?.id) {
-      const { error: updErr } = await sb
-        .from("feature_flags")
-        .update({ enabled, metadata, updated_at: now })
-        .eq("id", existing.id);
-      if (updErr) throw new Error(updErr.message);
-    } else {
-      const { error: insErr } = await sb
-        .from("feature_flags")
-        .insert({ organization_id: null, feature_key: featureKey, enabled, metadata, updated_at: now });
-      if (insErr) throw new Error(insErr.message);
-    }
-  } else {
-    // Per-org rows: regular upsert works because (orgId, featureKey) are both non-null
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase as any).from("feature_flags").upsert(
-      {
-        organization_id: orgId,
-        feature_key:     featureKey,
-        enabled,
-        metadata,
-        updated_at:      new Date().toISOString(),
-      },
-      { onConflict: "organization_id,feature_key" },
-    );
-    if (error) throw new Error(error.message);
-  }
+  // Phase 17 fix — use the SECURITY DEFINER RPC instead of direct table writes.
+  // Direct .update() can silently affect 0 rows when RLS rejects, leaving the
+  // UI showing success while the DB stays unchanged. The RPC raises on failure
+  // and returns the actual updated row.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc("set_feature_flag", {
+    p_org_id:      orgId,
+    p_feature_key: featureKey,
+    p_enabled:     enabled,
+    p_metadata:    metadata,
+  });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Feature flag update returned no row — likely RLS rejection");
 
   revalidatePath("/master/permissions");
-  // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
-  // Wrapped in try because layout-level revalidation can throw on some Next.js versions.
   try { revalidatePath("/(dashboard)", "layout"); } catch {}
   try { revalidatePath("/m", "layout"); } catch {}
 }
@@ -136,45 +105,17 @@ export async function setRoleCapabilityOverride(
 ): Promise<void> {
   await requireRole(["super_admin","developer_admin"]);
   const supabase = await createClient();
-  const now = new Date().toISOString();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sb = supabase as any;
-
-  if (orgId === null) {
-    // Same NULL-uniqueness workaround as setFeatureFlag
-    const { data: existing, error: selErr } = await sb
-      .from("role_capability_overrides")
-      .select("id")
-      .is("organization_id", null)
-      .eq("role", role)
-      .eq("capability", capability)
-      .limit(1)
-      .maybeSingle();
-    if (selErr) throw new Error(selErr.message);
-
-    if (existing?.id) {
-      const { error: updErr } = await sb
-        .from("role_capability_overrides")
-        .update({ enabled, updated_at: now })
-        .eq("id", existing.id);
-      if (updErr) throw new Error(updErr.message);
-    } else {
-      const { error: insErr } = await sb
-        .from("role_capability_overrides")
-        .insert({ organization_id: null, role, capability, enabled, updated_at: now });
-      if (insErr) throw new Error(insErr.message);
-    }
-  } else {
-    const { error } = await sb.from("role_capability_overrides").upsert(
-      { organization_id: orgId, role, capability, enabled, updated_at: now },
-      { onConflict: "organization_id,role,capability" },
-    );
-    if (error) throw new Error(error.message);
-  }
+  const { data, error } = await (supabase as any).rpc("set_role_capability_override", {
+    p_org_id:     orgId,
+    p_role:       role,
+    p_capability: capability,
+    p_enabled:    enabled,
+  });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Override update returned no row");
 
   revalidatePath("/master/permissions");
-  // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
-  // Wrapped in try because layout-level revalidation can throw on some Next.js versions.
   try { revalidatePath("/(dashboard)", "layout"); } catch {}
   try { revalidatePath("/m", "layout"); } catch {}
 }
@@ -188,13 +129,11 @@ export async function clearRoleCapabilityOverride(
   await requireRole(["super_admin","developer_admin"]);
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let q = (supabase as any).from("role_capability_overrides")
-    .delete()
-    .eq("role", role)
-    .eq("capability", capability);
-  if (orgId === null) q = q.is("organization_id", null);
-  else q = q.eq("organization_id", orgId);
-  const { error } = await q;
+  const { error } = await (supabase as any).rpc("clear_role_capability_override", {
+    p_org_id:     orgId,
+    p_role:       role,
+    p_capability: capability,
+  });
   if (error) throw new Error(error.message);
   revalidatePath("/master/permissions");
   // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
