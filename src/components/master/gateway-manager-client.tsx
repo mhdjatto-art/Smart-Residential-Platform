@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle2, CreditCard, Loader2, Pencil, Plus, Power, Trash2, XCircle } from "lucide-react";
@@ -264,22 +264,31 @@ function EditGatewayDialog({ gateway, onClose }: { gateway: GatewayRow; onClose:
   const [pending, startTransition] = useTransition();
   const fields = CREDENTIAL_SCHEMA[gateway.provider];
 
-  // Lazy-load full credentials (the listing only flagged whether they exist)
-  if (!loaded) {
-    startTransition(async () => {
+  // Lazy-load full credentials on mount. MUST be in useEffect — calling
+  // startTransition inside render causes an infinite loop and a white screen.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
       try {
         const full = await getGateway(gateway.id);
+        if (cancelled) return;
         if (full?.credentials) {
-          const masked: Record<string, string> = {};
+          const initial: Record<string, string> = {};
           for (const f of fields) {
             const v = full.credentials[f.key];
-            masked[f.key] = typeof v === "string" ? v : "";
+            initial[f.key] = typeof v === "string" ? v : "";
           }
-          setCredentials(masked);
+          setCredentials(initial);
         }
-      } finally { setLoaded(true); }
-    });
-  }
+      } catch (e) {
+        toast.error(t("gateways.load_failed"), { description: e instanceof Error ? e.message : "" });
+      } finally {
+        if (!cancelled) setLoaded(true);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gateway.id]);
 
   function submit() {
     startTransition(async () => {

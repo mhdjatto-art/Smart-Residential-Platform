@@ -1544,6 +1544,7 @@
     "create_failed": "دروستکردن سەرنەکەوت",
     "delete_failed": "سڕینەوە سەرنەکەوت",
     "fields_required": "خانە پێویستەکان نییە",
-    "display_name_required": "ناوی پیشاندان پێویستە"
+    "display_name_required": "ناوی پیشاندان پێویستە",
+    "load_failed": "بارکردنی ئەکاونتەکان سەرنەکەوت"
   }
 }

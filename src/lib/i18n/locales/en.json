@@ -1544,6 +1544,7 @@
     "create_failed": "Creation failed",
     "delete_failed": "Delete failed",
     "fields_required": "Required fields missing",
-    "display_name_required": "Display name is required"
+    "display_name_required": "Display name is required",
+    "load_failed": "Failed to load credentials"
   }
 }

@@ -1544,6 +1544,7 @@
     "create_failed": "فشل الإنشاء",
     "delete_failed": "فشل الحذف",
     "fields_required": "حقول مطلوبة ناقصة",
-    "display_name_required": "الاسم المعروض مطلوب"
+    "display_name_required": "الاسم المعروض مطلوب",
+    "load_failed": "فشل تحميل بيانات الاعتماد"
   }
 }
