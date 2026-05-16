@@ -166,6 +166,7 @@ export const navigation: NavSection[] = [
       { title: "Plans",         href: "/saas-console/plans",    icon: Crown,    requiredCapability: "saas:admin" },
       { title: "Features",      href: "/saas-console/features", icon: Sparkles, requiredCapability: "saas:admin" },
       { title: "Permissions",   href: "/master/permissions",    icon: Sparkles, requiredCapability: "saas:admin" },
+      { title: "Gateways",      href: "/master/gateways",       icon: CreditCard, requiredCapability: "saas:admin" },
     ],
   },
 ];

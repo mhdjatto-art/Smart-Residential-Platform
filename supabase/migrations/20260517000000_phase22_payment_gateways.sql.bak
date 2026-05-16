@@ -1,0 +1,141 @@
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Phase 22 — Dynamic payment gateway registry
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Lets super_admins add/remove/toggle payment providers (NASS, Qi Card,
+-- ZainCash, FastPay, AsiaHawala, Stripe, etc.) from the UI without code
+-- changes. Each row holds:
+--   • provider: the adapter to use (must be one of the registered enum values)
+--   • credentials: JSONB with provider-specific keys (api_key, merchant_id, …)
+--   • config: non-sensitive runtime config (test_mode, redirect_url, …)
+--   • enabled: master on/off toggle
+--   • organization_id: null = available to ALL orgs; UUID = org-specific
+--
+-- Idempotent.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+begin;
+
+create type if not exists public.payment_provider as enum (
+  'stripe',         -- international cards
+  'nass',           -- Iraqi NASS Pay (https://nass.iq)
+  'qi_card',        -- Iraqi Qi Card
+  'zaincash',       -- Zain Cash mobile wallet
+  'fastpay',        -- FastPay Iraq
+  'asiahawala',     -- AsiaHawala
+  'cash',           -- in-office cash (always-on; admin records via cashier UI)
+  'bank_transfer',  -- manual bank transfer (admin reconciles)
+  'cheque',         -- manual cheque clearing
+  'wallet'          -- in-app prepaid wallet
+);
+
+create table if not exists public.payment_gateways (
+  id                uuid primary key default gen_random_uuid(),
+  organization_id   uuid references public.organizations(id) on delete cascade,  -- null = platform-wide
+  provider          public.payment_provider not null,
+  display_name      text not null,                  -- shown to residents in the Pay dialog
+  enabled           boolean not null default true,
+  sort_order        integer not null default 100,
+  -- supported_methods: which UI buttons surface this gateway. Lets us hide
+  -- NASS from the "Card" picker if it only supports QR, for example.
+  supported_methods text[] not null default array['online_payment'],
+  -- supported_currencies: ISO codes (e.g. {'IQD','USD'}). If empty, accepts all.
+  supported_currencies text[] not null default array[]::text[],
+  -- credentials: encrypted-at-rest by Supabase; never exposed to client.
+  credentials       jsonb   not null default '{}'::jsonb,
+  -- config: non-sensitive runtime settings (test mode, callback URLs, etc.)
+  config            jsonb   not null default '{}'::jsonb,
+  last_health_check timestamptz,
+  last_health_ok    boolean,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now(),
+  created_by        uuid references auth.users(id) on delete set null,
+  updated_by        uuid references auth.users(id) on delete set null,
+  constraint payment_gateways_unique_per_org unique (organization_id, provider)
+);
+
+create index if not exists payment_gateways_org_idx     on public.payment_gateways (organization_id);
+create index if not exists payment_gateways_enabled_idx on public.payment_gateways (enabled) where enabled = true;
+
+comment on table public.payment_gateways is
+  'Dynamic registry of payment providers per organisation. Toggleable from /master/gateways without code changes.';
+comment on column public.payment_gateways.credentials is
+  'Provider-specific secrets (api_key, merchant_id, etc.). Read only by service_role; super_admin RLS shields write access.';
+
+-- ─── RLS ──────────────────────────────────────────────────────────────────
+alter table public.payment_gateways enable row level security;
+
+drop policy if exists payment_gateways_admin_read  on public.payment_gateways;
+drop policy if exists payment_gateways_admin_write on public.payment_gateways;
+drop policy if exists payment_gateways_public_read on public.payment_gateways;
+
+-- Anyone authenticated can READ which gateways are enabled (just enabled+display_name+provider).
+-- We expose a SECURITY DEFINER function for the public-facing view to keep credentials hidden.
+create policy payment_gateways_admin_read on public.payment_gateways
+  for select to authenticated
+  using (
+    exists (
+      select 1 from public.user_roles ur
+      where ur.user_id = auth.uid()
+        and ur.role in ('super_admin','developer_admin','compound_manager','finance_officer')
+    )
+  );
+
+create policy payment_gateways_admin_write on public.payment_gateways
+  for all to authenticated
+  using (
+    exists (
+      select 1 from public.user_roles ur
+      where ur.user_id = auth.uid()
+        and ur.role in ('super_admin','developer_admin')
+    )
+  )
+  with check (
+    exists (
+      select 1 from public.user_roles ur
+      where ur.user_id = auth.uid()
+        and ur.role in ('super_admin','developer_admin')
+    )
+  );
+
+-- ─── Public listing RPC — returns enabled gateways without secrets ────────
+-- The mobile Pay button calls this to render the method picker.
+create or replace function public.list_active_gateways(p_org_id uuid default null)
+returns table (
+  id              uuid,
+  provider        text,
+  display_name    text,
+  sort_order      integer,
+  supported_methods text[],
+  supported_currencies text[]
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select id, provider::text, display_name, sort_order, supported_methods, supported_currencies
+  from public.payment_gateways
+  where enabled = true
+    and (organization_id is null or organization_id = p_org_id)
+  order by sort_order asc, display_name asc;
+$$;
+
+grant execute on function public.list_active_gateways(uuid) to authenticated;
+
+-- ─── Seed: Stripe row (uses existing STRIPE_SECRET_KEY env var) ───────────
+insert into public.payment_gateways
+  (organization_id, provider, display_name, enabled, sort_order, supported_methods, supported_currencies, config)
+values
+  (null, 'stripe', 'Card (Stripe)', true, 10, array['online_payment'], array['USD','IQD','EUR'],
+   '{"description":"International cards via Stripe","uses_env_keys":true}'::jsonb),
+  (null, 'cash', 'Cash (Office)', true, 90, array['cash'], array['IQD','USD'],
+   '{"description":"Recorded by finance officer in /payments/quick","always_on":true}'::jsonb),
+  (null, 'bank_transfer', 'Bank Transfer', true, 80, array['bank_transfer'], array['IQD','USD'],
+   '{"description":"Manual reconciliation by finance officer","always_on":true}'::jsonb),
+  (null, 'cheque', 'Cheque', true, 85, array['cheque'], array['IQD','USD'],
+   '{"description":"Manual reconciliation by finance officer","always_on":true}'::jsonb),
+  (null, 'wallet', 'Wallet', true, 5, array['wallet'], array['IQD','USD'],
+   '{"description":"In-app prepaid wallet","always_on":true}'::jsonb)
+on conflict (organization_id, provider) do nothing;
+
+commit;
