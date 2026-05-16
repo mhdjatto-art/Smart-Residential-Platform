@@ -2,12 +2,12 @@
 # build-org-app.sh — white-label native build pipeline.
 #
 # Usage:
-#   ORG_SLUG=bonyan \
-#   ORG_NAME="Bonyan Residents" \
-#   ORG_BUNDLE_ID="app.bonyan.bonyan" \
-#   ORG_SERVER_URL="https://bonyan.bonyan.app/m" \
-#   ORG_THEME_COLOR="#0F172A" \
-#   ORG_LOGO_PNG="./assets/orgs/bonyan/logo.png" \
+#   ORG_SLUG=levant \
+#   ORG_NAME="LSRP" \
+#   ORG_BUNDLE_ID="com.levant.srp" \
+#   ORG_SERVER_URL="https://www.lsrp.app/m" \
+#   ORG_THEME_COLOR="#0B1F3A" \
+#   ORG_LOGO_PNG="./mobile/resources/icon.png" \
 #   ./scripts/build-org-app.sh
 #
 # What it does:
@@ -32,10 +32,10 @@ for var in "${REQUIRED[@]}"; do
     echo "❌ missing required env var: $var"
     echo
     echo "Usage:"
-    echo "  ORG_SLUG=bonyan \\"
-    echo "  ORG_NAME=\"Bonyan Residents\" \\"
-    echo "  ORG_BUNDLE_ID=\"app.bonyan.bonyan\" \\"
-    echo "  ORG_SERVER_URL=\"https://bonyan.bonyan.app/m\" \\"
+    echo "  ORG_SLUG=levant \\"
+    echo "  ORG_NAME=\"LSRP\" \\"
+    echo "  ORG_BUNDLE_ID=\"com.levant.srp\" \\"
+    echo "  ORG_SERVER_URL=\"https://www.lsrp.app/m\" \\"
     echo "  ./scripts/build-org-app.sh"
     exit 1
   fi
@@ -62,7 +62,7 @@ SHELL_BOOT="$ROOT_DIR/mobile/src/boot.js"
 TMP_BOOT="$(mktemp)"
 # We use a literal sed replace of the const default — keeps boot.js safe to
 # commit unchanged (the default is the same as a "fresh checkout" value).
-sed "s|https://www.bonyan.app/m|$ORG_SERVER_URL|g" "$SHELL_BOOT" > "$TMP_BOOT"
+sed "s|https://www.lsrp.app/m|$ORG_SERVER_URL|g" "$SHELL_BOOT" > "$TMP_BOOT"
 mv "$TMP_BOOT" "$SHELL_BOOT"
 
 # Inject ORG_SERVER_URL as a global on the window object too (for any
@@ -115,15 +115,30 @@ fi
 if [ -n "$ORG_LOGO_PNG" ] && [ -f "$ORG_LOGO_PNG" ]; then
   echo "🎨 generating icons + splash from $ORG_LOGO_PNG"
   mkdir -p "$ROOT_DIR/mobile/resources"
-  cp "$ORG_LOGO_PNG" "$ROOT_DIR/mobile/resources/icon.png"
-  cp "$ORG_LOGO_PNG" "$ROOT_DIR/mobile/resources/splash.png"
+  # Absolute paths so we can compare with the destination to avoid
+  # "same file" cp errors when the logo lives at the destination already.
+  SRC_LOGO_ABS="$(cd "$(dirname "$ORG_LOGO_PNG")" && pwd)/$(basename "$ORG_LOGO_PNG")"
+  DEST_ICON="$ROOT_DIR/mobile/resources/icon.png"
+  DEST_SPLASH="$ROOT_DIR/mobile/resources/splash.png"
+  if [ "$SRC_LOGO_ABS" != "$DEST_ICON" ]; then
+    cp "$ORG_LOGO_PNG" "$DEST_ICON"
+  else
+    echo "    (icon.png already at destination — skipping copy)"
+  fi
+  if [ "$SRC_LOGO_ABS" != "$DEST_SPLASH" ]; then
+    cp "$ORG_LOGO_PNG" "$DEST_SPLASH"
+  else
+    echo "    (splash.png already at destination — skipping copy)"
+  fi
   # @capacitor/assets is the official tool. Installed via npx so we don't
   # bloat package.json for orgs that don't need to regenerate locally.
+  # The `|| true` ensures a failure here doesn't kill the script — the
+  # build can still proceed with default icons.
   npx -y @capacitor/assets generate \
     --iconBackgroundColor "$ORG_THEME_COLOR" \
     --splashBackgroundColor "$ORG_THEME_COLOR" \
-    --assetPath mobile/resources || \
-    echo "⚠️  @capacitor/assets failed — icons may use defaults"
+    --assetPath mobile/resources \
+    || echo "⚠️  @capacitor/assets failed — icons may use defaults"
 else
   echo "ℹ️  no ORG_LOGO_PNG provided — icons will use the default."
 fi

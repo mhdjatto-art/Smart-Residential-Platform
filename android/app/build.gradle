@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "app.bonyan.bonyan"
+    namespace "com.levant.srp"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "app.bonyan.bonyan"
+        applicationId "com.levant.srp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

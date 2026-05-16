@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12+ data extraction rules. We explicitly opt OUT of:
+  - Cloud backup of app data (no SharedPreferences, no auth tokens, no encrypted DB
+    rows shipped to Google servers).
+  - Device-to-device transfer.
+  Reason: app state is server-side authoritative; nothing needs to survive a
+  device wipe, and we want zero PII to leak via Google's backup pipeline.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="file" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="external" />
+    </device-transfer>
+</data-extraction-rules>

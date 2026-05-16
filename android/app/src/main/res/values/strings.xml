@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Bonyan Residents</string>
-    <string name="title_activity_main">Bonyan Residents</string>
-    <string name="package_name">app.bonyan.bonyan</string>
-    <string name="custom_url_scheme">app.bonyan.bonyan</string>
+    <string name="app_name">LSRP</string>
+    <string name="title_activity_main">LSRP</string>
+    <string name="package_name">com.levant.srp</string>
+    <string name="custom_url_scheme">com.levant.srp</string>
 </resources>

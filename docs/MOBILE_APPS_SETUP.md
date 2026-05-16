@@ -1,286 +1,314 @@
-# Phase 16 — Native iOS + Android Apps per Compound
+# دليل بناء تطبيق Android (LSRP — Levant Smart Residential Platform)
 
-## 🏗️ المعمارية
-
-تطبيق native لكل مجمع، كلها مبنية من **codebase واحد** عبر Capacitor:
-
-```
-                         ┌─────────────────────────────┐
-                         │   SRP Single Codebase      │
-                         │   (Next.js + Supabase)     │
-                         └────────────┬────────────────┘
-                                      │
-                ┌─────────────────────┼─────────────────────┐
-                ▼                     ▼                     ▼
-        ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-        │  Web App     │      │ Compound A   │      │ Compound B   │
-        │  (Super      │      │ Native App   │      │ Native App   │
-        │   Admin +    │      │  (iOS + And) │      │  (iOS + And) │
-        │   Managers)  │      │              │      │              │
-        └──────────────┘      └──────────────┘      └──────────────┘
-```
-
-كل تطبيق native:
-- **Bundle ID خاص** (e.g., `app.bonyan.compound-a`)
-- **App Icon + Splash** من branding المجمع
-- **يفتح subdomain خاص** (e.g., `compound-a.bonyan.app/m`)
-- **يستخدم native plugins**: Push (APNS/FCM)، Biometric (Face ID/Touch ID)، QR Scanner، Camera، Haptics، Share
+> **Status:** Phase 24 — جاهز للبناء. كل البنية التحتية موجودة. هذا الدليل
+> يأخذك من «جهاز فاضي» إلى «APK مرفوع على Google Play».
 
 ---
 
-## 📦 ما تم بناؤه
+## 1. ما المتطلبات قبل البدء؟
 
-| الملف | الوظيفة |
-|------|---------|
-| `capacitor.config.ts` | إعداد Capacitor مع placeholders للـ branding |
-| `mobile/src/index.html` | الـ shell الـ static (splash + offline UI) |
-| `mobile/src/boot.js` | يحدد online/offline ويحوّل للتطبيق الحي |
-| `mobile/build-shell.sh` | يبني الـ shell الـ static |
-| `scripts/build-org-app.sh` | **white-label pipeline** الرئيسي |
-| `src/lib/native/capacitor-bridge.ts` | helper APIs (scanQrCode, biometricLogin, takePhoto, share, haptic) |
-| `src/app/api/push/register/route.ts` | endpoint لتسجيل APNS/FCM tokens |
-| `package.json` | scripts: `mobile:add:ios`, `mobile:sync`, `mobile:build:org` |
+| الأداة | الإصدار | لماذا |
+| --- | --- | --- |
+| Node.js | 18+ | لتشغيل Next.js و Capacitor CLI |
+| Java JDK | 17 | Android Gradle Plugin 8.x |
+| Android Studio | Hedgehog أو أحدث | لفتح المشروع وتوقيع الـ AAB |
+| حساب Google Play Developer | $25 (لمرة واحدة) | لرفع التطبيق |
+| (اختياري) Firebase Project | مجاني | لـ Push Notifications |
+
+> macOS مستخدم: ثبّت Android Studio من https://developer.android.com/studio
+> ثم افتحه مرة واحدة لتنزيل Android SDK (Build Tools + Platform).
 
 ---
 
-## 🚀 إعداد أوّلي (مرة واحدة)
+## 2. البنية التحتية الموجودة
 
-### المتطلبات
+```
+SRP/
+├── capacitor.config.ts          ← يقرأ ORG_SLUG, ORG_NAME, ORG_BUNDLE_ID, ORG_SERVER_URL من البيئة
+├── mobile/
+│   ├── src/
+│   │   ├── index.html           ← شاشة Splash + شاشة "بدون انترنت"
+│   │   └── boot.js              ← يسجّل FCM token ثم ينقل المستخدم إلى الموقع الحي
+│   ├── dist/                    ← يُبنى تلقائياً من src/ (لا تعدّل هنا)
+│   ├── resources/
+│   │   ├── icon.png             ← 1024×1024 لوغو المؤسسة (يولّد كل الأحجام)
+│   │   └── splash.png           ← 2732×2732 شاشة الترحيب
+│   └── build-shell.sh           ← يحوّل src/ → dist/
+├── android/                     ← مشروع Android Studio كامل
+│   └── app/src/main/AndroidManifest.xml  ← الصلاحيات + Deep Linking
+├── scripts/
+│   └── build-org-app.sh         ← السكربت الرئيسي (يعمل كل شيء)
+└── src/
+    ├── lib/native/capacitor-bridge.ts   ← مساعدات runtime: scanQrCode, biometric, haptic
+    └── app/api/push/register/route.ts   ← API يستقبل FCM tokens
+```
 
-- **Mac** مع Xcode 15+ (لـ iOS)
-- **Android Studio** Hedgehog أو أحدث (لـ Android)
-- **Node 18+**
-- حساب **Apple Developer** ($99/سنة)
-- حساب **Google Play Console** ($25 مرة واحدة)
+---
 
-### الخطوات
+## 3. البناء لمؤسسة واحدة (LSRP الافتراضي)
 
 ```bash
-cd "/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform"
-
-# 1. تثبيت Capacitor + Plugins
+# 1) ثبّت الـ deps
 npm install
 
-# 2. إعداد أول مجمع تجريبي (Bonyan demo)
-ORG_SLUG=bonyan \
-ORG_NAME="Bonyan Residents" \
-ORG_BUNDLE_ID="app.bonyan.bonyan" \
-ORG_SERVER_URL="https://www.bonyan.app/m" \
-ORG_THEME_COLOR="#0F172A" \
-./scripts/build-org-app.sh
+# 2) ابنِ التطبيق الويب (مرة واحدة قبل أي شيء)
+npm run build
 
-# 3. افتح iOS في Xcode
-npm run mobile:open:ios
+# 3) ابنِ الـ Native shell + Sync إلى Android
+ORG_SLUG=levant \
+ORG_NAME="LSRP" \
+ORG_BUNDLE_ID="com.levant.srp" \
+ORG_SERVER_URL="https://www.lsrp.app/m" \
+ORG_THEME_COLOR="#0B1F3A" \
+ORG_LOGO_PNG="./mobile/resources/icon.png" \
+SKIP_IOS=1 \
+  npm run mobile:build:org
 
-# 4. أو افتح Android في Android Studio
+# 4) افتح Android Studio
 npm run mobile:open:android
 ```
 
-في أول مرة، السكربت سيضيف `ios/` و `android/` تلقائياً.
+داخل Android Studio:
+
+1. انتظر حتى ينتهي Gradle sync (أول مرة قد يأخذ 5 دقائق).
+2. اختر `app` من dropdown الـ Run configuration.
+3. اضغط ▶️ لتشغيله على Emulator أو جهاز USB.
 
 ---
 
-## 🎨 بناء تطبيق لمجمع جديد
+## 4. البناء لمؤسسة جديدة (white-label)
 
-عند إضافة مجمع جديد (مثلاً "Al-Rawabi"):
+كل مؤسسة جديدة (مثل "Al-Rasheed Compound") تحصل على APK خاص بها:
 
 ```bash
-ORG_SLUG=rawabi \
-ORG_NAME="Al-Rawabi Residents" \
-ORG_BUNDLE_ID="app.bonyan.rawabi" \
-ORG_SERVER_URL="https://rawabi.bonyan.app/m" \
-ORG_THEME_COLOR="#10B981" \
-ORG_LOGO_PNG="./assets/orgs/rawabi/logo.png" \
-./scripts/build-org-app.sh
+# المتطلب: في DB يكون org.slug = "alrasheed" مع organization_branding مكتمل.
+ORG_SLUG="alrasheed" \
+ORG_NAME="Al-Rasheed Residents" \
+ORG_BUNDLE_ID="com.levant.alrasheed" \
+ORG_SERVER_URL="https://alrasheed.lsrp.app/m" \
+ORG_THEME_COLOR="#2D5F3F" \
+ORG_LOGO_PNG="./assets/orgs/alrasheed/logo.png" \
+  npm run mobile:build:org
 ```
 
-السكربت يعمل تلقائياً:
-1. ✅ يحدّث `capacitor.config.ts` بـ bundle ID + URL
-2. ✅ ينسخ logo المجمع لـ icons + splash (لكل المقاسات)
-3. ✅ يحدّث `mobile/src/boot.js` بـ subdomain الصحيح
-4. ✅ يبني الـ shell الـ static
-5. ✅ ينفذ `npx cap sync` لنسخ كل شي لـ `ios/` و `android/`
-
-ثم افتح Xcode أو Android Studio وابدأ archive.
+> السكربت **idempotent** — أعد تشغيله متى تغيرت branding للمؤسسة.
 
 ---
 
-## 📲 الـ Native Plugins المتاحة
+## 5. توقيع الـ AAB ورفعه على Play Store
 
-من أي صفحة React في `/m/*`، استخدم:
+### 5.1 توليد keystore (مرة واحدة في حياة التطبيق — احتفظ به!)
 
-```tsx
-import {
-  isNative,
-  scanQrCode,
-  biometricLogin,
-  takePhoto,
-  shareNative,
-  haptic,
-  isOnline,
-  setCached,
-  getCached,
-} from "@/lib/native/capacitor-bridge";
+```bash
+# داخل android/app/
+keytool -genkey -v \
+  -keystore lsrp-release.keystore \
+  -alias lsrp \
+  -keyalg RSA -keysize 2048 -validity 10000
+```
 
-// كل helper آمن للاستخدام في الويب أيضاً (fallback أو no-op)
-if (isNative()) {
-  const qr = await scanQrCode();
-  if (qr) toast.success(`Scanned: ${qr}`);
+⚠️ **مهم جداً:** احفظ هذا الـ keystore في مكان آمن. إذا فقدته لن تستطيع
+رفع تحديثات للتطبيق إلى الأبد. يفضّل وضعه في 1Password أو مدير أسرار.
+
+### 5.2 إعداد التوقيع في Gradle
+
+عدّل `android/app/build.gradle`:
+
+```gradle
+android {
+    signingConfigs {
+        release {
+            storeFile file('lsrp-release.keystore')
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias 'lsrp'
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
-
-// Biometric login
-const result = await biometricLogin("سجّل دخول إلى محفظتك");
-if (result.ok) router.push("/m/wallet");
 ```
 
----
+### 5.3 بناء AAB موقّع
 
-## 🍎 نشر على App Store (iOS)
+```bash
+export KEYSTORE_PASSWORD="..."
+export KEY_PASSWORD="..."
 
-### الإعداد لمرة واحدة
-
-1. أنشئ حساب [Apple Developer](https://developer.apple.com/) ($99/سنة).
-2. في **Certificates, Identifiers & Profiles**:
-   - أنشئ App ID لكل bundle ID (e.g., `app.bonyan.bonyan`)
-   - مكّن capabilities: Push Notifications، Sign in with Apple، App Groups
-3. في **App Store Connect**:
-   - أنشئ تطبيق جديد لكل مجمع
-   - املأ Privacy Policy (موجودة: `https://www.bonyan.app/privacy`)
-   - أضف Screenshots (6.7" + 5.5" iPhone + 12.9" iPad)
-
-### لكل بناء جديد
-
-1. `./scripts/build-org-app.sh` بـ org variables
-2. `npm run mobile:open:ios`
-3. في Xcode:
-   - **Signing & Capabilities** → اختر Team
-   - **Product → Archive**
-   - **Distribute App → App Store Connect → Upload**
-4. في App Store Connect:
-   - **TestFlight** → أضف testers داخليين
-   - بعد الاختبار: **Submit for Review**
-   - مراجعة Apple تأخذ 24-72 ساعة
-
-### Push Notifications على iOS (إعداد إضافي)
-
-1. في Apple Developer → Keys → أنشئ **APNS Key (.p8)**
-2. ارفع الـ key لـ Supabase (إذا تستخدم Supabase Edge Functions للـ push)
-3. أو ارفعه لـ Firebase Cloud Messaging واستخدم FCM لـ iOS أيضاً
-
----
-
-## 🤖 نشر على Google Play (Android)
-
-### الإعداد لمرة واحدة
-
-1. أنشئ حساب [Play Console](https://play.google.com/console/) ($25 مرة).
-2. أنشئ تطبيق جديد لكل مجمع.
-3. املأ Store Listing:
-   - الوصف بالعربية + الإنجليزية
-   - Screenshots (Phone + 7" tablet + 10" tablet)
-   - Privacy Policy URL
-   - Content rating questionnaire
-
-### لكل بناء جديد
-
-1. `./scripts/build-org-app.sh` بـ org variables
-2. `npm run mobile:open:android`
-3. في Android Studio:
-   - **Build → Generate Signed Bundle / APK → Android App Bundle**
-   - استخدم keystore (أنشئ واحد لكل تطبيق، احفظهم في 1Password)
-4. في Play Console:
-   - **Production → Releases → Create new release**
-   - ارفع الـ `.aab`
-   - اضغط Review release
-   - مراجعة Google تأخذ 4-48 ساعة
-
----
-
-## 🔔 ربط Push Notifications
-
-### Backend (موجود بالفعل)
-
-- `push_subscriptions` table — تخزّن APNS + FCM + Web Push tokens
-- `/api/push/register` — endpoint للتسجيل من التطبيق
-- `src/lib/notifications/push.ts` — `sendPush()` يفان out على كل devices للمستخدم
-
-### Frontend (التلقائي)
-
-عند أول تشغيل للتطبيق، `mobile/src/boot.js`:
-1. يطلب صلاحية الإشعارات
-2. يحصل على APNS/FCM token
-3. يرسله لـ `/api/push/register`
-4. يخزّن في `push_subscriptions`
-
-من أي مكان في الكود، إرسال إشعار لمستخدم:
-
-```ts
-import { sendPush } from "@/lib/notifications/push";
-
-await sendPush({
-  userId: resident.user_id,
-  title: "تمت إعادة الخدمة",
-  body: "تم تعبئة 25,000 IQD. تم تشغيل الكهرباء.",
-  data: { url: "/m/wallet" },
-});
+cd android
+./gradlew bundleRelease
+# الناتج: android/app/build/outputs/bundle/release/app-release.aab
 ```
 
-النظام يرسل لكل devices (iOS + Android + Web) تلقائياً.
+أو من Android Studio:
+**Build → Generate Signed Bundle / APK → Android App Bundle → Release**
+
+### 5.4 الرفع على Play Console
+
+1. سجّل دخول على https://play.google.com/console
+2. **Create app** → اختر اللغة (Arabic) + النوع (App / Free).
+3. **App content** → املأ Privacy Policy URL + Target Audience + Data Safety.
+4. **Production → Create new release** → ارفع الـ `.aab`.
+5. اكتب release notes (مثلاً: "إصدار البداية v1.0").
+6. **Send for review** — مراجعة Google تأخذ 1-7 أيام.
 
 ---
 
-## 📊 تكلفة + جدول زمني
+## 6. Push Notifications (FCM)
 
-| المرحلة | المدة | الكلفة |
-|---------|-------|--------|
-| إعداد أول مجمع (Capacitor + Plugins + Test) | 2-3 أيام | 0$ |
-| Submit أول تطبيق iOS (مع review) | 3-5 أيام | $99/سنة |
-| Submit أول تطبيق Android (مع review) | 2-3 أيام | $25 مرة |
-| كل مجمع إضافي بعد ذلك | 1-2 يوم | 0$ |
+### 6.1 إنشاء Firebase project
 
-**ملاحظة:** الـ Apple/Google fees مشتركة بين كل تطبيقاتك. مهما كان عدد المجمعات، الكلفة ثابتة.
+1. https://console.firebase.google.com → Add project → سمّيه "lsrp-prod".
+2. أضف Android app: package name = `com.levant.srp` (نفس applicationId).
+3. حمّل `google-services.json` وضعه في `android/app/`.
+4. في **Project Settings → Cloud Messaging** انسخ `Server Key`.
+
+### 6.2 إعداد المشروع لاستقبال الـ token
+
+ملف `android/app/build.gradle` يحتوي بالفعل على:
+
+```gradle
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(...) { ... }
+```
+
+أي أن وجود `google-services.json` يفعّل FCM تلقائياً. لا تحتاج تعديل كود.
+
+### 6.3 إرسال push من السيرفر
+
+أضف Server Key في `.env`:
+
+```
+FCM_SERVER_KEY=AAAA...
+```
+
+ثم استخدمه في `src/lib/push/send-push.ts` (موجود من Phase 7).
 
 ---
 
-## 🔐 الأمان
+## 7. اختبار قبل الرفع
 
-- **Bundle IDs منفصلة** لكل تطبيق → no data leakage بين المجمعات
-- **HTTPS فقط** (App Transport Security)
-- **CSP headers** موجودة (Phase 11)
-- **Biometric** للـ login السريع — لا يخزّن credentials محلياً
-- **JWT tokens** من Supabase ينتهي صلاحيتها بشكل صحيح
-- **Native push tokens** مرتبطة بـ user_id (RLS)
+| الاختبار | الأمر / الخطوة |
+| --- | --- |
+| Lint Android | `cd android && ./gradlew lint` |
+| Debug build | `cd android && ./gradlew assembleDebug` |
+| تشغيل على emulator | `npm run mobile:open:android` ثم ▶️ |
+| تشغيل على جهاز فعلي | فعّل USB Debugging على الجهاز ثم وصّله |
+| Push notification | استخدم Firebase Console → Cloud Messaging → Send test message مع FCM token |
+| Deep link | `adb shell am start -W -a android.intent.action.VIEW -d "https://www.lsrp.app/m"` |
+| Permissions | داخل التطبيق ادخل Settings → Apps → LSRP → Permissions |
 
 ---
 
-## 🐛 استكشاف الأخطاء
+## 8. الـ Permissions المطلوبة
+
+محفوظة في `android/app/src/main/AndroidManifest.xml`:
+
+| Permission | السبب |
+| --- | --- |
+| INTERNET | الاتصال بالموقع |
+| ACCESS_NETWORK_STATE | فحص online/offline في boot.js |
+| POST_NOTIFICATIONS | Android 13+ يحتاج runtime permission للإشعارات |
+| CAMERA | QR للزوار + رفع صور الإيصالات |
+| USE_BIOMETRIC / USE_FINGERPRINT | تسجيل دخول بالبصمة |
+| VIBRATE | Haptics عند الضغط على الأزرار |
+| READ_MEDIA_IMAGES | رفع صور (Android 13+) |
+| READ_EXTERNAL_STORAGE | رفع صور (Android 12 وما قبله — maxSdk=32) |
+
+---
+
+## 9. الـ Versioning
+
+كل إصدار جديد يحتاج:
+
+```gradle
+// android/app/build.gradle
+defaultConfig {
+    versionCode 2        // ← ارفعه عدد صحيح متزايد
+    versionName "1.1.0"  // ← Semver — للمستخدم
+}
+```
+
+Google Play يرفض رفع AAB بنفس `versionCode` كإصدار سابق.
+
+---
+
+## 10. troubleshooting شائع
 
 | المشكلة | الحل |
-|---------|------|
-| `cap sync` fails | احذف `node_modules` و `ios/` و `android/`، ثم `npm install` و سكربت البناء |
-| iOS build error: signing | في Xcode → Signing & Capabilities → اختر Team صحيح |
-| Android: keystore lost | لا يمكن استعادته — لازم تطبيق جديد بـ bundle ID مختلف |
-| Push notifications لا تصل | تحقق من `push_subscriptions` فيه token المستخدم |
-| WebView يفتح صفحة فاضية | `server.url` في `capacitor.config.ts` غلط أو الـ subdomain لا يقبل |
-| Apple يرفض ("just a wrapper") | أضف ميزات native أكثر (نحن نضيف QR + Biometric + Camera) |
+| --- | --- |
+| `Could not find tools.jar` | ثبّت JDK 17، ضع `JAVA_HOME` في bashrc |
+| `SDK location not found` | افتح Android Studio → Settings → SDK Manager → نزّل SDK 34 |
+| `Manifest merger failed` | أعد `npx cap sync android` |
+| Push notifications لا تصل | تحقق من `google-services.json` موجود في `android/app/` |
+| White screen عند الإطلاق | اقرأ `adb logcat | grep Capacitor` — غالباً URL خاطئ في boot.js |
+| `INSTALL_FAILED_VERSION_DOWNGRADE` | احذف التطبيق من Emulator أولاً |
 
 ---
 
-## 🚦 الخطوات التالية
+## 11. الـ checklist النهائي قبل النشر
 
-1. **شغّل المنطقة المحلية**: `npm install` ثم `./scripts/build-org-app.sh` بـ Bonyan defaults
-2. **افتح في Xcode**: `npm run mobile:open:ios` — لازم يفتح المشروع
-3. **اشحن للسيمولاتور**: Cmd+R — يفتح التطبيق على iOS Simulator
-4. **اختبر**: should redirect to `https://www.bonyan.app/m` after splash
-5. **عند الجاهزية**: سجّل Apple Developer + Google Play Console
-6. **Submit**: ابدأ بـ TestFlight + Internal Track قبل الإنتاج
+- [ ] `versionCode` متزايد عن آخر إصدار في Play Console
+- [ ] `versionName` يحاكي semver
+- [ ] `keystore` محفوظ في 1Password
+- [ ] `google-services.json` لا يُكشف في git (موجود في `.gitignore`)
+- [ ] جميع الـ permissions موثّقة في Play Console → App content → Permissions
+- [ ] Privacy Policy URL يفتح ويعرض سياسة الخصوصية
+- [ ] Screenshots: 1080×1920 على الأقل، 4 إلى 8 صور
+- [ ] App icon: 512×512 PNG (يطلبها Play Console منفصلة عن الـ AAB)
+- [ ] Feature graphic: 1024×500 PNG (الصورة الكبيرة في Play Store)
+- [ ] اختبرته على جهازين مختلفين (Android 11 + Android 14 على الأقل)
 
 ---
 
-## 📚 مراجع
+## 12. للمتقدمين: CI/CD على GitHub Actions
 
-- [Capacitor Docs](https://capacitorjs.com/docs)
-- [@capacitor-mlkit/barcode-scanning](https://github.com/capawesome-team/capacitor-mlkit/tree/main/packages/barcode-scanning)
-- [@aparajita/capacitor-biometric-auth](https://github.com/aparajita/capacitor-biometric-auth)
-- [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
-- [Google Play Console](https://play.google.com/console/)
+ضع هذا في `.github/workflows/android-release.yml`:
+
+```yaml
+name: Android Release
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/setup-java@v4
+        with: { java-version: 17, distribution: temurin }
+      - run: npm ci
+      - run: npm run build
+      - run: ./scripts/build-org-app.sh
+        env:
+          ORG_SLUG: levant
+          ORG_NAME: "LSRP"
+          ORG_BUNDLE_ID: "com.levant.srp"
+          ORG_SERVER_URL: "https://www.lsrp.app/m"
+          SKIP_IOS: 1
+      - run: cd android && ./gradlew bundleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD:      ${{ secrets.KEY_PASSWORD }}
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
+          packageName: com.levant.srp
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: production
+```
+
+---
+
+أي مشكلة في خطوة محددة، افتح ticket في `#mobile-app` channel.

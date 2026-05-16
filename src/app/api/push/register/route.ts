@@ -50,18 +50,19 @@ export async function POST(request: Request) {
   const supabase = await createClient();
 
   // The `push_subscriptions` table already exists (Phase 7) for web push.
-  // We extend it to also store native tokens — the difference is the
-  // `endpoint` column carries the raw APNS/FCM token for native, while
-  // web subscriptions store a Push API endpoint URL there.
+  // Phase 24 extended it with `platform`, `organization_id`, `updated_at`,
+  // and made `p256dh`/`auth` nullable so native tokens can be stored too.
+  // The `endpoint` column carries the raw APNS/FCM token for native rows,
+  // while web subscriptions store a Push API endpoint URL there.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await (supabase as any).from("push_subscriptions").upsert(
     {
-      user_id:        user.id,
+      user_id:         user.id,
       organization_id: user.organizationIds[0] ?? null,
-      endpoint:       token,           // native token goes here
+      endpoint:        token,          // native token goes here
       platform,                        // "ios" | "android" | "web"
-      keys:           null,            // unused for native (web push only)
-      updated_at:     new Date().toISOString(),
+      // p256dh / auth left undefined → NULL in DB (web-only fields)
+      updated_at:      new Date().toISOString(),
     },
     { onConflict: "user_id,endpoint" },
   );

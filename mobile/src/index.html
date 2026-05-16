@@ -2,85 +2,27 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-    <meta name="theme-color" content="#0F172A" />
-    <title>SRP — Smart Residential Platform</title>
-    <link rel="icon" href="data:," />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#0B1F3A" />
+    <title>LSRP</title>
     <style>
-      :root {
-        color-scheme: light dark;
-        --brand: #0F172A;
-        --text:  #ffffff;
-      }
-      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-      html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
-                     Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
-        background: var(--brand);
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: env(safe-area-inset-top) env(safe-area-inset-right)
-                 env(safe-area-inset-bottom) env(safe-area-inset-left);
-      }
-      .splash { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-      .logo {
-        width: 96px; height: 96px;
-        border-radius: 24px;
-        background: rgba(255, 255, 255, 0.08);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 48px;
-      }
-      .title { font-size: 20px; font-weight: 600; margin: 0; }
-      .subtitle { font-size: 13px; opacity: 0.65; margin: 0; }
-      .spinner {
-        width: 28px; height: 28px;
-        border: 3px solid rgba(255,255,255,0.15);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: spin .9s linear infinite;
-      }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      .offline {
-        display: none;
-        flex-direction: column;
-        gap: 12px;
-        padding: 24px;
-      }
-      .offline.show { display: flex; }
-      .splash.hide { display: none; }
-      button {
-        appearance: none;
-        background: #fff;
-        color: var(--brand);
-        border: 0;
-        padding: 12px 24px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-      }
+      html, body { margin:0; padding:0; height:100%; background:#0B1F3A; color:#fff;
+                   font-family:-apple-system,BlinkMacSystemFont,"Cairo","Noto Sans Arabic",system-ui,sans-serif; }
+      body { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+      .logo { width:96px; height:96px; border-radius:24px; background:rgba(255,255,255,.08);
+              display:grid; place-items:center; font-size:48px; }
+      h1 { font-size:28px; font-weight:700; margin:16px 0 4px; }
+      p  { font-size:14px; opacity:.7; margin:0; }
+      .spinner { width:28px; height:28px; border:3px solid rgba(255,255,255,.15);
+                 border-top-color:#fff; border-radius:50%; animation:spin .9s linear infinite;
+                 margin-top:24px; }
+      @keyframes spin { to { transform:rotate(360deg); } }
     </style>
   </head>
   <body>
-    <script>window.__ORG_SERVER_URL__ = "https://smart-residential-platform.vercel.app/m";</script>
-    <div id="splash" class="splash">
-      <div class="logo">🏠</div>
-      <h1 class="title">SRP</h1>
-      <p class="subtitle">Smart Residential Platform</p>
-      <div class="spinner" aria-hidden="true"></div>
-    </div>
-
-    <div id="offline" class="offline">
-      <div class="logo">📴</div>
-      <h1 class="title">لا يوجد اتصال بالإنترنت</h1>
-      <p class="subtitle">يحتاج التطبيق إلى اتصال للوصول إلى بياناتك. أعد المحاولة عند الاتصال.</p>
-      <button onclick="location.reload()">إعادة المحاولة</button>
-    </div>
-
-    <script type="module" src="./boot.js"></script>
+    <div class="logo">🏠</div>
+    <h1>LSRP</h1>
+    <p>جارٍ التحميل…</p>
+    <div class="spinner"></div>
   </body>
 </html>

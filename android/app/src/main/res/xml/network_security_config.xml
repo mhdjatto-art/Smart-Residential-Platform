@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Network security policy for LSRP (Levant Smart Residential Platform).
+  - cleartext is DISABLED everywhere (matches capacitor.config.ts: cleartext=false).
+  - Only HTTPS subdomains we explicitly whitelist are reachable.
+  - This file is referenced from AndroidManifest.xml via android:networkSecurityConfig.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- App-hosted domains -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">lsrp.app</domain>
+        <domain includeSubdomains="true">supabase.co</domain>
+        <domain includeSubdomains="true">stripe.com</domain>
+        <!-- Iraqi payment gateways -->
+        <domain includeSubdomains="true">nass.iq</domain>
+        <domain includeSubdomains="true">fast-pay.iq</domain>
+        <domain includeSubdomains="true">zaincash.iq</domain>
+        <domain includeSubdomains="true">asiahawala.com</domain>
+        <domain includeSubdomains="true">qi.iq</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

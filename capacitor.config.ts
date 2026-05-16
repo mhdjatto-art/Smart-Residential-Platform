@@ -5,23 +5,24 @@
  * reads each organization's row from `public.organizations` + `public.organization_branding`
  * and replaces the placeholders before invoking `npx cap sync`.
  *
- * Defaults here target the umbrella "Bonyan" demo app — useful while
- * developing the native shell locally before any org is provisioned.
+ * Defaults here target the umbrella "LSRP" (Levant Smart Residential Platform)
+ * demo app — useful while developing the native shell locally before any
+ * organization is provisioned.
  *
  * Required env vars at build time:
- *   ORG_SLUG          — e.g. "bonyan"          (defaults to "bonyan")
- *   ORG_NAME          — e.g. "Bonyan Residents"
- *   ORG_BUNDLE_ID     — e.g. "app.bonyan.bonyan"
- *   ORG_SERVER_URL    — e.g. "https://bonyan.bonyan.app/m"
+ *   ORG_SLUG          — e.g. "levant"          (defaults to "levant")
+ *   ORG_NAME          — e.g. "LSRP"
+ *   ORG_BUNDLE_ID     — e.g. "com.levant.srp"
+ *   ORG_SERVER_URL    — e.g. "https://levant.lsrp.app/m"
  *
  * See docs/MOBILE_APPS_SETUP.md for the full pipeline.
  */
 import type { CapacitorConfig } from "@capacitor/cli";
 
-const orgSlug     = process.env.ORG_SLUG     ?? "bonyan";
-const orgName     = process.env.ORG_NAME     ?? "Bonyan Residents";
-const orgBundleId = process.env.ORG_BUNDLE_ID ?? `app.bonyan.${orgSlug}`;
-const orgServerUrl = process.env.ORG_SERVER_URL ?? "https://www.bonyan.app/m";
+const orgSlug     = process.env.ORG_SLUG     ?? "levant";
+const orgName     = process.env.ORG_NAME     ?? "LSRP";
+const orgBundleId = process.env.ORG_BUNDLE_ID ?? `com.levant.srp`;
+const orgServerUrl = process.env.ORG_SERVER_URL ?? "https://smart-residential-platform.vercel.app/m";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -34,15 +35,17 @@ const config: CapacitorConfig = {
   // pointing at our hosted /m routes. The shell is built into `mobile/dist`.
   webDir:  "mobile/dist",
 
-  // Hybrid mode — the static shell handles boot + offline fallback, then
-  // hands off to the live web app on first online connect.
+  // Hybrid mode — the app loads the live site at server.url.
+  // The static shell in mobile/dist/ is only used if Capacitor falls back
+  // (rarely happens — basically a fail-safe).
   server: {
-    url: orgServerUrl,
+    url: orgServerUrl,                // ← live Vercel deployment
     cleartext: false,
-    // Allow our own subdomains + Supabase + Stripe + the Iraqi gateways.
     allowNavigation: [
-      `${orgSlug}.bonyan.app`,
-      "www.bonyan.app",
+      "smart-residential-platform.vercel.app",
+      "*.vercel.app",
+      `${orgSlug}.lsrp.app`,
+      "*.lsrp.app",
       "*.supabase.co",
       "checkout.stripe.com",
       "*.nass.iq",
@@ -51,7 +54,6 @@ const config: CapacitorConfig = {
       "*.asiahawala.com",
       "*.qi.iq",
     ],
-    // Use HTTPS — Apple requires it for App Transport Security.
     iosScheme: "https",
     androidScheme: "https",
   },
