@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser, requireRole } from "@/lib/auth/guards";
 import { facilitySchema, bookingSchema, type FacilityInput, type BookingInput } from "@/lib/validations/operations";
+import { logger } from "@/lib/logger";
 
 export interface FacilityRow {
   id: string;
@@ -115,7 +116,7 @@ export async function listBookings(opts: BookingListOpts = {}): Promise<{ data: 
 
   const { data, count, error } = await q;
   if (error) {
-    console.error("[listBookings] failed:", error.message);
+    logger.error("facilities", "listBookings failed", error);
     return { data: [], total: 0 };
   }
 

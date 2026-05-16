@@ -10,6 +10,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireRole, requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface DailyKpiRow {
   id: string;
@@ -110,7 +111,7 @@ export async function listOverdueRisk(): Promise<OverdueRiskRow[]> {
     .order("score", { ascending: false })
     .limit(50);
   if (error) {
-    console.error("[listOverdueRisk] failed:", error.message);
+    logger.error("analytics", "listOverdueRisk failed", error);
     return [];
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

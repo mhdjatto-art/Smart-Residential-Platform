@@ -15,6 +15,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
   );
 
   if (error) {
-    console.error("[push/register]", error.message);
+    logger.error("push-register", "insert failed", error);
     return NextResponse.json({ error: "Failed to register" }, { status: 500 });
   }
 

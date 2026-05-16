@@ -6,6 +6,7 @@ import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { getT } from "@/lib/i18n/server";
+import { logger } from "@/lib/logger";
 
 export const metadata: Metadata = { title: "My documents" };
 export const dynamic = "force-dynamic";
@@ -50,7 +51,7 @@ export default async function MobileDocumentsPage() {
       .order("created_at", { ascending: false })
       .limit(50);
     if (error) {
-      console.error("[m/documents] failed:", error.message);
+      logger.error("m/documents", "failed", error);
     } else {
       docs = (data ?? []) as unknown as DocRow[];
     }

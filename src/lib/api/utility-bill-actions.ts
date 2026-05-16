@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
 import { notifyPenaltyApplied } from "@/lib/notifications/bill-events";
+import { logger } from "@/lib/logger";
 
 export interface PaymentInput {
   bill_id: string;
@@ -58,7 +59,7 @@ export async function applyUtilityPenalties(
   // Fire-and-forget in-app notifications for every bill that got a penalty
   for (const d of summary.details ?? []) {
     notifyPenaltyApplied(d.bill_id, d.penalty).catch((e) => {
-      console.error("[apply-penalties] notifyPenaltyApplied failed:", e instanceof Error ? e.message : String(e));
+      logger.error("apply-penalties", "notifyPenaltyApplied failed", e);
     });
   }
 

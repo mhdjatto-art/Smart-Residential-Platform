@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 /**
  * Fail-closed cron authentication.
@@ -28,14 +29,14 @@ export function requireCronAuth(request: Request, jobName: string): NextResponse
   // Production: fail-closed.
   if (isProd) {
     if (!secret) {
-      console.error(`[cron/${jobName}] BLOCKED — CRON_SECRET is not set in production`);
+      logger.error(`cron/${jobName}`, "BLOCKED — CRON_SECRET is not set in production");
       return NextResponse.json(
         { error: "Cron not configured — CRON_SECRET missing" },
         { status: 503 },
       );
     }
     if (auth !== `Bearer ${secret}`) {
-      console.warn(`[cron/${jobName}] BLOCKED — invalid or missing Authorization header`);
+      logger.warn(`cron/${jobName}`, "BLOCKED — invalid or missing Authorization header");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return null;
@@ -43,11 +44,11 @@ export function requireCronAuth(request: Request, jobName: string): NextResponse
 
   // Non-prod: if secret is set, enforce it; otherwise allow for local dev.
   if (secret && auth !== `Bearer ${secret}`) {
-    console.warn(`[cron/${jobName}] BLOCKED (dev with secret set) — invalid Authorization header`);
+    logger.warn(`cron/${jobName}`, "BLOCKED (dev with secret set) — invalid Authorization header");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (!secret) {
-    console.warn(`[cron/${jobName}] DEV MODE — CRON_SECRET unset, allowing call`);
+    logger.warn(`cron/${jobName}`, "DEV MODE — CRON_SECRET unset, allowing call");
   }
   return null;
 }

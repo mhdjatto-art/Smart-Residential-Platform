@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface SignatureRow {
   id: string;
@@ -36,7 +37,7 @@ export async function getLatestSignature(contractId: string): Promise<SignatureR
     .limit(1)
     .maybeSingle();
   if (error) {
-    console.error("[contract-signatures] latest failed:", error.message);
+    logger.error("contract-signatures", "latest failed", error);
     return null;
   }
   return (data as unknown as SignatureRow) ?? null;
@@ -142,7 +143,7 @@ export async function listResidentContracts(): Promise<Array<{
     .eq("resident_id", residentId)
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("[contract-signatures] list resident contracts failed:", error.message);
+    logger.error("contract-signatures", "list resident contracts failed", error);
     return [];
   }
   const list = (contracts ?? []) as Array<{ id: string; contract_number: string; contract_type: string; contract_status: string; total_property_price: number | null; monthly_amount: number | null; currency: string | null }>;

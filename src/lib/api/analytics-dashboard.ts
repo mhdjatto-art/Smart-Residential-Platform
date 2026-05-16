@@ -10,6 +10,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface AnalyticsKpis {
   total_revenue_30d: number;
@@ -52,12 +53,12 @@ async function safeCount(
   try {
     const { count, error } = await query;
     if (error) {
-      console.error(`[analytics] ${label} failed:`, error.message);
+      logger.error("analytics", `${label} failed`, error);
       return 0;
     }
     return count ?? 0;
   } catch (e) {
-    console.error(`[analytics] ${label} threw:`, e instanceof Error ? e.message : String(e));
+    logger.error("analytics", `${label} threw`, e);
     return 0;
   }
 }
@@ -70,12 +71,12 @@ async function safeQuery<T>(
   try {
     const { data, error } = await query;
     if (error) {
-      console.error(`[analytics] ${label} failed:`, error.message);
+      logger.error("analytics", `${label} failed`, error);
       return [];
     }
     return (data ?? []) as T[];
   } catch (e) {
-    console.error(`[analytics] ${label} threw:`, e instanceof Error ? e.message : String(e));
+    logger.error("analytics", `${label} threw`, e);
     return [];
   }
 }

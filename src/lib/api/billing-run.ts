@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
 import { notifyNewBill } from "@/lib/notifications/bill-events";
+import { logger } from "@/lib/logger";
 
 export interface BillingRunDetail {
   sub_id: string;
@@ -48,7 +49,7 @@ export async function runAutoBilling(dryRun: boolean): Promise<BillingRunSummary
     for (const d of summary.details ?? []) {
       if (d.outcome === "generated" && d.bill_id) {
         notifyNewBill(d.bill_id).catch((e) => {
-          console.error("[billing-run] notifyNewBill failed:", e instanceof Error ? e.message : String(e));
+          logger.error("billing-run", "notifyNewBill failed", e);
         });
       }
     }
@@ -139,7 +140,7 @@ export async function generateSingleUtilityBill(input: {
 
   // Fire-and-forget notification (best-effort)
   notifyNewBill(String(data)).catch((e) => {
-    console.error("[generateSingleUtilityBill] notifyNewBill failed:", e instanceof Error ? e.message : String(e));
+    logger.error("billing-run", "generateSingleUtilityBill notifyNewBill failed", e);
   });
 
   revalidatePath("/utility-bills");

@@ -20,6 +20,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getGateway, isKnownGateway } from "@/lib/payments/registry";
+import { getErrorMessage } from "@/lib/errors";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +46,7 @@ export async function POST(
 
   // 2. Verify signature.
   if (!gateway.verifyWebhook(rawBody, headers)) {
-    console.warn(`[webhook/${provider}] signature verification failed`);
+    logger.warn(`webhook/${provider}`, "signature verification failed");
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
@@ -53,12 +55,12 @@ export async function POST(
   try {
     event = gateway.parseWebhook(rawBody);
   } catch (e) {
-    console.error(`[webhook/${provider}] parse error:`, e);
+    logger.error(`webhook/${provider}`, "parse error", e);
     return NextResponse.json({ error: "Bad payload" }, { status: 400 });
   }
 
   if (!event.externalRef) {
-    console.error(`[webhook/${provider}] missing externalRef — cannot match wallet`);
+    logger.error(`webhook/${provider}`, "missing externalRef — cannot match wallet");
     return NextResponse.json({ ok: true, note: "no externalRef" });
   }
 
@@ -71,7 +73,7 @@ export async function POST(
     const parts = event.externalRef.split(":");
     const walletId = parts[0] === "wallet" ? parts[1] : null;
     if (!walletId) {
-      console.error(`[webhook/${provider}] malformed externalRef:`, event.externalRef);
+      logger.error(`webhook/${provider}`, `malformed externalRef: ${event.externalRef}`);
       return NextResponse.json({ ok: true });
     }
 
@@ -87,25 +89,29 @@ export async function POST(
         p_notes:           `Settled via ${provider} (${event.rawEventType})`,
       });
       if (error) {
-        console.error(`[webhook/${provider}] topup_wallet failed:`, error.message);
-        // Still return 200 — retry won't help if the RPC rejected it.
+        const msg = getErrorMessage(error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const code = (error as any)?.code;
+        if (code === "23505" || msg.includes("duplicate key")) {
+          logger.info(`webhook/${provider}`, "duplicate top-up suppressed");
+        } else {
+          logger.error(`webhook/${provider}`, `topup_wallet failed: ${msg}`, error);
+        }
       } else {
         // Best-effort: restore service if it was cut off.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (supabase as any).rpc("restore_after_topup", { p_wallet_id: walletId }).catch(() => {});
+        await (supabase as any).rpc("restore_after_topup", { p_wallet_id: walletId }).catch((err: unknown) => {
+          logger.warn(`webhook/${provider}`, "restore_after_topup failed", err);
+        });
       }
     } catch (e) {
-      console.error(`[webhook/${provider}] RPC error:`, e);
+      logger.error(`webhook/${provider}`, "RPC error", e);
     }
   }
 
   // For other statuses we just log — no balance change needed.
   if (event.status !== "succeeded") {
-    console.info(`[webhook/${provider}] non-success event:`, {
-      externalRef: event.externalRef,
-      status:      event.status,
-      raw:         event.rawEventType,
-    });
+    logger.info(`webhook/${provider}`, `non-success event status=${event.status} ref=${event.externalRef}`);
   }
 
   return NextResponse.json({ ok: true });

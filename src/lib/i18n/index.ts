@@ -62,23 +62,27 @@ export async function loadLocale(locale: LocaleCode): Promise<Dict> {
   return dict;
 }
 
-export function resolveKey(dict: Dict, key: TranslationKey): string {
+export function resolveKey(dict: Dict | null | undefined, key: TranslationKey | null | undefined): string {
+  if (!dict || !key) return key ?? "";
   const parts = key.split(".");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let cur: any = dict;
   for (const p of parts) {
-    cur = cur?.[p];
-    if (cur === undefined) return key;
+    if (cur == null || typeof cur !== "object") return key;
+    cur = cur[p];
+    if (cur === undefined || cur === null) return key;
   }
   return typeof cur === "string" ? cur : key;
 }
 
 /** Synchronous translation factory. Call `await loadLocale(...)` first. */
-export function makeT(dict: Dict) {
+export function makeT(dict: Dict | null | undefined) {
   return function t(key: TranslationKey, params: Record<string, string | number> = {}): string {
+    if (!key) return "";
     let s = resolveKey(dict, key);
+    if (!params || typeof params !== "object") return s;
     for (const [k, v] of Object.entries(params)) {
-      s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+      s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v ?? ""));
     }
     return s;
   };

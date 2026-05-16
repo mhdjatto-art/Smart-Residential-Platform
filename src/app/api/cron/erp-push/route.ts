@@ -10,6 +10,7 @@ import { NextResponse } from "next/server";
 import { pushQueuedJournalEntries } from "@/lib/erp/worker";
 import { requireCronAuth } from "@/lib/cron/auth";
 import { reportError } from "@/lib/observability/report";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
 
   try {
     const summary = await pushQueuedJournalEntries();
-    console.log("[erp-push] summary:", JSON.stringify(summary, null, 0));
+    logger.info("cron/erp-push", "summary", summary);
     return NextResponse.json({ ok: true, summary });
   } catch (err) {
     reportError(err, { module: "cron/erp-push", severity: "error" });

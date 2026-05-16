@@ -18,6 +18,7 @@
 
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logger } from "@/lib/logger";
 
 export interface PushPayload {
   title: string;
@@ -35,7 +36,7 @@ let warned = false;
 export async function sendPushToUser(userId: string, payload: PushPayload): Promise<void> {
   if (!pushConfigured()) {
     if (!warned) {
-      console.log("[push] skipped — VAPID env vars not set");
+      logger.info("push", "skipped — VAPID env vars not set");
       warned = true;
     }
     return;
@@ -48,7 +49,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
     webpush = (await import("web-push" as any)).default ?? (await import("web-push" as any));
   } catch {
     if (!warned) {
-      console.log("[push] skipped — `web-push` package not installed (run: npm i web-push)");
+      logger.info("push", "skipped — `web-push` package not installed (run: npm i web-push)");
       warned = true;
     }
     return;
@@ -67,7 +68,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
     .select("id, endpoint, p256dh, auth")
     .eq("user_id", userId);
   if (error) {
-    console.error("[push] subscriptions query failed:", error.message);
+    logger.error("push", "subscriptions query failed", error);
     return;
   }
 
@@ -92,7 +93,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload): Prom
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = e as any;
       const status = err?.statusCode ?? err?.status ?? 0;
-      console.error("[push] send failed:", status, err?.message ?? String(e));
+      logger.error("push", `send failed (status ${status})`, e);
       // 410 = subscription gone — clean it up
       if (status === 404 || status === 410) {
         await admin.from("push_subscriptions").delete().eq("id", s.id);

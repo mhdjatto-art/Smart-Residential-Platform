@@ -1,3 +1,5 @@
+import { toStripeAmount } from "@/config/constants";
+
 /**
  * Minimal Stripe API client — no npm dependency.
  *
@@ -46,12 +48,9 @@ export async function createCheckoutSession(input: CreateCheckoutInput): Promise
   if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
 
   // Stripe accepts amounts as integers in the smallest currency unit.
-  // Zero-decimal currencies (IQD doesn't have cents per Stripe's list).
-  const ZERO_DECIMAL = new Set([
-    "bif","clp","djf","gnf","jpy","kmf","krw","mga","pyg","rwf","ugx","vnd","vuv","xaf","xof","xpf",
-  ]);
+  // Helper handles zero-decimal currencies (e.g. JPY).
   const ccy = input.currency.toLowerCase();
-  const cents = ZERO_DECIMAL.has(ccy) ? Math.round(input.amount) : Math.round(input.amount * 100);
+  const cents = toStripeAmount(input.amount, ccy);
 
   const params = new URLSearchParams();
   params.append("mode", "payment");

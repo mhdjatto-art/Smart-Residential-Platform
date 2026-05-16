@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 /**
  * Matches the actual `audit_log` schema from migration 003:
@@ -83,7 +84,7 @@ export async function listAuditLog(opts: ListOpts = {}): Promise<{ data: AuditRo
 
   const { data, count, error } = await q;
   if (error) {
-    console.error("[audit] list failed:", error.message);
+    logger.error("audit", "list failed", error);
     return { data: [], total: 0 };
   }
   return { data: (data ?? []) as unknown as AuditRow[], total: count ?? 0 };
@@ -103,7 +104,7 @@ export async function getRecordActivity(table: string, rowId: string, limit = 20
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) {
-    console.error("[audit] record activity failed:", error.message);
+    logger.error("audit", "record activity failed", error);
     return [];
   }
   return (data ?? []) as unknown as AuditRow[];
@@ -143,7 +144,7 @@ export async function listAdminActions(opts: {
   const { data, count, error } = await q;
   if (error) {
     // View may not exist yet on databases that haven't applied Phase 12 — soft fail.
-    console.error("[audit] admin actions list failed:", error.message);
+    logger.error("audit", "admin actions list failed", error);
     return { data: [], total: 0 };
   }
   return { data: (data ?? []) as unknown as AdminActionRow[], total: count ?? 0 };

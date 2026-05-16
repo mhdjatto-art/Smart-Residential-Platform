@@ -10,6 +10,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { withTimeout } from "@/lib/promise-timeout";
+import { logger } from "@/lib/logger";
 
 export type TenancyType = "owner" | "tenant" | "family_member" | "guest";
 
@@ -121,7 +123,7 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
   // Owners see installment schedules (cash sales have no installments → empty)
   // Tenants see rent payment schedules (rental contracts may also use the same
   // installment_schedules table, indexed by contract_type=rental).
-  const [installments, rentalContracts, utilityBills, tickets, visitors, orders, unread] = await Promise.all([
+  const [installments, rentalContracts, utilityBills, tickets, visitors, orders, unread] = await withTimeout(Promise.all([
     // Installments tied to a property_sale or lease_to_own contract for this resident
     supabase
       .from("installment_schedules")
@@ -161,7 +163,13 @@ export async function getMobileDashboard(): Promise<MobileDashboard> {
       .select("id", { count: "exact", head: true })
       .eq("user_id", ctx.user_id)
       .is("read_at", null),
-  ]);
+  ]), 5000, "getMobileDashboard.parallelQueries").catch((e) => {
+    // Timeout → degrade gracefully instead of crashing the whole page.
+    logger.error("resident-mobile", "parallel queries timed out, returning empty", e);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const empty = { data: [], count: 0, error: null } as any;
+    return [empty, empty, empty, empty, empty, empty, empty] as const;
+  });
 
   type InstallmentRow = { total_due: number; penalty_amount: number; paid_amount: number; due_date: string; status: string;
     installment_contracts?: { contract_type?: string } | { contract_type?: string }[] };

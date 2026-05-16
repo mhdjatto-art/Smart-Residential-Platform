@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface ContractTemplate {
   id: string;
@@ -29,7 +30,7 @@ export async function listContractTemplates(opts: { kind?: string; locale?: stri
   if (opts.locale) q = q.eq("locale", opts.locale);
   const { data, error } = await q;
   if (error) {
-    console.error("[contract-templates] list failed:", error.message);
+    logger.error("contract-templates", "list failed", error);
     return [];
   }
   return (data ?? []) as unknown as ContractTemplate[];

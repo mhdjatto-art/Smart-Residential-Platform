@@ -11,6 +11,7 @@
  */
 
 import "server-only";
+import { logger } from "@/lib/logger";
 
 export function isEmailConfigured(): boolean {
   return !!process.env.RESEND_API_KEY && !!process.env.EMAIL_FROM;
@@ -34,7 +35,7 @@ export interface SendEmailResult {
 
 export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult> {
   if (!isEmailConfigured()) {
-    console.log("[email] skipped (not configured):", input.subject, "→", input.to);
+    logger.info("email", `skipped (not configured): ${input.subject} → ${input.to}`);
     return { ok: true, skipped: true };
   }
 
@@ -63,15 +64,15 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
 
     if (!res.ok) {
       const msg = json.message ?? json.error ?? `HTTP ${res.status}`;
-      console.error("[email] Resend error:", msg, "→", input.to);
+      logger.error("email", `Resend error: ${msg} → ${input.to}`);
       return { ok: false, error: msg };
     }
 
-    console.log("[email] sent:", json.id, "→", input.to, "subject:", input.subject);
+    logger.info("email", `sent: ${json.id} → ${input.to} subject: ${input.subject}`);
     return { ok: true, id: json.id };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Network error";
-    console.error("[email] threw:", msg);
+    logger.error("email", `threw: ${msg}`, err);
     return { ok: false, error: msg };
   }
 }

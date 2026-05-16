@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface DashboardStats {
   compounds: number;
@@ -30,12 +31,12 @@ async function safeCount(
   try {
     const { count, error } = await query;
     if (error) {
-      console.error(`[dashboard-stats] ${label} failed:`, error.message);
+      logger.error("dashboard-stats", `${label} failed`, error);
       return 0;
     }
     return count ?? 0;
   } catch (e) {
-    console.error(`[dashboard-stats] ${label} threw:`, e instanceof Error ? e.message : String(e));
+    logger.error("dashboard-stats", `${label} threw`, e);
     return 0;
   }
 }

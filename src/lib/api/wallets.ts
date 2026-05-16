@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser, requireRole } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface WalletRow {
   id: string;
@@ -86,7 +87,7 @@ export async function getMyWalletSummary(): Promise<WalletSummary | null> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, error } = await (supabase as any).rpc("get_wallet_summary", { p_resident_id: null });
   if (error) {
-    console.error("[getMyWalletSummary] failed:", error.message);
+    logger.error("wallets", "getMyWalletSummary failed", error);
     return null;
   }
   if ((data as { error?: string })?.error) return null;
@@ -126,7 +127,7 @@ export async function listWallets(opts: {
 
   const { data, count, error } = await q;
   if (error) {
-    console.error("[listWallets] failed:", error.message);
+    logger.error("wallets", "listWallets failed", error);
     return { data: [], total: 0 };
   }
   let rows = (data ?? []) as unknown as WalletRow[];

@@ -36,6 +36,7 @@ import { requireUser } from "@/lib/auth/guards";
 import { enforceRateLimit } from "@/lib/rate-limit";
 import { getGateway, isKnownGateway } from "@/lib/payments/registry";
 import { buildExternalRef } from "@/lib/payments/types";
+import { logger } from "@/lib/logger";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.bonyan.app";
 
@@ -138,7 +139,7 @@ export async function POST(
       },
     });
   } catch (e) {
-    console.error(`[wallet/topup/${method}] gateway error:`, e);
+    logger.error("wallet-topup", `gateway error (${method})`, e);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Gateway error" },
       { status: 502 },
@@ -164,7 +165,7 @@ export async function POST(
   } catch (e) {
     // Don't fail the request if the audit insert fails — the webhook will
     // still credit correctly because it uses the external_reference key.
-    console.warn(`[wallet/topup/${method}] failed to record pending row:`, e);
+    logger.warn("wallet-topup", `failed to record pending row (${method})`, e);
   }
 
   return NextResponse.json({

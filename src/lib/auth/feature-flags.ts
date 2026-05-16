@@ -12,6 +12,7 @@
  */
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 export type FeatureKey =
   | "wallets" | "marketplace" | "parking" | "visitors" | "facilities"
@@ -46,7 +47,7 @@ export async function getEnabledFeatures(orgId: string | null): Promise<Set<stri
     });
 
     if (error) {
-      console.error("[feature-flags] read failed:", error.message ?? error);
+      logger.error("feature-flags", "read failed", error);
       return new Set<string>(); // fail-open
     }
     if (!Array.isArray(data) || data.length === 0) {
@@ -86,7 +87,7 @@ export async function getEnabledFeatures(orgId: string | null): Promise<Set<stri
     }
     return enabled;
   } catch (e) {
-    console.error("[feature-flags] unexpected error:", e instanceof Error ? e.message : String(e));
+    logger.error("feature-flags", "unexpected error", e);
     return new Set<string>();
   }
 }

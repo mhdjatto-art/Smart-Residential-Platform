@@ -16,6 +16,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { makeAdapter, type JournalEntryDTO, type ErpAdapter } from "@/lib/erp/adapters";
+import { logger } from "@/lib/logger";
 
 export interface PushRunSummary {
   picked: number;
@@ -47,7 +48,7 @@ export async function pushQueuedJournalEntries(): Promise<PushRunSummary> {
     .order("created_at")
     .limit(MAX_PER_RUN);
   if (qErr) {
-    console.error("[erp-worker] failed to list queued:", qErr.message);
+    logger.error("erp-worker", "failed to list queued", qErr);
     return summary;
   }
 

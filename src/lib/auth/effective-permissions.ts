@@ -12,6 +12,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { ROLE_CAPABILITIES, type Capability } from "@/lib/auth/permissions";
 import type { AppRole } from "@/types";
+import { logger } from "@/lib/logger";
 
 interface OverrideRow {
   organization_id: string | null;
@@ -59,7 +60,7 @@ export async function getEffectiveCapabilities(
     const data = (allData as any[] | null)?.filter((r) => roles.includes(r.role as AppRole));
 
     if (error) {
-      console.error("[effective-permissions] read failed:", error.message ?? error);
+      logger.error("effective-permissions", "read failed", error);
       return effective; // fall back to defaults
     }
     if (!Array.isArray(data)) return effective;
@@ -93,7 +94,7 @@ export async function getEffectiveCapabilities(
 
     return effective;
   } catch (e) {
-    console.error("[effective-permissions] unexpected error:", e instanceof Error ? e.message : String(e));
+    logger.error("effective-permissions", "unexpected error", e);
     return effective;
   }
 }

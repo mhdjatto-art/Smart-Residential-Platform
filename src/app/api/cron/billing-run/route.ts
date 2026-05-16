@@ -14,6 +14,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireCronAuth } from "@/lib/cron/auth";
 import { reportError } from "@/lib/observability/report";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
       reportError(new Error(error.message), { module: "cron/billing-run", severity: "critical" });
       return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
     }
-    console.log("[cron/billing-run] summary:", JSON.stringify(data));
+    logger.info("cron/billing-run", "summary", data);
     return NextResponse.json({ ok: true, summary: data });
   } catch (err) {
     reportError(err, { module: "cron/billing-run", severity: "critical" });

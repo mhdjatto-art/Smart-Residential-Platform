@@ -13,6 +13,7 @@
  *   try { … } catch (e) { reportError(e, { module: "billing-run" }); }
  */
 import * as Sentry from "@sentry/nextjs";
+import { logger } from "@/lib/logger";
 
 type Severity = "info" | "warning" | "error" | "critical";
 
@@ -50,8 +51,8 @@ export function reportError(err: unknown, opts: ReportOptions = {}): void {
   const stack = err instanceof Error ? err.stack : undefined;
   const tag = opts.module ? `[${opts.module}] ` : "";
 
-  // Always console — these go to Vercel logs.
-  console.error(`${tag}${severity.toUpperCase()}: ${msg}`, stack ? "\n" + stack : "");
+  // Always log — these go to Vercel logs.
+  logger.error(opts.module ?? "report", `${severity.toUpperCase()}: ${msg}${stack ? "\n" + stack : ""}`, err);
 
   // Sentry (if configured)
   if (sentryEnabled()) {
@@ -71,7 +72,13 @@ export function reportError(err: unknown, opts: ReportOptions = {}): void {
 export function reportEvent(message: string, opts: ReportOptions = {}): void {
   const severity = opts.severity ?? "info";
   const tag = opts.module ? `[${opts.module}] ` : "";
-  console.log(`${tag}${severity}: ${message}`);
+  if (severity === "warning") {
+    logger.warn(opts.module ?? "report", message);
+  } else if (severity === "error" || severity === "critical") {
+    logger.error(opts.module ?? "report", message);
+  } else {
+    logger.info(opts.module ?? "report", message);
+  }
 
   if (sentryEnabled()) {
     Sentry.captureMessage(message, {

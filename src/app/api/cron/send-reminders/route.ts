@@ -12,6 +12,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBillReminderEmail } from "@/lib/email/notify";
 import { requireCronAuth } from "@/lib/cron/auth";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,12 +39,12 @@ export async function GET(request: Request) {
     .in("due_date", targets);
 
   if (error) {
-    console.error("[send-reminders] query failed:", error.message);
+    logger.error("send-reminders", "query failed", error);
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
   }
 
   const bills = (data ?? []) as Array<{ id: string; due_date: string }>;
-  console.log(`[send-reminders] found ${bills.length} bills due on ${targets.join(", ")}`);
+  logger.info("send-reminders", `found ${bills.length} bills due on ${targets.join(", ")}`);
 
   let sent = 0;
   let errors = 0;
@@ -52,7 +53,7 @@ export async function GET(request: Request) {
       await sendBillReminderEmail(b.id);
       sent++;
     } catch (e) {
-      console.error("[send-reminders] failed for", b.id, ":", e instanceof Error ? e.message : String(e));
+      logger.error("send-reminders", `failed for bill ${b.id}`, e);
       errors++;
     }
   }

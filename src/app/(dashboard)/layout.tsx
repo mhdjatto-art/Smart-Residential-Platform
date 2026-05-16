@@ -9,6 +9,7 @@ import { getActiveLocale } from "@/lib/i18n/server";
 import { getEffectiveCapabilities } from "@/lib/auth/effective-permissions";
 import { getEnabledFeatures } from "@/lib/auth/feature-flags";
 import { getPostLoginPath, ROUTES } from "@/lib/auth/post-login-redirect";
+import { logger } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +60,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       .is("read_at", null);
     initialUnread = count ?? 0;
   } catch (e) {
-    console.error("[dashboard-layout] unread count failed:", e instanceof Error ? e.message : String(e));
+    logger.error("dashboard-layout", "unread count failed", e);
   }
 
   const branding = await getActiveBranding(primaryOrgId);
@@ -77,7 +78,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     effectiveCaps = Array.from(caps);
     enabledFeatures = Array.from(feats);
   } catch (e) {
-    console.error("[dashboard-layout] phase17 enforcement load failed:", e instanceof Error ? e.message : String(e));
+    logger.error("dashboard-layout", "phase17 enforcement load failed", e);
   }
 
   return (

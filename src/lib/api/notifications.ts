@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface NotificationRow {
   id: string;
@@ -111,12 +112,12 @@ export async function createNotification(input: CreateNotificationInput): Promis
       .select("id")
       .single();
     if (error) {
-      console.error("[createNotification] insert failed:", error.message);
+      logger.error("notifications", "createNotification insert failed", error);
       return null;
     }
     return (data as { id: string }).id;
   } catch (e) {
-    console.error("[createNotification] threw:", e instanceof Error ? e.message : String(e));
+    logger.error("notifications", "createNotification threw", e);
     return null;
   }
 }

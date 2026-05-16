@@ -19,6 +19,9 @@ import { sendPaymentReceiptEmail } from "@/lib/email/notify";
 import { notifyPaymentReceived } from "@/lib/notifications/bill-events";
 import { enforceRateLimit } from "@/lib/rate-limit";
 import { reportEvent } from "@/lib/observability/report";
+import { ZERO_DECIMAL_CURRENCIES, fromStripeAmount } from "@/config/constants";
+import { getErrorMessage } from "@/lib/errors";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -75,10 +78,8 @@ async function handleCheckoutCompleted(event: StripeEvent): Promise<Response> {
     return NextResponse.json({ ok: true, ignored: "not paid" });
   }
 
-  const ZERO_DECIMAL = new Set(["bif","clp","djf","gnf","jpy","kmf","krw","mga","pyg","rwf","ugx","vnd","vuv","xaf","xof","xpf"]);
   const ccy = (session.currency ?? "usd").toLowerCase();
-  const cents = session.amount_total ?? 0;
-  const amount = ZERO_DECIMAL.has(ccy) ? cents : cents / 100;
+  const amount = fromStripeAmount(session.amount_total ?? 0, ccy);
 
   // Phase 20: route to installment/rent handler when metadata.kind = 'installment'
   if (session.metadata?.kind === "installment" && session.metadata.installment_id && session.metadata.contract_id) {
@@ -103,7 +104,11 @@ async function recordInstallmentPayment(contractId: string, amount: number, ref:
   if (amount <= 0) return NextResponse.json({ ok: true, ignored: "zero amount" });
   const admin = createAdminClient();
 
-  // Idempotency — check if a payment with this Stripe ref already exists
+  // Idempotency — pre-check + UNIQUE index on payments.external_reference
+  // (Phase 23 migration) guarantees the race-free invariant: even if two
+  // concurrent webhook deliveries both pass this SELECT, the second INSERT
+  // will fail with the unique violation code 23505 — which we then treat
+  // as a duplicate (not a real error).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: existing } = await (admin as any)
     .from("payments")
@@ -111,7 +116,7 @@ async function recordInstallmentPayment(contractId: string, amount: number, ref:
     .eq("external_reference", ref)
     .maybeSingle();
   if (existing?.id) {
-    console.log("[stripe-webhook] installment payment already recorded:", ref);
+    logger.info("stripe-webhook", `installment payment already recorded ref=${ref}`);
     return NextResponse.json({ ok: true, ignored: "duplicate" });
   }
 
@@ -125,10 +130,18 @@ async function recordInstallmentPayment(contractId: string, amount: number, ref:
     p_notes:          `Stripe ${source}`,
   });
   if (error) {
-    console.error("[stripe-webhook] record_payment failed:", error.message);
-    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+    const msg = getErrorMessage(error);
+    // 23505 = unique_violation → another concurrent webhook beat us. NOT a real failure.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const code = (error as any)?.code;
+    if (code === "23505" || msg.includes("duplicate key")) {
+      logger.info("stripe-webhook", `concurrent webhook lost the race ref=${ref}`);
+      return NextResponse.json({ ok: true, ignored: "duplicate-concurrent" });
+    }
+    logger.error("stripe-webhook", `record_payment failed ref=${ref}`, error);
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
-  console.log("[stripe-webhook] recorded installment payment:", contractId, amount, ref);
+  logger.info("stripe-webhook", `recorded installment payment contract=${contractId} amount=${amount} ref=${ref}`);
   return NextResponse.json({ ok: true, contract_id: contractId, amount });
 }
 
@@ -143,10 +156,8 @@ async function handlePaymentIntentSucceeded(event: StripeEvent): Promise<Respons
   if (!billId) {
     return NextResponse.json({ ok: true, ignored: "no bill_id in payment_intent" });
   }
-  const ZERO_DECIMAL = new Set(["bif","clp","djf","gnf","jpy","kmf","krw","mga","pyg","rwf","ugx","vnd","vuv","xaf","xof","xpf"]);
   const ccy = (pi.currency ?? "usd").toLowerCase();
-  const cents = pi.amount_received ?? 0;
-  const amount = ZERO_DECIMAL.has(ccy) ? cents : cents / 100;
+  const amount = fromStripeAmount(pi.amount_received ?? 0, ccy);
 
   return recordPayment(billId, amount, pi.id, "payment_intent.succeeded");
 }
@@ -168,11 +179,11 @@ async function recordPayment(billId: string, amount: number, ref: string, source
   const md = ((bill?.metadata ?? {}) as Record<string, unknown>);
   const lastPayment = (md.last_payment ?? null) as { reference?: string } | null;
   if (lastPayment?.reference === ref) {
-    console.log("[stripe-webhook] already processed:", ref);
+    logger.info("stripe-webhook", `already processed ref=${ref}`);
     return NextResponse.json({ ok: true, ignored: "duplicate" });
   }
   if (bill?.status === "paid") {
-    console.log("[stripe-webhook] bill already paid:", billId);
+    logger.info("stripe-webhook", `bill already paid ${billId}`);
     return NextResponse.json({ ok: true, ignored: "already paid" });
   }
 
@@ -186,17 +197,24 @@ async function recordPayment(billId: string, amount: number, ref: string, source
   });
 
   if (error) {
-    console.error("[stripe-webhook] record_utility_bill_payment failed:", error.message);
-    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+    const msg = getErrorMessage(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const code = (error as any)?.code;
+    if (code === "23505" || msg.includes("duplicate key")) {
+      logger.info("stripe-webhook", `concurrent webhook lost the race ref=${ref}`);
+      return NextResponse.json({ ok: true, ignored: "duplicate-concurrent" });
+    }
+    logger.error("stripe-webhook", `record_utility_bill_payment failed`, error);
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
-  console.log("[stripe-webhook] recorded payment:", billId, amount, ref);
+  logger.info("stripe-webhook", `recorded payment bill=${billId} amount=${amount} ref=${ref}`);
 
   // Fire-and-forget receipt email + in-app notification (best-effort)
   sendPaymentReceiptEmail(billId, amount, "online_payment", ref).catch((e) => {
-    console.error("[stripe-webhook] receipt email failed:", e instanceof Error ? e.message : String(e));
+    logger.error("stripe-webhook", "receipt email failed", e);
   });
   notifyPaymentReceived(billId, amount).catch((e) => {
-    console.error("[stripe-webhook] in-app notification failed:", e instanceof Error ? e.message : String(e));
+    logger.error("stripe-webhook", "in-app notification failed", e);
   });
 
   return NextResponse.json({ ok: true, bill_id: billId, amount });

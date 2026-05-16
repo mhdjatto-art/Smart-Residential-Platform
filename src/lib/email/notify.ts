@@ -14,6 +14,7 @@ import {
   billReminderEmail,
   penaltyNoticeEmail,
 } from "@/lib/email/templates";
+import { logger } from "@/lib/logger";
 
 function appUrl(): string {
   return process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
@@ -102,7 +103,7 @@ export async function sendPaymentReceiptEmail(
   try {
     const ctx = await fetchBillWithEmail(billId);
     if (!ctx || !ctx.recipient_email) {
-      console.log("[email] receipt skipped — no recipient for bill", billId);
+      logger.info("email", `receipt skipped — no recipient for bill ${billId}`);
       return;
     }
 
@@ -130,7 +131,7 @@ export async function sendPaymentReceiptEmail(
       ],
     });
   } catch (e) {
-    console.error("[email] sendPaymentReceiptEmail threw:", e instanceof Error ? e.message : String(e));
+    logger.error("email", "sendPaymentReceiptEmail threw", e);
   }
 }
 
@@ -175,7 +176,7 @@ export async function sendBillReminderEmail(billId: string): Promise<void> {
       ],
     });
   } catch (e) {
-    console.error("[email] sendBillReminderEmail threw:", e instanceof Error ? e.message : String(e));
+    logger.error("email", "sendBillReminderEmail threw", e);
   }
 }
 
@@ -218,6 +219,6 @@ export async function sendPenaltyNoticeEmail(billId: string): Promise<void> {
       ],
     });
   } catch (e) {
-    console.error("[email] sendPenaltyNoticeEmail threw:", e instanceof Error ? e.message : String(e));
+    logger.error("email", "sendPenaltyNoticeEmail threw", e);
   }
 }

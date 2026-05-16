@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser, requireRole } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface DocumentRow {
   id: string;
@@ -62,7 +63,7 @@ export async function listAllDocuments(opts: AllDocumentsOpts = {}): Promise<{ d
 
   const { data, count, error } = await q;
   if (error) {
-    console.error("[listAllDocuments] failed:", error.message);
+    logger.error("documents", "listAllDocuments failed", error);
     return { data: [], total: 0 };
   }
   return { data: (data ?? []) as unknown as DocumentRow[], total: count ?? 0 };

@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { logger } from "@/lib/logger";
 
 interface BrandRow {
   logo_path: string | null;
@@ -38,7 +39,7 @@ export async function BrandingProvider({ orgId, children }: { orgId: string | nu
     brand = (data as unknown as BrandRow) ?? null;
   } catch (e) {
     // Soft fail — never block the page on branding lookup
-    console.error("[branding-provider] failed:", e instanceof Error ? e.message : String(e));
+    logger.error("branding-provider", "failed", e);
   }
 
   if (!brand) return <>{children}</>;

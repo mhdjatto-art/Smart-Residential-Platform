@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import { loginSchema } from "@/lib/validations/auth";
+import { checkLoginRate } from "@/lib/auth/rate-check";
 import { useT } from "@/lib/i18n/client";
+import { getErrorMessage } from "@/lib/errors";
 
 /**
  * Email + password login.
@@ -45,14 +47,23 @@ export function LoginForm() {
     }
 
     startTransition(async () => {
+      // Phase 23 — server-side rate limit before hitting Supabase Auth
+      const gate = await checkLoginRate(parsed.data.email);
+      if (!gate.allowed) {
+        setErrors({ form: gate.message ?? "Too many attempts" });
+        toast.error("Too many attempts", { description: gate.message });
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email: parsed.data.email,
         password: parsed.data.password,
       });
 
       if (error) {
-        setErrors({ form: error.message });
-        toast.error("Sign in failed", { description: error.message });
+        const msg = getErrorMessage(error);
+        setErrors({ form: msg });
+        toast.error("Sign in failed", { description: msg });
         return;
       }
 

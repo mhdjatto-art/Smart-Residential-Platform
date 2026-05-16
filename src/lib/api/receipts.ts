@@ -10,6 +10,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/guards";
+import { logger } from "@/lib/logger";
 
 export interface ReceiptData {
   bill: {
@@ -87,12 +88,12 @@ export async function getReceipt(billId: string): Promise<ReceiptData | null> {
     try {
       const { data, error } = await promise;
       if (error) {
-        console.error("[getReceipt] side query failed:", error.message);
+        logger.error("receipts", "getReceipt side query failed", error);
         return null;
       }
       return (data ?? null) as T | null;
     } catch (e) {
-      console.error("[getReceipt] side query threw:", e instanceof Error ? e.message : String(e));
+      logger.error("receipts", "getReceipt side query threw", e);
       return null;
     }
   }
@@ -223,7 +224,7 @@ export async function listMyPaidBills(): Promise<Array<{
       .from("residents").select("id, unit_id").eq("user_id", user.id);
 
     if (mineErr) {
-      console.error("[listMyPaidBills] residents lookup failed:", mineErr.message);
+      logger.error("receipts", "listMyPaidBills residents lookup failed", mineErr);
       return [];
     }
 
@@ -273,7 +274,7 @@ export async function listMyPaidBills(): Promise<Array<{
     const merged: Raw[] = [];
     for (const r of results) {
       if (r.error) {
-        console.error("[listMyPaidBills] query failed:", r.error.message);
+        logger.error("receipts", "listMyPaidBills query failed", r.error);
         continue;
       }
       for (const row of (r.data as Raw[] | null) ?? []) {
@@ -295,7 +296,7 @@ export async function listMyPaidBills(): Promise<Array<{
       provider_name: r.provider?.provider_name ?? null,
     }));
   } catch (e) {
-    console.error("[listMyPaidBills] threw:", e instanceof Error ? e.message : String(e));
+    logger.error("receipts", "listMyPaidBills threw", e);
     return [];
   }
 }
