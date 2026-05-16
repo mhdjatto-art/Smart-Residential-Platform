@@ -1,6 +1,7 @@
 import { CalendarClock, FileText, Zap } from "lucide-react";
 import { MobileTopbar } from "@/components/mobile/topbar";
 import { PayBillButton } from "@/components/mobile/pay-bill-button";
+import { PayInstallmentButton } from "@/components/mobile/pay-installment-button";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
@@ -130,9 +131,17 @@ export default async function MobilePaymentsPage() {
                       <p className="text-xs text-muted-foreground">{new Date(r.due_date).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  <div className="text-end shrink-0">
+                  <div className="text-end shrink-0 flex flex-col items-end gap-1.5">
                     <p className="text-sm font-bold tabular-nums">{formatCurrency(remaining(r), { currency: ctx.currency })}</p>
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{r.status}</p>
+                    <PayInstallmentButton
+                      installmentId={r.id}
+                      installmentNumber={r.installment_number}
+                      contractKind={isOwner ? "installments" : "rent"}
+                      totalDue={r.total_due}
+                      paidAmount={r.paid_amount}
+                      penaltyAmount={r.penalty_amount ?? 0}
+                      currency={ctx.currency}
+                    />
                   </div>
                 </li>
               ))}

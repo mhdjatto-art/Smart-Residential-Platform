@@ -37,7 +37,7 @@ export default async function MyOrdersPage() {
       order_number: o.order_number,
       order_status: o.order_status,
       total_amount: Number(o.total_amount ?? 0),
-      currency: o.currency ?? "USD",
+      currency: o.currency ?? "IQD",
       created_at: o.created_at,
       provider_name: o.provider?.provider_name ?? null,
     }));

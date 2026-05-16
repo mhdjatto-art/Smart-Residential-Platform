@@ -39,7 +39,7 @@ export function ContractForm({ units, residents }: ContractFormProps) {
       resident_id: String(fd.get("resident_id") ?? ""),
       contract_number: String(fd.get("contract_number") ?? ""),
       contract_type: String(fd.get("contract_type") ?? "property_sale"),
-      currency: String(fd.get("currency") ?? "USD"),
+      currency: String(fd.get("currency") ?? "IQD"),
       contract_start_date: String(fd.get("contract_start_date") ?? ""),
       contract_end_date: String(fd.get("contract_end_date") ?? ""),
       total_property_price: String(fd.get("total_property_price") ?? ""),
@@ -114,7 +114,7 @@ export function ContractForm({ units, residents }: ContractFormProps) {
           </Field>
 
           <Field label={t("forms.currency")} error={errors.currency}>
-            <Select name="currency" defaultValue="USD">
+            <Select name="currency" defaultValue="IQD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">{t("forms.currency_usd_label")}</SelectItem>

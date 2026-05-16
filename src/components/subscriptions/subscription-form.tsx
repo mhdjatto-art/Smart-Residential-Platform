@@ -42,7 +42,7 @@ export function SubscriptionForm({ units, providers, residents }: SubscriptionFo
     subscription_type: "electricity",
     billing_cycle: "monthly",
     monthly_fee: 0,
-    currency: "USD",
+    currency: "IQD",
     internet_package_id: undefined,
     start_date: today,
     end_date: undefined,

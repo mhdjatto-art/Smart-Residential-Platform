@@ -45,10 +45,10 @@ async function loadResidentContext(): Promise<ResidentContext> {
   const fullName = residentRow
     ? [residentRow.first_name, residentRow.last_name].filter(Boolean).join(" ") || null
     : null;
-  let currency = "USD";
+  let currency = "IQD";
   if (residentRow?.organization_id) {
     const { data: org } = await supabase.from("organizations").select("currency").eq("id", residentRow.organization_id).maybeSingle();
-    currency = (org as { currency?: string } | null)?.currency ?? "USD";
+    currency = (org as { currency?: string } | null)?.currency ?? "IQD";
   }
   return {
     user_id: user.id,

@@ -97,7 +97,7 @@ export default async function MaintenancePage({
                   <TableCell className="capitalize text-muted-foreground">{j.job_type}</TableCell>
                   <TableCell><StatusBadge status={j.status} /></TableCell>
                   <TableCell className="text-muted-foreground">{formatDate(j.scheduled_for)}</TableCell>
-                  <TableCell className="text-right tabular-nums">{j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "USD" }) : "—"}</TableCell>
+                  <TableCell className="text-right tabular-nums">{j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "IQD" }) : "—"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

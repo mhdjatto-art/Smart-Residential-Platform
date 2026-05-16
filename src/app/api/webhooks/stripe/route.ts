@@ -64,17 +64,12 @@ async function handleCheckoutCompleted(event: StripeEvent): Promise<Response> {
   const session = event.data.object as {
     id: string;
     client_reference_id?: string;
-    metadata?: { bill_id?: string };
+    metadata?: { bill_id?: string; installment_id?: string; contract_id?: string; kind?: string };
     amount_total?: number;
     currency?: string;
     payment_status?: string;
   };
 
-  const billId = session.metadata?.bill_id ?? session.client_reference_id;
-  if (!billId) {
-    console.error("[stripe-webhook] missing bill_id in checkout.session.completed");
-    return NextResponse.json({ ok: true, ignored: "missing bill_id" });
-  }
   if (session.payment_status !== "paid") {
     console.log("[stripe-webhook] checkout not paid, status:", session.payment_status);
     return NextResponse.json({ ok: true, ignored: "not paid" });
@@ -85,7 +80,56 @@ async function handleCheckoutCompleted(event: StripeEvent): Promise<Response> {
   const cents = session.amount_total ?? 0;
   const amount = ZERO_DECIMAL.has(ccy) ? cents : cents / 100;
 
+  // Phase 20: route to installment/rent handler when metadata.kind = 'installment'
+  if (session.metadata?.kind === "installment" && session.metadata.installment_id && session.metadata.contract_id) {
+    return recordInstallmentPayment(
+      session.metadata.contract_id,
+      amount,
+      session.id,
+      "checkout.session.completed",
+    );
+  }
+
+  const billId = session.metadata?.bill_id ?? session.client_reference_id;
+  if (!billId) {
+    console.error("[stripe-webhook] missing bill_id in checkout.session.completed");
+    return NextResponse.json({ ok: true, ignored: "missing bill_id" });
+  }
+
   return recordPayment(billId, amount, session.id, "checkout.session.completed");
+}
+
+async function recordInstallmentPayment(contractId: string, amount: number, ref: string, source: string): Promise<Response> {
+  if (amount <= 0) return NextResponse.json({ ok: true, ignored: "zero amount" });
+  const admin = createAdminClient();
+
+  // Idempotency — check if a payment with this Stripe ref already exists
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existing } = await (admin as any)
+    .from("payments")
+    .select("id")
+    .eq("external_reference", ref)
+    .maybeSingle();
+  if (existing?.id) {
+    console.log("[stripe-webhook] installment payment already recorded:", ref);
+    return NextResponse.json({ ok: true, ignored: "duplicate" });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin as any).rpc("record_payment", {
+    p_contract_id:    contractId,
+    p_amount:         amount,
+    p_payment_method: "online_payment",
+    p_payment_date:   new Date().toISOString().slice(0, 10),
+    p_external_ref:   ref,
+    p_notes:          `Stripe ${source}`,
+  });
+  if (error) {
+    console.error("[stripe-webhook] record_payment failed:", error.message);
+    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  }
+  console.log("[stripe-webhook] recorded installment payment:", contractId, amount, ref);
+  return NextResponse.json({ ok: true, contract_id: contractId, amount });
 }
 
 async function handlePaymentIntentSucceeded(event: StripeEvent): Promise<Response> {

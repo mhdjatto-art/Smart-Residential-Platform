@@ -21,7 +21,7 @@ interface PaymentFormProps {
 
 type Errors = Partial<Record<keyof PaymentInput | "form", string>>;
 
-export function PaymentForm({ contractId, outstandingTotal, nextDueAmount, currency = "USD" }: PaymentFormProps) {
+export function PaymentForm({ contractId, outstandingTotal, nextDueAmount, currency = "IQD" }: PaymentFormProps) {
   const fmt = (n: number) => formatCurrency(n, { currency });
   const router = useRouter();
   const [pending, startTransition] = useTransition();

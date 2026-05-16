@@ -36,7 +36,7 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
       speed_mbps_up: speedUp ? Number(speedUp) : undefined,
       data_cap_gb: dataCap ? Number(dataCap) : undefined,
       monthly_price: Number(fd.get("monthly_price") ?? 0),
-      currency: String(fd.get("currency") ?? "USD"),
+      currency: String(fd.get("currency") ?? "IQD"),
       suspension_policy: String(fd.get("suspension_policy") ?? "after_grace"),
       is_active: true,
       description: String(fd.get("description") ?? ""),
@@ -116,7 +116,7 @@ export function InternetPackageForm({ providers }: InternetPackageFormProps) {
 
           <div className="space-y-2">
             <Label>{t("forms.currency")}</Label>
-            <Select name="currency" defaultValue="USD">
+            <Select name="currency" defaultValue="IQD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">USD</SelectItem>

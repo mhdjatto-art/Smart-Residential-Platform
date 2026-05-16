@@ -54,7 +54,7 @@ export function PricingRuleForm({ organizations }: PricingRuleFormProps) {
       unit_amount: Number(fd.get("unit_amount") ?? 0),
       min_amount: String(fd.get("min_amount") ?? ""),
       max_amount: String(fd.get("max_amount") ?? ""),
-      currency: String(fd.get("currency") ?? "USD"),
+      currency: String(fd.get("currency") ?? "IQD"),
       tiers: Array.isArray(tiers) ? tiers : [],
       formula: String(fd.get("formula") ?? ""),
       schedule: typeof schedule === "object" && schedule ? schedule as Record<string, unknown> : {},
@@ -124,7 +124,7 @@ export function PricingRuleForm({ organizations }: PricingRuleFormProps) {
           </div>
           <div className="space-y-2">
             <Label>{t("forms.currency")}</Label>
-            <Select name="currency" defaultValue="USD">
+            <Select name="currency" defaultValue="IQD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">USD</SelectItem>

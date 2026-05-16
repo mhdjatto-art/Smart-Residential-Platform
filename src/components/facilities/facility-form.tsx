@@ -30,7 +30,7 @@ export function FacilityForm({ compounds }: Props) {
     facility_type: "gym",
     capacity: undefined,
     booking_fee: 0,
-    fee_currency: "USD",
+    fee_currency: "IQD",
     min_duration_minutes: 60,
     max_duration_minutes: 240,
     is_active: true,

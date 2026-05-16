@@ -66,7 +66,7 @@ export async function getExecutiveSnapshot(): Promise<ExecutiveSnapshot> {
   const prior  = trend[1] ?? null;
   return {
     org_id: orgId,
-    currency: latest?.currency ?? "USD",
+    currency: latest?.currency ?? "IQD",
     kpi_date: latest?.kpi_date ?? null,
     latest,
     prior,

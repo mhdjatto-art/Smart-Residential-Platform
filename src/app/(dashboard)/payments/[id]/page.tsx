@@ -37,7 +37,7 @@ export default async function PaymentDetailPage({ params }: { params: Promise<{ 
     <div>
       <PageHeader
         title={payment.payment_reference}
-        description={`${formatCurrency(payment.payment_amount, { currency: payment.currency ?? "USD" })} · ${payment.payment_method.replace("_", " ")} · ${formatDate(payment.payment_date)}`}
+        description={`${formatCurrency(payment.payment_amount, { currency: payment.currency ?? "IQD" })} · ${payment.payment_method.replace("_", " ")} · ${formatDate(payment.payment_date)}`}
         actions={
           <div className="flex gap-2">
             <Button asChild variant="outline">
@@ -79,7 +79,7 @@ export default async function PaymentDetailPage({ params }: { params: Promise<{ 
                         <TableCell>#{inst?.number ?? "—"}</TableCell>
                         <TableCell className="text-muted-foreground">{formatDate(inst?.due_date ?? null)}</TableCell>
                         <TableCell className="capitalize">{a.applied_to}</TableCell>
-                        <TableCell className="text-right tabular-nums font-medium">{formatCurrency(a.amount, { currency: payment.currency ?? "USD" })}</TableCell>
+                        <TableCell className="text-right tabular-nums font-medium">{formatCurrency(a.amount, { currency: payment.currency ?? "IQD" })}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -93,7 +93,7 @@ export default async function PaymentDetailPage({ params }: { params: Promise<{ 
           <CardHeader><CardTitle>Summary</CardTitle></CardHeader>
           <CardContent className="space-y-3 text-sm">
             <Row label="Status" value={<StatusBadge status={payment.payment_status} />} />
-            <Row label="Amount" value={<span className="font-medium">{formatCurrency(payment.payment_amount, { currency: payment.currency ?? "USD" })}</span>} />
+            <Row label="Amount" value={<span className="font-medium">{formatCurrency(payment.payment_amount, { currency: payment.currency ?? "IQD" })}</span>} />
             <Row label="Method" value={<span className="capitalize">{payment.payment_method.replace("_", " ")}</span>} />
             <Row label="Date" value={formatDate(payment.payment_date)} />
             <Row label="Receipt" value={receipt ? <Link className="font-mono hover:underline" href={`/payments/${payment.id}/receipt`}>{receipt.receipt_number}</Link> : "—"} />

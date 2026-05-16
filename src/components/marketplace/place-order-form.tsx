@@ -38,7 +38,7 @@ export function PlaceOrderForm({ providers, items, residents }: PlaceOrderFormPr
   const [pending, startTransition] = useTransition();
   const [providerId, setProviderId] = useState<string>(providers[0]?.id ?? "");
   const [residentId, setResidentId] = useState<string>(residents[0]?.id ?? "");
-  const [currency, setCurrency] = useState<string>("USD");
+  const [currency, setCurrency] = useState<string>("IQD");
   const [lines, setLines] = useState<LineRow[]>([{ item_name: "", quantity: 1, unit_price: 0 }]);
   const [serviceFee, setServiceFee] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(0);

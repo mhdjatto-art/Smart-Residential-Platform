@@ -39,7 +39,7 @@ export default async function ContractDetailPage({ params }: { params: Promise<{
   const unitNumber = (unitRes.data as { unit_number?: string } | null)?.unit_number ?? "—";
   const residentRow = residentRes.data as { first_name?: string; last_name?: string } | null;
   const residentName = residentRow ? `${residentRow.first_name ?? ""} ${residentRow.last_name ?? ""}`.trim() : "—";
-  const orgCurrency = (orgRes.data as { currency?: string } | null)?.currency ?? "USD";
+  const orgCurrency = (orgRes.data as { currency?: string } | null)?.currency ?? "IQD";
   // Effective currency: contract override → org default → USD
   const cur = contract.currency ?? orgCurrency;
   const fmt = (n: number | null | undefined) => formatCurrency(n, { currency: cur });

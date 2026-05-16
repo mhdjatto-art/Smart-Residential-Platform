@@ -136,7 +136,7 @@ export async function renderContract(contractId: string, templateId: string): Pr
   // Default contract fields that may be null
   const contractCtx = {
     ...c,
-    currency: c.currency ?? "USD",
+    currency: c.currency ?? "IQD",
     contract_end_date: c.contract_end_date ?? "—",
     late_penalty_type: c.late_penalty_type ?? "—",
     late_penalty_value: c.late_penalty_value ?? 0,

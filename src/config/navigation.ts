@@ -100,6 +100,7 @@ export const navigation: NavSection[] = [
       { title: "Finance",   href: "/finance",   icon: Wallet,     requiredCapability: "payment:read" },
       { title: "Contracts", href: "/contracts", icon: FileText,   requiredCapability: "contract:read", feature: "contracts" },
       { title: "Payments",  href: "/payments",  icon: DollarSign, requiredCapability: "payment:read" },
+      { title: "Cashier",   href: "/payments/quick", icon: DollarSign, requiredCapability: "payment:write" },
       { title: "Reminders", href: "/reminders", icon: Bell,       requiredCapability: "payment:read" },
       { title: "ERP bridge", href: "/erp",     icon: BookOpen,    requiredCapability: "erp:read",        feature: "erp_integration" },
     ],

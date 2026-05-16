@@ -9,7 +9,7 @@ interface MonthlyChartProps {
   currency?: string;
 }
 
-export function MonthlyChart({ data, currency = "USD" }: MonthlyChartProps) {
+export function MonthlyChart({ data, currency = "IQD" }: MonthlyChartProps) {
   const compactFmt = (n: number) =>
     new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
 

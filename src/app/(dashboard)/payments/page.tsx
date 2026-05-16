@@ -103,12 +103,12 @@ export default async function PaymentsPage({
                     <Link href={`/payments/${p.id}`} className="font-medium hover:underline font-mono">
                       {p.payment_reference}
                     </Link>
-                    <div className="text-xs text-muted-foreground">{p.currency ?? "USD"}</div>
+                    <div className="text-xs text-muted-foreground">{p.currency ?? "IQD"}</div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">{formatDate(p.payment_date)}</TableCell>
                   <TableCell className="capitalize text-muted-foreground">{p.payment_method.replace("_", " ")}</TableCell>
                   <TableCell><StatusBadge status={p.payment_status} /></TableCell>
-                  <TableCell className="text-right tabular-nums font-medium">{formatCurrency(p.payment_amount, { currency: p.currency ?? "USD" })}</TableCell>
+                  <TableCell className="text-right tabular-nums font-medium">{formatCurrency(p.payment_amount, { currency: p.currency ?? "IQD" })}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

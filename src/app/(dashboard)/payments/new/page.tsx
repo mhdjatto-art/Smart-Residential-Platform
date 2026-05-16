@@ -46,7 +46,7 @@ export default async function NewPaymentPage({
 
   const supabase = await createClient();
   const orgRes = await supabase.from("organizations").select("currency").eq("id", contract.organization_id).maybeSingle();
-  const cur = contract.currency ?? ((orgRes.data as { currency?: string } | null)?.currency ?? "USD");
+  const cur = contract.currency ?? ((orgRes.data as { currency?: string } | null)?.currency ?? "IQD");
 
   return (
     <div>

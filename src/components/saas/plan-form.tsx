@@ -32,7 +32,7 @@ export function PlanForm({ initial, mode }: PlanFormProps) {
     description: initial?.description ?? "",
     monthly_price: initial?.monthly_price ?? 0,
     annual_price: initial?.annual_price ?? 0,
-    currency: initial?.currency ?? "USD",
+    currency: initial?.currency ?? "IQD",
     max_compounds: initial?.max_compounds ?? null,
     max_units: initial?.max_units ?? null,
     max_residents: initial?.max_residents ?? null,

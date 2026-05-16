@@ -59,7 +59,7 @@ export default async function FacilitiesPage() {
                   <TableCell className="text-muted-foreground">{f.capacity ?? "—"}</TableCell>
                   <TableCell className="text-muted-foreground">{t("ops.facilities_duration_minutes", { min: f.min_duration_minutes, max: f.max_duration_minutes })}</TableCell>
                   <TableCell>{f.requires_approval ? <Badge variant="warning">{t("ops.facilities_approval_required")}</Badge> : <Badge variant="success">{t("ops.facilities_approval_auto")}</Badge>}</TableCell>
-                  <TableCell className="text-right tabular-nums">{formatCurrency(f.booking_fee, { currency: f.fee_currency ?? "USD" })}</TableCell>
+                  <TableCell className="text-right tabular-nums">{formatCurrency(f.booking_fee, { currency: f.fee_currency ?? "IQD" })}</TableCell>
                   <TableCell>{f.is_active ? <Badge variant="success">{t("status.active")}</Badge> : <Badge variant="muted">{t("status.inactive")}</Badge>}</TableCell>
                 </TableRow>
               ))}

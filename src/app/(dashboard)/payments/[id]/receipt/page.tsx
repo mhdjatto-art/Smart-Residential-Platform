@@ -106,7 +106,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
                     <td className="py-2">#{inst?.number ?? "—"}</td>
                     <td className="py-2 text-muted-foreground">{formatDate(inst?.due_date ?? null)}</td>
                     <td className="py-2 capitalize">{a.applied_to}</td>
-                    <td className="py-2 text-right tabular-nums">{formatCurrency(a.amount, { currency: payment.currency ?? "USD" })}</td>
+                    <td className="py-2 text-right tabular-nums">{formatCurrency(a.amount, { currency: payment.currency ?? "IQD" })}</td>
                   </tr>
                 );
               })}
@@ -132,7 +132,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
           )}
           <div className="flex items-center justify-between border-t pt-3 text-base font-bold">
             <span>Total received</span>
-            <span className="tabular-nums">{formatCurrency(payment.payment_amount, { currency: payment.currency ?? "USD" })}</span>
+            <span className="tabular-nums">{formatCurrency(payment.payment_amount, { currency: payment.currency ?? "IQD" })}</span>
           </div>
         </div>
 

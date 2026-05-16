@@ -37,7 +37,7 @@ export function ServiceItemForm({ provider, categories }: ServiceItemFormProps) 
       description: String(fd.get("description") ?? ""),
       service_kind: String(fd.get("service_kind") ?? "on_demand_service"),
       price: Number(fd.get("price") ?? 0),
-      currency: String(fd.get("currency") ?? "USD"),
+      currency: String(fd.get("currency") ?? "IQD"),
       duration_minutes: fd.get("duration_minutes") ? Number(fd.get("duration_minutes")) : undefined,
       unit: String(fd.get("unit") ?? ""),
       is_active: true,
@@ -89,7 +89,7 @@ export function ServiceItemForm({ provider, categories }: ServiceItemFormProps) 
           </div>
           <div className="space-y-2">
             <Label>Currency</Label>
-            <Select name="currency" defaultValue="USD">
+            <Select name="currency" defaultValue="IQD">
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">USD</SelectItem>

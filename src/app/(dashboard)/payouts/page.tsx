@@ -45,7 +45,7 @@ export default async function PayoutsPage() {
     gross_amount: Number(p.gross_amount ?? 0),
     commission_amount: Number(p.commission_amount ?? 0),
     net_amount: Number(p.net_amount ?? 0),
-    currency: p.currency ?? "USD",
+    currency: p.currency ?? "IQD",
     status: p.status,
     paid_at: p.paid_at,
   }));

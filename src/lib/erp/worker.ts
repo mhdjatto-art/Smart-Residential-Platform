@@ -158,7 +158,7 @@ export async function pushQueuedJournalEntries(): Promise<PushRunSummary> {
         username: integration.username,
         api_key: integration.credentials_ref, // production should resolve via vault; here we use ref directly
         company_external_id: integration.company_external_id,
-        default_currency: integration.default_currency ?? "USD",
+        default_currency: integration.default_currency ?? "IQD",
         extra: integration.config,
       });
     } catch (e) {

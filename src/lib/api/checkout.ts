@@ -83,3 +83,61 @@ export async function startBillCheckout(billId: string): Promise<CheckoutResult>
     return { configured: true, error: err instanceof Error ? err.message : "Stripe error" };
   }
 }
+
+/**
+ * Phase 20 — Stripe Checkout for installment / rent schedule rows.
+ *
+ * The webhook updates the schedule via record_payment() once Stripe confirms.
+ */
+export async function startInstallmentCheckout(installmentId: string, amount: number): Promise<CheckoutResult> {
+  if (!isStripeConfigured()) {
+    return { configured: false };
+  }
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: sched, error: sErr } = await (supabase as any)
+    .from("installment_schedules")
+    .select("id, installment_number, total_due, penalty_amount, paid_amount, status, contract_id, installment_contracts!inner(id, contract_type, contract_number, currency, residents!inner(user_id))")
+    .eq("id", installmentId)
+    .maybeSingle();
+  if (sErr) return { configured: true, error: sErr.message };
+  if (!sched) return { configured: true, error: "Installment not found" };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const contract = (sched as any).installment_contracts;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ownerUserId = (contract?.residents?.user_id ?? null) as string | null;
+  if (ownerUserId !== user.id) {
+    return { configured: true, error: "You can only pay your own installments" };
+  }
+  if (sched.status === "paid") return { configured: true, error: "Installment is already paid" };
+
+  const remaining = Math.max(0, Number(sched.total_due) + Number(sched.penalty_amount ?? 0) - Number(sched.paid_amount));
+  const owed = Math.min(Math.max(0, Number(amount)), remaining);
+  if (owed <= 0) return { configured: true, error: "Amount must be > 0" };
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const kind = contract?.contract_type === "rental" ? "Rent" : "Installment";
+  const desc = `${kind} #${sched.installment_number} · ${contract?.contract_number ?? ""}`;
+
+  try {
+    const session = await createCheckoutSession({
+      // We reuse the bill_id field on Stripe metadata to also carry the
+      // installment id — the webhook checks both `installment_id` and
+      // `bill_id` to figure out what to settle.
+      bill_id: sched.id,
+      amount: owed,
+      currency: contract?.currency ?? "IQD",
+      description: desc,
+      customer_email: user.email ?? undefined,
+      success_url: `${appUrl}/m/payments/success?installment=${sched.id}`,
+      cancel_url:  `${appUrl}/m/payments`,
+      metadata: { kind: "installment", installment_id: sched.id, contract_id: sched.contract_id },
+    });
+    return { configured: true, url: session.url };
+  } catch (err) {
+    return { configured: true, error: err instanceof Error ? err.message : "Stripe error" };
+  }
+}

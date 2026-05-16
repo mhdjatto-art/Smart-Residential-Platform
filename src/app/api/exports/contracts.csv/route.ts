@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       "Interest %", "Created",
     ],
     toRow: (c) => [
-      c.contract_number, c.contract_type, c.contract_status, c.currency ?? "USD",
+      c.contract_number, c.contract_type, c.contract_status, c.currency ?? "IQD",
       c.contract_start_date, c.contract_end_date ?? "",
       c.total_property_price, c.down_payment, c.financed_amount,
       c.installment_count, c.monthly_amount ?? "",

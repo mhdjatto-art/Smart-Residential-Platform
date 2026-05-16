@@ -455,7 +455,7 @@ export async function getSaasOverview(): Promise<SaasOverviewStats> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const invRows = (invs.data ?? []) as any[];
   const unpaid_amount = invRows.reduce((s, r) => s + Math.max(0, Number(r.total_amount) - Number(r.paid_amount)), 0);
-  const currency = subsRows[0]?.currency ?? invRows[0]?.currency ?? "USD";
+  const currency = subsRows[0]?.currency ?? invRows[0]?.currency ?? "IQD";
 
   return {
     total_organizations: orgs.count ?? 0,

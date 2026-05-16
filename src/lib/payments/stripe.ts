@@ -37,6 +37,8 @@ interface CreateCheckoutInput {
   customer_email?: string;
   success_url: string;
   cancel_url: string;
+  /** Optional extra metadata flat keys → values (string). Stripe-validated. */
+  metadata?: Record<string, string>;
 }
 
 export async function createCheckoutSession(input: CreateCheckoutInput): Promise<CheckoutSession> {
@@ -58,6 +60,12 @@ export async function createCheckoutSession(input: CreateCheckoutInput): Promise
   if (input.customer_email) params.append("customer_email", input.customer_email);
   params.append("metadata[bill_id]", input.bill_id);
   params.append("client_reference_id", input.bill_id);
+  // Forward any extra metadata (e.g. installment_id, kind)
+  if (input.metadata) {
+    for (const [k, v] of Object.entries(input.metadata)) {
+      params.append(`metadata[${k}]`, String(v));
+    }
+  }
   params.append("line_items[0][quantity]", "1");
   params.append("line_items[0][price_data][currency]", ccy);
   params.append("line_items[0][price_data][unit_amount]", String(cents));

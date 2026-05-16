@@ -100,7 +100,7 @@ export default async function ContractsPage({
             </TableHeader>
             <TableBody>
               {data.map((c) => {
-                const cur = c.currency ?? "USD";
+                const cur = c.currency ?? "IQD";
                 return (
                   <TableRow key={c.id}>
                     <TableCell>

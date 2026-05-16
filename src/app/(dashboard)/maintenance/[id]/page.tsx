@@ -81,7 +81,7 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
               <Field icon={Calendar}  label={t("ops.maintenance_field_scheduled")}   value={formatDate(j.scheduled_for) || "—"} />
               <Field icon={Calendar}  label={t("ops.maintenance_field_started")}     value={j.started_at ? new Date(j.started_at).toLocaleString() : "—"} />
               <Field icon={Calendar}  label={t("ops.maintenance_field_completed")}   value={j.completed_at ? new Date(j.completed_at).toLocaleString() : "—"} />
-              <Field icon={Hash}      label={t("ops.maintenance_field_cost")}        value={j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "USD" }) : "—"} />
+              <Field icon={Hash}      label={t("ops.maintenance_field_cost")}        value={j.cost !== null ? formatCurrency(j.cost, { currency: j.cost_currency ?? "IQD" }) : "—"} />
             </dl>
 
             {j.description && (

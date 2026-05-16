@@ -55,7 +55,7 @@ export function ErpIntegrationForm({ organizations }: ErpIntegrationFormProps) {
       username: String(fd.get("username") ?? ""),
       credentials_ref: String(fd.get("credentials_ref") ?? ""),
       company_external_id: String(fd.get("company_external_id") ?? ""),
-      default_currency: String(fd.get("default_currency") ?? "USD"),
+      default_currency: String(fd.get("default_currency") ?? "IQD"),
       config,
       is_active: true,
       auto_push: fd.get("auto_push") === "on",
@@ -149,7 +149,7 @@ export function ErpIntegrationForm({ organizations }: ErpIntegrationFormProps) {
 
           <div className="space-y-2">
             <Label>Default currency</Label>
-            <Input name="default_currency" defaultValue="USD" />
+            <Input name="default_currency" defaultValue="IQD" />
           </div>
           <div className="flex items-end gap-2">
             <label className="flex items-center gap-2 text-sm">

@@ -17,7 +17,7 @@ const COLORS = [
   "hsl(0 72% 50%)",       // destructive — 90+
 ];
 
-export function AgingChart({ data, currency = "USD" }: AgingChartProps) {
+export function AgingChart({ data, currency = "IQD" }: AgingChartProps) {
   const compactFmt = (n: number) =>
     new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
 

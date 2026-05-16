@@ -64,8 +64,11 @@ export function formatCurrency(
   opts: { currency?: string; locale?: string; signed?: boolean; compact?: boolean } = {},
 ): string {
   if (amount === null || amount === undefined) return "—";
-  const code = (opts.currency ?? "USD").toUpperCase();
-  const cfg = CURRENCY_CONFIG[code] ?? CURRENCY_CONFIG.USD!;
+  // Phase 21 — default currency is IQD (Iraqi Dinar) for this deployment.
+  // Callers should still pass currency explicitly when context is known
+  // (e.g. contract.currency, organization.currency).
+  const code = (opts.currency ?? "IQD").toUpperCase();
+  const cfg = CURRENCY_CONFIG[code] ?? CURRENCY_CONFIG.IQD ?? CURRENCY_CONFIG.USD!;
   try {
     const formatter = new Intl.NumberFormat(opts.locale ?? cfg.locale, {
       style: "currency",

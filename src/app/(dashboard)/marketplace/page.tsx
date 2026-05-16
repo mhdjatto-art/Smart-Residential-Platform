@@ -16,12 +16,12 @@ export default async function MarketplacePage() {
   const user = await requireUser();
   const stats = await getMarketplaceStats();
 
-  let currency = "USD";
+  let currency = "IQD";
   const firstOrgId = user.organizationIds[0];
   if (firstOrgId) {
     const supabase = await createClient();
     const { data } = await supabase.from("organizations").select("currency").eq("id", firstOrgId).maybeSingle();
-    currency = (data as { currency?: string } | null)?.currency ?? "USD";
+    currency = (data as { currency?: string } | null)?.currency ?? "IQD";
   }
 
   return (

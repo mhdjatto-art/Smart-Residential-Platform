@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       "Reversed at", "Reversal reason", "Notes",
     ],
     toRow: (p) => [
-      p.payment_reference, p.payment_date, p.payment_method, p.payment_amount, p.currency ?? "USD", p.payment_status,
+      p.payment_reference, p.payment_date, p.payment_method, p.payment_amount, p.currency ?? "IQD", p.payment_status,
       p.external_reference ?? "", p.contract_id, p.resident_id,
       p.reversed_at ?? "", p.reversal_reason ?? "", p.notes ?? "",
     ],

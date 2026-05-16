@@ -184,7 +184,8 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
       contact_email: "support@bonyan.demo",
       contact_phone: "+9647700000000",
       country_code: "IQ",
-      metadata: { demo: true, currency: "USD" },
+      currency: "IQD",
+      metadata: { demo: true, currency: "IQD" },
     })
     .select("id")
     .single();
@@ -409,7 +410,7 @@ async function seed(admin: Admin, warnings: string[]): Promise<SeedSummary> {
       tax_amount: tax,
       paid_amount: paidAmt,
       total_amount: totalAmt,
-      currency: "USD",
+      currency: "IQD",
       status: billStatus,
     });
     if (bErr) warnings.push(`utility_bill for ${email}: ${bErr.message}`);
