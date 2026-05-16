@@ -177,12 +177,13 @@ export function MasterPermissionsClient({
         </ul>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 border-b">
+      {/* Tabs — sticky so the user can always switch even after scrolling
+          deep into the Roles matrix. */}
+      <div className="sticky top-0 z-20 -mx-4 flex gap-2 border-b bg-background/95 px-4 backdrop-blur-md lg:-mx-8 lg:px-8">
         <button
           type="button"
           onClick={() => setTab("features")}
-          className={`flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition ${
             tab === "features"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -194,7 +195,7 @@ export function MasterPermissionsClient({
         <button
           type="button"
           onClick={() => setTab("roles")}
-          className={`flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-medium transition ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition ${
             tab === "roles"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"

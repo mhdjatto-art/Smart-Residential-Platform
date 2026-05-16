@@ -663,8 +663,8 @@
     "role_security_staff": "Security staff",
     "role_resident": "Resident",
     "banner_title": "How permission toggles behave",
-    "banner_super": "Super admins see disabled features in the sidebar with a 🔒 indicator (so you don't lock yourself out).",
-    "banner_others": "Other users have those features hidden completely."
+    "banner_super": "Disabled features are hidden for everyone, including super admins. Toggle them back on here when needed.",
+    "banner_others": "This page (Master Permissions) and SaaS Console stay accessible to super admins regardless of any flag."
   },
   "contract_types": {
     "property_sale": "Property sale",
