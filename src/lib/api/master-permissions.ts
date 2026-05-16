@@ -108,7 +108,10 @@ export async function setFeatureFlag(
   }
 
   revalidatePath("/master/permissions");
-  revalidatePath("/dashboard");
+  // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
+  // Wrapped in try because layout-level revalidation can throw on some Next.js versions.
+  try { revalidatePath("/(dashboard)", "layout"); } catch {}
+  try { revalidatePath("/m", "layout"); } catch {}
 }
 
 /* ─── role_capability_overrides ──────────────────────────────────────────── */
@@ -170,7 +173,10 @@ export async function setRoleCapabilityOverride(
   }
 
   revalidatePath("/master/permissions");
-  revalidatePath("/dashboard");
+  // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
+  // Wrapped in try because layout-level revalidation can throw on some Next.js versions.
+  try { revalidatePath("/(dashboard)", "layout"); } catch {}
+  try { revalidatePath("/m", "layout"); } catch {}
 }
 
 /** Wipe an override so the code default takes over again. */
@@ -191,7 +197,10 @@ export async function clearRoleCapabilityOverride(
   const { error } = await q;
   if (error) throw new Error(error.message);
   revalidatePath("/master/permissions");
-  revalidatePath("/dashboard");
+  // Invalidate the (dashboard) layout so Sidebar reloads enabledFeatures + caps.
+  // Wrapped in try because layout-level revalidation can throw on some Next.js versions.
+  try { revalidatePath("/(dashboard)", "layout"); } catch {}
+  try { revalidatePath("/m", "layout"); } catch {}
 }
 
 /* ─── Lightweight feature-check (used by other pages to gate UI) ────────── */

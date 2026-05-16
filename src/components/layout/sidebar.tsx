@@ -14,8 +14,11 @@ import { Home, Lock } from "lucide-react";
 
 // Items that should ALWAYS be visible to super_admin / saas-level users —
 // these are the platform/admin tools. Feature-flag gating doesn't apply to them.
+// (Otherwise super_admin could lock themselves out of the gateway/permissions UI.)
 const PLATFORM_HREFS = new Set([
   "/master/permissions",
+  "/master/permissions/debug",
+  "/master/gateways",
   "/saas-console",
   "/saas-console/plans",
   "/saas-console/features",
@@ -138,13 +141,14 @@ export function Sidebar({ roles, isSuperAdmin, effectiveCapabilities, enabledFea
 
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
         {navigation.map((section) => {
-          // For super_admin: show ALL items (so they feel the feature toggle take effect
-          // via a "disabled" indicator) but keep capability gating.
-          // For everyone else: hide both capability-denied AND feature-disabled items.
+          // For ALL roles (including super_admin): hide both capability-denied
+          // AND feature-disabled items. The Platform/Master URLs are still
+          // exempted via PLATFORM_HREFS so super_admin can always reach the
+          // gateway/permissions admin to flip a flag back on.
           const items = section.items
             .filter((it) => can(it.requiredCapability))
             .map((it) => ({ ...it, _disabled: !featureAllowed(it.href, it.feature) }))
-            .filter((it) => isSuperAdmin || !it._disabled);
+            .filter((it) => !it._disabled);
 
           if (items.length === 0) return null;
           return (

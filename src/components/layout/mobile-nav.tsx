@@ -15,6 +15,8 @@ import type { AppRole } from "@/types";
 
 const PLATFORM_HREFS = new Set([
   "/master/permissions",
+  "/master/permissions/debug",
+  "/master/gateways",
   "/saas-console",
   "/saas-console/plans",
   "/saas-console/features",
@@ -107,7 +109,7 @@ export function MobileNav({ roles, isSuperAdmin, effectiveCapabilities, enabledF
                 const items = section.items
                   .filter((it) => can(it.requiredCapability))
                   .map((it) => ({ ...it, _disabled: !featureAllowed(it.href, it.feature) }))
-                  .filter((it) => isSuperAdmin || !it._disabled);
+                  .filter((it) => !it._disabled);
                 if (items.length === 0) return null;
                 return (
                   <div key={section.title}>
