@@ -45,15 +45,18 @@ export async function getEffectiveCapabilities(
   if (!roles || roles.length === 0) return effective;
 
   try {
-    // 2. Load all overrides for these roles (org-specific + global), most recent first.
-    // ORDER BY updated_at DESC ensures duplicates resolve to the freshest write.
+    // 2. Load overrides via SECURITY DEFINER RPC so non-admin roles (which
+    // RLS would otherwise block) get the same view. The RPC returns only
+    // safe fields (no who-edited timestamps).
     const supabase = await createClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any)
-      .from("role_capability_overrides")
-      .select("organization_id, role, capability, enabled, updated_at")
-      .in("role", roles)
-      .order("updated_at", { ascending: false });
+    const { data: allData, error } = await (supabase as any).rpc(
+      "list_role_capability_overrides_public",
+      { p_org_id: orgId },
+    );
+    // Filter by roles client-side since the RPC returns all rows
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = (allData as any[] | null)?.filter((r) => roles.includes(r.role as AppRole));
 
     if (error) {
       console.error("[effective-permissions] read failed:", error.message ?? error);

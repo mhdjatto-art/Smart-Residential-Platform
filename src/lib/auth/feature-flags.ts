@@ -36,14 +36,14 @@ interface FlagRow {
 export async function getEnabledFeatures(orgId: string | null): Promise<Set<string>> {
   try {
     const supabase = await createClient();
-    // ORDER BY updated_at DESC so the MOST RECENT row of any duplicate group
-    // comes first. Combined with the "first wins" dedupe logic below, this
-    // means we always use the freshest write.
+    // Phase 17 FINAL FIX: residents are blocked by RLS from reading
+    // feature_flags directly (returns empty array, no error). Use the
+    // SECURITY DEFINER RPC that exposes feature_key + enabled (no
+    // sensitive fields) to ALL authenticated users.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any)
-      .from("feature_flags")
-      .select("organization_id, feature_key, enabled, updated_at")
-      .order("updated_at", { ascending: false });
+    const { data, error } = await (supabase as any).rpc("list_feature_flags_public", {
+      p_org_id: orgId,
+    });
 
     if (error) {
       console.error("[feature-flags] read failed:", error.message ?? error);
