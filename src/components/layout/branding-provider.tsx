@@ -12,6 +12,10 @@ interface BrandRow {
   font_family: string;
   custom_css: string | null;
   email_footer: string | null;
+  // Phase 25 — login page customisation
+  login_hero_path:        string | null;
+  login_welcome_title:    Record<string, string> | null;
+  login_welcome_subtitle: Record<string, string> | null;
 }
 
 /**
@@ -33,7 +37,7 @@ export async function BrandingProvider({ orgId, children }: { orgId: string | nu
     const supabase = await createClient();
     const { data } = await supabase
       .from("organization_branding")
-      .select("logo_path, logo_dark_path, favicon_path, primary_color, accent_color, background_color, font_family, custom_css, email_footer")
+      .select("logo_path, logo_dark_path, favicon_path, primary_color, accent_color, background_color, font_family, custom_css, email_footer, login_hero_path, login_welcome_title, login_welcome_subtitle")
       .eq("organization_id", orgId)
       .maybeSingle();
     brand = (data as unknown as BrandRow) ?? null;
@@ -81,7 +85,7 @@ export async function getActiveBranding(orgId: string | null): Promise<BrandRow 
     const supabase = await createClient();
     const { data } = await supabase
       .from("organization_branding")
-      .select("logo_path, logo_dark_path, favicon_path, primary_color, accent_color, background_color, font_family, custom_css, email_footer")
+      .select("logo_path, logo_dark_path, favicon_path, primary_color, accent_color, background_color, font_family, custom_css, email_footer, login_hero_path, login_welcome_title, login_welcome_subtitle")
       .eq("organization_id", orgId)
       .maybeSingle();
     return (data as unknown as BrandRow) ?? null;

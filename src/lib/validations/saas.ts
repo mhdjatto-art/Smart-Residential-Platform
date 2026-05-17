@@ -22,6 +22,12 @@ export const provisionOrganizationSchema = z.object({
 });
 export type ProvisionOrganizationInput = z.infer<typeof provisionOrganizationSchema>;
 
+/**
+ * Multi-language text. Keys are locale codes (en, ar, ku); values are the
+ * translation. Empty object means "use the default in the i18n bundle".
+ */
+const multiLangText = z.record(z.string(), z.string().max(500)).optional();
+
 export const brandingSchema = z.object({
   organization_id: z.string().uuid(),
   logo_path: optionalString,
@@ -34,6 +40,10 @@ export const brandingSchema = z.object({
   custom_css: optionalString,
   email_from_name: optionalString,
   email_footer: optionalString,
+  // Phase 25 — login page customisation
+  login_hero_path:         optionalString,
+  login_welcome_title:     multiLangText,
+  login_welcome_subtitle:  multiLangText,
 });
 export type BrandingInput = z.infer<typeof brandingSchema>;
 

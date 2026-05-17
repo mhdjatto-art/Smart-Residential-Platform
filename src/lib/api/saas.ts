@@ -252,6 +252,10 @@ export interface BrandingRow {
   custom_css: string | null;
   email_from_name: string | null;
   email_footer: string | null;
+  // Phase 25 — login page customisation
+  login_hero_path:        string | null;
+  login_welcome_title:    Record<string, string> | null;
+  login_welcome_subtitle: Record<string, string> | null;
 }
 
 export async function getBranding(orgId: string): Promise<BrandingRow | null> {
@@ -267,7 +271,8 @@ export async function upsertBranding(input: BrandingInput): Promise<void> {
   await requireRole(["super_admin","developer_admin","compound_manager"]);
   const parsed = brandingSchema.parse(input);
   const supabase = await createClient();
-  const { error } = await supabase.from("organization_branding").upsert({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("organization_branding").upsert({
     organization_id: parsed.organization_id,
     logo_path: parsed.logo_path ?? null,
     logo_dark_path: parsed.logo_dark_path ?? null,
@@ -279,9 +284,57 @@ export async function upsertBranding(input: BrandingInput): Promise<void> {
     custom_css: parsed.custom_css ?? null,
     email_from_name: parsed.email_from_name ?? null,
     email_footer: parsed.email_footer ?? null,
+    // Phase 25 — login page customisation
+    login_hero_path:         parsed.login_hero_path         ?? null,
+    login_welcome_title:     parsed.login_welcome_title     ?? {},
+    login_welcome_subtitle:  parsed.login_welcome_subtitle  ?? {},
   });
   if (error) throw new Error(error.message);
   revalidatePath("/settings/branding");
+  revalidatePath("/login");
+}
+
+/**
+ * Phase 25 — Upload a branding image (logo, favicon, hero) to Supabase
+ * Storage and return its public URL. Server action so the service role
+ * key isn't shipped to the browser.
+ *
+ *   formData fields:
+ *     orgId  — uuid of the organization
+ *     kind   — "logo" | "logo_dark" | "favicon" | "login_hero"
+ *     file   — the actual File blob (≤ 5 MB, image/* only)
+ *
+ * The storage path is `<orgId>/<kind>-<timestamp>.<ext>` so re-uploads
+ * never collide with the previously-active asset (we deliberately leave
+ * old files behind so an in-flight email/login session keeps rendering).
+ */
+export async function uploadBrandingImage(formData: FormData): Promise<{ url: string }> {
+  await requireRole(["super_admin","developer_admin","compound_manager"]);
+
+  const orgId = String(formData.get("orgId") ?? "");
+  const kind  = String(formData.get("kind") ?? "");
+  const file  = formData.get("file") as File | null;
+
+  if (!orgId)         throw new Error("orgId required");
+  if (!file)          throw new Error("file required");
+  if (file.size > 5 * 1024 * 1024) throw new Error("File too large (max 5 MB)");
+  if (!file.type.startsWith("image/")) throw new Error("File must be an image");
+
+  const validKinds = ["logo", "logo_dark", "favicon", "login_hero"];
+  if (!validKinds.includes(kind)) throw new Error(`Invalid kind: ${kind}`);
+
+  // Derive extension from MIME so the URL is recognisable.
+  const ext = (file.name.split(".").pop() ?? "png").toLowerCase().slice(0, 4);
+  const path = `${orgId}/${kind}-${Date.now()}.${ext}`;
+
+  const supabase = await createClient();
+  const { error: upErr } = await supabase.storage
+    .from("branding")
+    .upload(path, file, { upsert: false, contentType: file.type });
+  if (upErr) throw new Error(`Upload failed: ${upErr.message}`);
+
+  const { data: pub } = supabase.storage.from("branding").getPublicUrl(path);
+  return { url: pub.publicUrl };
 }
 
 // ─── domains ──────────────────────────────────────────────────────────────
