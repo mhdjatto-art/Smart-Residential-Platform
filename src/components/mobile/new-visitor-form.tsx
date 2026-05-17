@@ -52,7 +52,7 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
     try {
       const raw = await scanQrCode();
       if (!raw) {
-        toast.info("No QR code detected");
+        toast.info(t("mobile.qr_no_code"));
         return;
       }
 
@@ -86,13 +86,13 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
       }
 
       if (filled > 0) {
-        toast.success("QR scanned");
+        toast.success(t("mobile.qr_scanned"));
       } else {
-        toast.info("Unrecognised QR — please enter manually");
+        toast.info(t("mobile.qr_unrecognised"));
       }
     } catch (err) {
       console.warn("[visitor-form] scan failed", err);
-      toast.error("Scan failed", { description: err instanceof Error ? err.message : "" });
+      toast.error(t("mobile.qr_scan_failed"), { description: err instanceof Error ? err.message : "" });
     } finally {
       setScanning(false);
     }
@@ -147,7 +147,7 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
           className="mb-3 w-full"
         >
           <ScanLine className="mr-2 h-4 w-4" />
-          {scanning ? "Scanning…" : "Scan visitor QR"}
+          {scanning ? t("mobile.qr_scanning") : t("mobile.qr_scan_id")}
         </Button>
       )}
       <Card>

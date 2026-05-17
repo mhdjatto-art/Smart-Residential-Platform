@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { compoundSchema, type CompoundInput } from "@/lib/validations/compound";
 import { createCompound, updateCompound } from "@/lib/api/compounds";
+import { useT } from "@/lib/i18n/client";
 
 interface OrgOption { id: string; name: string; }
 
@@ -22,6 +23,7 @@ type Errors = Partial<Record<keyof CompoundInput | "form", string>>;
 
 export function CompoundForm({ organizations, initial }: CompoundFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
   const editing = !!initial?.id;
@@ -62,17 +64,17 @@ export function CompoundForm({ organizations, initial }: CompoundFormProps) {
       try {
         if (editing && initial?.id) {
           await updateCompound(initial.id, parsed.data);
-          toast.success("Compound updated");
+          toast.success(t("forms.toast_compound_updated"));
         } else {
           await createCompound(parsed.data);
-          toast.success("Compound created");
+          toast.success(t("forms.toast_compound_created"));
         }
         router.push("/compounds");
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }

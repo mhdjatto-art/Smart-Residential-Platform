@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { buildingSchema, type BuildingInput } from "@/lib/validations/building";
 import { createBuilding, updateBuilding } from "@/lib/api/buildings";
+import { useT } from "@/lib/i18n/client";
 
 interface CompoundOption { id: string; name: string; }
 
@@ -23,6 +24,7 @@ type Errors = Partial<Record<keyof BuildingInput | "form", string>>;
 
 export function BuildingForm({ compounds, initial, defaultCompoundId }: BuildingFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
   const editing = !!initial?.id;
@@ -56,17 +58,17 @@ export function BuildingForm({ compounds, initial, defaultCompoundId }: Building
       try {
         if (editing && initial?.id) {
           await updateBuilding(initial.id, parsed.data);
-          toast.success("Building updated");
+          toast.success(t("forms.toast_building_updated"));
         } else {
           await createBuilding(parsed.data);
-          toast.success("Building created");
+          toast.success(t("forms.toast_building_created"));
         }
         router.push("/buildings");
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }

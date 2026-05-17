@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ticketSchema, TICKET_CATEGORIES, type TicketInput } from "@/lib/validations/operations";
 import { createTicket } from "@/lib/api/tickets";
+import { useT } from "@/lib/i18n/client";
 
 interface CompoundOption { id: string; name: string; }
 interface ResidentOption { id: string; full_name: string; }
@@ -25,6 +26,7 @@ type Errors = Partial<Record<keyof TicketInput | "form", string>>;
 
 export function TicketForm({ compounds, residents, units }: TicketFormProps) {
   const router = useRouter();
+  const { t } = useT();
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Errors>({});
 
@@ -53,13 +55,13 @@ export function TicketForm({ compounds, residents, units }: TicketFormProps) {
     startTransition(async () => {
       try {
         const created = await createTicket(parsed.data);
-        toast.success("Ticket created", { description: created.ticket_number });
+        toast.success(t("forms.toast_ticket_created"), { description: created.ticket_number });
         router.push(`/tickets/${created.id}`);
         router.refresh();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown";
+        const msg = err instanceof Error ? err.message : t("forms.unknown_error");
         setErrors({ form: msg });
-        toast.error("Save failed", { description: msg });
+        toast.error(t("forms.toast_save_failed"), { description: msg });
       }
     });
   }

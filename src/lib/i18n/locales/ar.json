@@ -586,7 +586,21 @@
     "payment_failed": "فشل الدفع",
     "payment_recorded": "تم تسجيل الدفعة",
     "confirm_pay": "ادفع {amount}",
-    "pay_dialog_desc": "ادفع {amount} لتسديد هذا القسط."
+    "pay_dialog_desc": "ادفع {amount} لتسديد هذا القسط.",
+    "qr_scan_id": "مسح QR الزائر",
+    "qr_scanning": "جارٍ المسح…",
+    "qr_no_code": "لم يتم رصد رمز QR",
+    "qr_scanned": "تم مسح الرمز",
+    "qr_unrecognised": "رمز غير معروف — أدخل البيانات يدوياً",
+    "qr_scan_failed": "فشل المسح",
+    "push_not_configured": "الإشعارات غير مهيأة",
+    "push_not_configured_desc": "مدير السيرفر: عيّن NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+    "push_permission_denied": "تم رفض الإذن",
+    "push_permission_denied_desc": "فعّل الإشعارات من إعدادات المتصفح.",
+    "push_enabled": "تم تفعيل الإشعارات",
+    "push_disabled": "تم تعطيل الإشعارات",
+    "push_subscribe_failed": "فشل الاشتراك",
+    "push_unsubscribe_failed": "فشل إلغاء الاشتراك"
   },
   "search": {
     "placeholder_input": "ابحث عن ساكن، وحدة، عقد، دفعة، تذكرة…",
@@ -1191,7 +1205,12 @@
     "pricing_schedule_placeholder": "{\"hours\":[{\"from\":0,\"to\":7,\"price\":0.08},{\"from\":7,\"to\":22,\"price\":0.15}]}",
     "pricing_formula_placeholder": "{base} + {sqm} * 0.5 + {residents} * 2",
     "pricing_formula_tokens": "{base} {sqm} {residents} {consumption}",
-    "toast_revoke_failed": "فشل الإلغاء"
+    "toast_revoke_failed": "فشل الإلغاء",
+    "toast_ticket_created": "تم إنشاء التذكرة",
+    "toast_building_created": "تم إنشاء المبنى",
+    "toast_building_updated": "تم تحديث المبنى",
+    "toast_compound_created": "تم إنشاء المجمع",
+    "toast_compound_updated": "تم تحديث المجمع"
   },
   "ops": {
     "tickets_search_ph": "ابحث في الموضوع، الوصف، رقم التذكرة…",

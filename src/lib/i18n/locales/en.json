@@ -586,7 +586,21 @@
     "payment_failed": "Payment failed",
     "payment_recorded": "Payment recorded",
     "confirm_pay": "Pay {amount}",
-    "pay_dialog_desc": "Pay {amount} to settle this installment."
+    "pay_dialog_desc": "Pay {amount} to settle this installment.",
+    "qr_scan_id": "Scan visitor QR",
+    "qr_scanning": "Scanning…",
+    "qr_no_code": "No QR code detected",
+    "qr_scanned": "QR scanned",
+    "qr_unrecognised": "Unrecognised QR — please enter manually",
+    "qr_scan_failed": "Scan failed",
+    "push_not_configured": "Push not configured",
+    "push_not_configured_desc": "Server admin: set NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+    "push_permission_denied": "Permission denied",
+    "push_permission_denied_desc": "Enable notifications in your browser settings.",
+    "push_enabled": "Push notifications enabled",
+    "push_disabled": "Push notifications disabled",
+    "push_subscribe_failed": "Subscribe failed",
+    "push_unsubscribe_failed": "Unsubscribe failed"
   },
   "search": {
     "placeholder_input": "Search for a resident, unit, contract, payment, ticket…",
@@ -1191,7 +1205,12 @@
     "pricing_schedule_placeholder": "{\"hours\":[{\"from\":0,\"to\":7,\"price\":0.08},{\"from\":7,\"to\":22,\"price\":0.15}]}",
     "pricing_formula_placeholder": "{base} + {sqm} * 0.5 + {residents} * 2",
     "pricing_formula_tokens": "{base} {sqm} {residents} {consumption}",
-    "toast_revoke_failed": "Revoke failed"
+    "toast_revoke_failed": "Revoke failed",
+    "toast_ticket_created": "Ticket created",
+    "toast_building_created": "Building created",
+    "toast_building_updated": "Building updated",
+    "toast_compound_created": "Compound created",
+    "toast_compound_updated": "Compound updated"
   },
   "ops": {
     "tickets_search_ph": "Search subject, description, ticket #…",

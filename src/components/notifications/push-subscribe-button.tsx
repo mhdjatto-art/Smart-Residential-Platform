@@ -17,6 +17,7 @@ import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Bell, BellOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/i18n/client";
 
 const VAPID_PUBLIC = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
@@ -31,6 +32,7 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 export function PushSubscribeButton() {
+  const { t } = useT();
   const [supported, setSupported] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>("default");
@@ -52,7 +54,7 @@ export function PushSubscribeButton() {
 
   function subscribe() {
     if (!VAPID_PUBLIC) {
-      toast.error("Push not configured", { description: "Server admin: set NEXT_PUBLIC_VAPID_PUBLIC_KEY" });
+      toast.error(t("mobile.push_not_configured"), { description: t("mobile.push_not_configured_desc") });
       return;
     }
     startTransition(async () => {
@@ -60,7 +62,7 @@ export function PushSubscribeButton() {
         const perm = await Notification.requestPermission();
         setPermission(perm);
         if (perm !== "granted") {
-          toast.error("Permission denied", { description: "Enable notifications in your browser settings." });
+          toast.error(t("mobile.push_permission_denied"), { description: t("mobile.push_permission_denied_desc") });
           return;
         }
 
@@ -87,9 +89,9 @@ export function PushSubscribeButton() {
           throw new Error(j.error ?? `HTTP ${res.status}`);
         }
         setSubscribed(true);
-        toast.success("Push notifications enabled");
+        toast.success(t("mobile.push_enabled"));
       } catch (err) {
-        toast.error("Subscribe failed", { description: err instanceof Error ? err.message : "Unknown error" });
+        toast.error(t("mobile.push_subscribe_failed"), { description: err instanceof Error ? err.message : t("forms.unknown_error") });
       }
     });
   }
@@ -108,9 +110,9 @@ export function PushSubscribeButton() {
           body: JSON.stringify({ endpoint }),
         });
         setSubscribed(false);
-        toast.success("Push notifications disabled");
+        toast.success(t("mobile.push_disabled"));
       } catch (err) {
-        toast.error("Unsubscribe failed", { description: err instanceof Error ? err.message : "Unknown error" });
+        toast.error(t("mobile.push_unsubscribe_failed"), { description: err instanceof Error ? err.message : t("forms.unknown_error") });
       }
     });
   }

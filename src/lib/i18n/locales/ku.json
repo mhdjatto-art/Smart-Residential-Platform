@@ -586,7 +586,21 @@
     "payment_failed": "پارەدان سەرنەکەوت",
     "payment_recorded": "پارەدانەکە تۆمار کرا",
     "confirm_pay": "پارە بدە {amount}",
-    "pay_dialog_desc": "پارە بدە {amount} بۆ کۆتاییپێهێنانی ئەم قیستە."
+    "pay_dialog_desc": "پارە بدە {amount} بۆ کۆتاییپێهێنانی ئەم قیستە.",
+    "qr_scan_id": "QR-ی میوان سکان بکە",
+    "qr_scanning": "سکان دەکات…",
+    "qr_no_code": "هیچ کۆدێکی QR نەدۆزرایەوە",
+    "qr_scanned": "QR سکان کرا",
+    "qr_unrecognised": "QR نەناسراو — تکایە دەستی بنووسە",
+    "qr_scan_failed": "سکان شکستی هێنا",
+    "push_not_configured": "ئاگاداریەکان ڕێکنەخراون",
+    "push_not_configured_desc": "بەڕێوەبەری سێرڤەر: NEXT_PUBLIC_VAPID_PUBLIC_KEY دانێ",
+    "push_permission_denied": "مۆڵەت ڕەتکرایەوە",
+    "push_permission_denied_desc": "لە ڕێکخستنەکانی وێبگەڕەکەت ئاگاداریەکان چالاک بکە.",
+    "push_enabled": "ئاگاداریەکان چالاک کران",
+    "push_disabled": "ئاگاداریەکان لەکار خران",
+    "push_subscribe_failed": "بەشدارکردن سەرنەکەوت",
+    "push_unsubscribe_failed": "لابردنی بەشداری سەرنەکەوت"
   },
   "search": {
     "placeholder_input": "بگەڕێ بۆ دانیشتوو، یەکە، گرێبەست، پارەدان، تیکێت…",
@@ -1191,7 +1205,12 @@
     "pricing_schedule_placeholder": "{\"hours\":[{\"from\":0,\"to\":7,\"price\":0.08},{\"from\":7,\"to\":22,\"price\":0.15}]}",
     "pricing_formula_placeholder": "{base} + {sqm} * 0.5 + {residents} * 2",
     "pricing_formula_tokens": "{base} {sqm} {residents} {consumption}",
-    "toast_revoke_failed": "هەڵوەشاندنەوە سەرکەوتوو نەبوو"
+    "toast_revoke_failed": "هەڵوەشاندنەوە سەرکەوتوو نەبوو",
+    "toast_ticket_created": "تیکێت دروستکرا",
+    "toast_building_created": "بینا دروستکرا",
+    "toast_building_updated": "بینا نوێکرایەوە",
+    "toast_compound_created": "کۆمپاوند دروستکرا",
+    "toast_compound_updated": "کۆمپاوند نوێکرایەوە"
   },
   "ops": {
     "tickets_search_ph": "گەڕان لە بابەت، وەسف، ژمارەی تیکێت…",
