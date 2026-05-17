@@ -76,3 +76,6 @@ build/
 node_modules/
 out/
 build/
+
+.env.sentry-build-plugin
+.env*.local
