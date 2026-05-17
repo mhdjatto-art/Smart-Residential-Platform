@@ -1,0 +1,143 @@
+"use server";
+
+/**
+ * Server actions for redirecting a resident to Stripe Checkout.
+ *
+ * The mobile Pay button calls this, then opens the returned URL in the
+ * resident's browser. After Stripe collects the payment, our webhook
+ * (`/api/webhooks/stripe`) flips the bill to `paid` in our database.
+ */
+
+import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/guards";
+import { createCheckoutSession, isStripeConfigured } from "@/lib/payments/stripe";
+
+export interface CheckoutResult {
+  url?: string;
+  configured: boolean;
+  error?: string;
+}
+
+/**
+ * Returns a Stripe Checkout URL for a utility bill the caller owns.
+ * If Stripe isn't configured, returns { configured: false } so the UI
+ * can fall back to the direct-pay path.
+ */
+export async function startBillCheckout(billId: string): Promise<CheckoutResult> {
+  if (!isStripeConfigured()) {
+    return { configured: false };
+  }
+
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  // Fetch + ownership check (same logic as payMyUtilityBill)
+  const { data: bill, error: bErr } = await supabase
+    .from("utility_bills")
+    .select("id, bill_number, utility_type, resident_id, unit_id, status, total_amount, penalty_amount, paid_amount, currency")
+    .eq("id", billId)
+    .maybeSingle();
+  if (bErr) return { configured: true, error: bErr.message };
+  if (!bill) return { configured: true, error: "Bill not found" };
+
+  const b = bill as {
+    id: string; bill_number: string; utility_type: string;
+    resident_id: string | null; unit_id: string | null; status: string;
+    total_amount: number; penalty_amount: number; paid_amount: number; currency: string;
+  };
+  if (b.status === "cancelled") return { configured: true, error: "Bill is cancelled" };
+
+  // Verify ownership: residents row must link this user to the bill
+  const { data: myResidents } = await supabase
+    .from("residents")
+    .select("id, unit_id")
+    .eq("user_id", user.id);
+  const myResidentIds = ((myResidents ?? []) as Array<{ id: string; unit_id: string | null }>).map((r) => r.id);
+  const myUnitIds     = ((myResidents ?? []) as Array<{ id: string; unit_id: string | null }>).map((r) => r.unit_id).filter(Boolean) as string[];
+  const isMine =
+    (b.resident_id && myResidentIds.includes(b.resident_id)) ||
+    (!b.resident_id && b.unit_id && myUnitIds.includes(b.unit_id));
+  const isStaff = user.isSuperAdmin || user.roles.some((r) =>
+    ["developer_admin", "compound_manager", "finance_officer"].includes(r.role));
+  if (!isMine && !isStaff) {
+    return { configured: true, error: "You can only pay your own bills" };
+  }
+
+  const owed = Math.max(0, Number(b.total_amount) + Number(b.penalty_amount ?? 0) - Number(b.paid_amount ?? 0));
+  if (owed <= 0) return { configured: true, error: "Bill is already paid" };
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+
+  try {
+    const session = await createCheckoutSession({
+      bill_id: b.id,
+      amount: owed,
+      currency: b.currency,
+      description: `${b.utility_type.toUpperCase()} · ${b.bill_number}`,
+      customer_email: user.email ?? undefined,
+      success_url: `${appUrl}/m/payments/success?bill=${b.id}`,
+      cancel_url:  `${appUrl}/m/payments`,
+    });
+    return { configured: true, url: session.url };
+  } catch (err) {
+    return { configured: true, error: err instanceof Error ? err.message : "Stripe error" };
+  }
+}
+
+/**
+ * Phase 20 — Stripe Checkout for installment / rent schedule rows.
+ *
+ * The webhook updates the schedule via record_payment() once Stripe confirms.
+ */
+export async function startInstallmentCheckout(installmentId: string, amount: number): Promise<CheckoutResult> {
+  if (!isStripeConfigured()) {
+    return { configured: false };
+  }
+  const user = await requireUser();
+  const supabase = await createClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: sched, error: sErr } = await (supabase as any)
+    .from("installment_schedules")
+    .select("id, installment_number, total_due, penalty_amount, paid_amount, status, contract_id, installment_contracts!inner(id, contract_type, contract_number, currency, residents!inner(user_id))")
+    .eq("id", installmentId)
+    .maybeSingle();
+  if (sErr) return { configured: true, error: sErr.message };
+  if (!sched) return { configured: true, error: "Installment not found" };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const contract = (sched as any).installment_contracts;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ownerUserId = (contract?.residents?.user_id ?? null) as string | null;
+  if (ownerUserId !== user.id) {
+    return { configured: true, error: "You can only pay your own installments" };
+  }
+  if (sched.status === "paid") return { configured: true, error: "Installment is already paid" };
+
+  const remaining = Math.max(0, Number(sched.total_due) + Number(sched.penalty_amount ?? 0) - Number(sched.paid_amount));
+  const owed = Math.min(Math.max(0, Number(amount)), remaining);
+  if (owed <= 0) return { configured: true, error: "Amount must be > 0" };
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const kind = contract?.contract_type === "rental" ? "Rent" : "Installment";
+  const desc = `${kind} #${sched.installment_number} · ${contract?.contract_number ?? ""}`;
+
+  try {
+    const session = await createCheckoutSession({
+      // We reuse the bill_id field on Stripe metadata to also carry the
+      // installment id — the webhook checks both `installment_id` and
+      // `bill_id` to figure out what to settle.
+      bill_id: sched.id,
+      amount: owed,
+      currency: contract?.currency ?? "USD",
+      description: desc,
+      customer_email: user.email ?? undefined,
+      success_url: `${appUrl}/m/payments/success?installment=${sched.id}`,
+      cancel_url:  `${appUrl}/m/payments`,
+      metadata: { kind: "installment", installment_id: sched.id, contract_id: sched.contract_id },
+    });
+    return { configured: true, url: session.url };
+  } catch (err) {
+    return { configured: true, error: err instanceof Error ? err.message : "Stripe error" };
+  }
+}
