@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "next-env.d.ts",
+    "src/types/*.ts",
+    "src/types/**/*.ts",
+    "src/lib/auth/guards.ts",
+    "src/lib/api/audit.ts",
+    "src/lib/api/billing-run.ts",
+    "src/lib/api/notifications.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

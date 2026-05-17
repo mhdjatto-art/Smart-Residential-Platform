@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.levant.srp.app-mergeDebugResources-44:/values-h720dp-v13/values-h720dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/marius/.gradle/caches/8.9/transforms/6179ccd960940e5ff4f714773b35837f/transformed/appcompat-1.7.1/res/values-h720dp-v13/values-h720dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "66",
+                        "endOffsets": "117"
+                    }
+                }
+            ]
+        }
+    ]
+}

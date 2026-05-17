@@ -120,7 +120,9 @@
     "sign_in_title": "تسجيل الدخول إلى حسابك",
     "sign_in_subtitle": "استخدم بريد العمل للوصول إلى المنصة.",
     "remember_me": "تذكرني",
-    "forgot_password": "نسيت كلمة المرور؟"
+    "forgot_password": "نسيت كلمة المرور؟",
+    "invite_prompt": "عندك رمز دعوة؟",
+    "sign_up": "إنشاء حساب"
   },
   "common": {
     "loading": "جارٍ التحميل…",

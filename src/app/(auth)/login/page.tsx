@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LoginForm } from "@/components/auth/login-form";
 import { BrandingProvider, getBrandingByHost } from "@/components/layout/branding-provider";
-import { getActiveLocale } from "@/lib/i18n/server";
+import { getActiveLocale, getT } from "@/lib/i18n/server";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -17,7 +17,20 @@ export default async function LoginPage() {
   // screen. On the SRP platform domain we render the default look.
   const brand  = await getBrandingByHost();
   const locale = await getActiveLocale();
+  const { t }  = await getT();
   const b = brand?.branding ?? null;
+
+  // Pre-translate labels on the server so the first paint never shows
+  // untranslated i18n keys (no hydration flash).
+  const labels = {
+    sign_in_title:    t("auth.sign_in_title"),
+    sign_in_subtitle: t("auth.sign_in_subtitle"),
+    email:            t("auth.email"),
+    password:         t("auth.password"),
+    sign_in:          t("actions.sign_in"),
+    invite_prompt:    t("auth.invite_prompt"),
+    sign_up:          t("auth.sign_up"),
+  };
 
   // Resolve per-locale welcome strings with fallbacks to English then to
   // null (handled by the JSX). Order: requested locale → en → null.
@@ -68,7 +81,7 @@ export default async function LoginPage() {
 
         <div className="w-full">
           <Suspense fallback={null}>
-            <LoginForm />
+            <LoginForm labels={labels} />
           </Suspense>
         </div>
       </div>

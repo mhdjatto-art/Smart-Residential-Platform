@@ -1,0 +1,551 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.levant.srp"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="22"
+9        android:targetSdkVersion="34" />
+10
+11    <!--
+12      Permissions — Phase 8.
+13      Each one mapped to a concrete capability the app uses. We intentionally
+14      do NOT request: location, contacts, calendar, SMS, microphone, or any
+15      other sensitive permission — none of them are part of the resident app.
+16    -->
+17
+18
+19    <!-- Core networking. Required by Next.js WebView + Capacitor Network plugin. -->
+20    <uses-permission android:name="android.permission.INTERNET" />
+20-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:67:5-67
+20-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:67:22-64
+21    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+21-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:68:5-79
+21-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:68:22-76
+22
+23    <!--
+24      Push notifications.
+25      Android 13 (API 33) added a runtime permission for posting notifications.
+26      Older Android versions ignore this declaration safely.
+27    -->
+28    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+28-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:75:5-77
+28-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:75:22-74
+29
+30    <!--
+31      Camera + barcode scanning.
+32      Used by /m/visitors flow (QR scan via @capacitor-mlkit/barcode-scanning)
+33      and /m receipt uploads (@capacitor/camera). Marked as optional below
+34      via <uses-feature> so devices without a camera can still install the app.
+35    -->
+36    <uses-permission android:name="android.permission.CAMERA" />
+36-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:83:5-65
+36-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:83:22-62
+37
+38    <!--
+39      Reading saved images for receipt / profile picker.
+40      Android 13+ uses scoped READ_MEDIA_IMAGES; pre-13 falls back to
+41      READ_EXTERNAL_STORAGE (capped at API 32 — see maxSdkVersion).
+42    -->
+43    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+43-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:90:5-76
+43-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:90:22-73
+44    <uses-permission
+44-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:91:5-93:38
+45        android:name="android.permission.READ_EXTERNAL_STORAGE"
+45-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:92:9-64
+46        android:maxSdkVersion="32" />
+46-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:93:9-35
+47
+48    <!--
+49      Biometric login (@aparajita/capacitor-biometric-auth).
+50      USE_BIOMETRIC is the modern declaration; USE_FINGERPRINT is the
+51      pre-Android-9 equivalent that the plugin falls back to.
+52    -->
+53    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+53-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:100:5-72
+53-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:100:22-69
+54    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+54-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:101:5-74
+54-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:101:22-71
+55
+56    <!-- Haptics on button taps (@capacitor/haptics). -->
+57    <uses-permission android:name="android.permission.VIBRATE" />
+57-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:104:5-66
+57-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:104:22-63
+58
+59    <!--
+60      Hardware features the app prefers but doesn't require. Listing them as
+61      `required="false"` keeps the Play Store install filter loose so a
+62      tablet without a camera or fingerprint reader can still get the app.
+63    -->
+64    <uses-feature
+64-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:5-85
+65        android:name="android.hardware.camera"
+65-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:19-57
+66        android:required="false" />
+66-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:58-82
+67    <uses-feature
+67-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:5-95
+68        android:name="android.hardware.camera.autofocus"
+68-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:19-67
+69        android:required="false" />
+69-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:68-92
+70    <uses-feature
+70-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:5-90
+71        android:name="android.hardware.fingerprint"
+71-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:19-62
+72        android:required="false" />
+72-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:63-87
+73
+74    <queries>
+74-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:15
+75        <intent>
+75-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:18
+76            <action android:name="android.support.customtabs.action.CustomTabsService" />
+76-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-90
+76-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:21-87
+77        </intent>
+78        <intent>
+78-->[:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:18
+79            <action android:name="android.media.action.IMAGE_CAPTURE" />
+79-->[:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-73
+79-->[:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:21-70
+80        </intent>
+81    </queries>
+82
+83    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+83-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:24:5-68
+83-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:24:22-65
+84    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+84-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:26:5-82
+84-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:26:22-79
+85
+86    <permission
+86-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+87        android:name="com.levant.srp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+87-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+88        android:protectionLevel="signature" />
+88-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
+89
+90    <uses-permission android:name="com.levant.srp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+90-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+90-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+91
+92    <application
+92-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:4:5-57:19
+93        android:allowBackup="true"
+93-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:5:9-35
+94        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+94-->[androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
+95        android:debuggable="true"
+96        android:extractNativeLibs="true"
+97        android:icon="@mipmap/ic_launcher"
+97-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:6:9-43
+98        android:label="@string/app_name"
+98-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:7:9-41
+99        android:roundIcon="@mipmap/ic_launcher_round"
+99-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:8:9-54
+100        android:supportsRtl="true"
+100-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:9:9-35
+101        android:theme="@style/AppTheme" >
+101-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:10:9-40
+102        <activity
+102-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:12:9-45:20
+103            android:name="com.levant.srp.MainActivity"
+103-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:14:13-41
+104            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+104-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:13:13-129
+105            android:exported="true"
+105-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:18:13-36
+106            android:label="@string/title_activity_main"
+106-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:15:13-56
+107            android:launchMode="singleTask"
+107-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:17:13-44
+108            android:theme="@style/AppTheme.NoActionBarLaunch" >
+108-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:16:13-62
+109            <intent-filter>
+109-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:20:13-23:29
+110                <action android:name="android.intent.action.MAIN" />
+110-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:21:17-69
+110-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:21:25-66
+111
+112                <category android:name="android.intent.category.LAUNCHER" />
+112-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:22:17-77
+112-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:22:27-74
+113            </intent-filter>
+114
+115            <!--
+116              Phase 8 — Deep link to /m/* shell.
+117              Tapping a link like https://smart-residential-platform.vercel.app/m/payments
+118              opens the installed LSRP app instead of the browser.
+119              `autoVerify=true` activates Android App Links once the
+120              assetlinks.json is published at
+121              https://smart-residential-platform.vercel.app/.well-known/assetlinks.json.
+122              When the production domain is provisioned later (e.g. lsrp.app),
+123              add another <intent-filter> for that host alongside this one.
+124            -->
+125            <intent-filter android:autoVerify="true" >
+125-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:35:13-43:29
+125-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:35:28-53
+126                <action android:name="android.intent.action.VIEW" />
+126-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:36:17-69
+126-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:36:25-66
+127
+128                <category android:name="android.intent.category.DEFAULT" />
+128-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:37:17-76
+128-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:37:27-73
+129                <category android:name="android.intent.category.BROWSABLE" />
+129-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:38:17-78
+129-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:38:27-75
+130
+131                <data
+131-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:39:17-42:47
+132                    android:host="smart-residential-platform.vercel.app"
+132-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:41:21-73
+133                    android:pathPrefix="/m"
+133-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:42:21-44
+134                    android:scheme="https" />
+134-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:40:21-43
+135            </intent-filter>
+136        </activity>
+137
+138        <provider
+139            android:name="androidx.core.content.FileProvider"
+139-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:48:13-62
+140            android:authorities="com.levant.srp.fileprovider"
+140-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:49:13-64
+141            android:exported="false"
+141-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:50:13-37
+142            android:grantUriPermissions="true" >
+142-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:51:13-47
+143            <meta-data
+143-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:52:13-54:64
+144                android:name="android.support.FILE_PROVIDER_PATHS"
+144-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:53:17-67
+145                android:resource="@xml/file_paths" />
+145-->/Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:54:17-51
+146        </provider>
+147
+148        <activity
+148-->[:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-11:59
+149            android:name="com.aparajita.capacitor.biometricauth.AuthActivity"
+149-->[:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-78
+150            android:label="@string/title_activity_auth_activity"
+150-->[:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-65
+151            android:theme="@style/AppTheme.Transparent" />
+151-->[:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-56
+152        <activity
+152-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:9-18:75
+153            android:name="com.capacitorjs.plugins.browser.BrowserControllerActivity"
+153-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-85
+154            android:exported="false"
+154-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-37
+155            android:launchMode="singleTask"
+155-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:13-44
+156            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+156-->[:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-72
+157
+158        <service
+158-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-14:19
+159            android:name="com.capacitorjs.plugins.pushnotifications.MessagingService"
+159-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-86
+160            android:exported="false" >
+160-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-37
+161            <intent-filter>
+161-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-13:29
+162                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+162-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:17-78
+162-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:25-75
+163            </intent-filter>
+164        </service>
+165        <!--
+166        This activity is an invisible delegate activity to start scanner activity
+167        and receive result, so it's unnecessary to support screen orientation and
+168        we can avoid any side effect from activity recreation in any case.
+169        -->
+170        <activity
+170-->[com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:15:9-20:20
+171            android:name="com.google.mlkit.vision.codescanner.internal.GmsBarcodeScanningDelegateActivity"
+171-->[com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:16:13-107
+172            android:exported="false"
+172-->[com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:17:13-37
+173            android:screenOrientation="portrait" >
+173-->[com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:18:13-49
+174        </activity>
+175
+176        <receiver
+176-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:29:9-40:20
+177            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+177-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:30:13-78
+178            android:exported="true"
+178-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:31:13-36
+179            android:permission="com.google.android.c2dm.permission.SEND" >
+179-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:32:13-73
+180            <intent-filter>
+180-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:33:13-35:29
+181                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+181-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:34:17-81
+181-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:34:25-78
+182            </intent-filter>
+183
+184            <meta-data
+184-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:37:13-39:40
+185                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+185-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:38:17-92
+186                android:value="true" />
+186-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:39:17-37
+187        </receiver>
+188        <!--
+189             FirebaseMessagingService performs security checks at runtime,
+190             but set to not exported to explicitly avoid allowing another app to call it.
+191        -->
+192        <service
+192-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:46:9-53:19
+193            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+193-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:47:13-82
+194            android:directBootAware="true"
+194-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:48:13-43
+195            android:exported="false" >
+195-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:49:13-37
+196            <intent-filter android:priority="-500" >
+196-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-13:29
+197                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+197-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:17-78
+197-->[:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:25-75
+198            </intent-filter>
+199        </service>
+200        <service
+200-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:54:9-63:19
+201            android:name="com.google.firebase.components.ComponentDiscoveryService"
+201-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:55:13-84
+202            android:directBootAware="true"
+202-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:32:13-43
+203            android:exported="false" >
+203-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:56:13-37
+204            <meta-data
+204-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:57:13-59:85
+205                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+205-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:58:17-122
+206                android:value="com.google.firebase.components.ComponentRegistrar" />
+206-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:59:17-82
+207            <meta-data
+207-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:60:13-62:85
+208                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+208-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:61:17-119
+209                android:value="com.google.firebase.components.ComponentRegistrar" />
+209-->[com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:62:17-82
+210            <meta-data
+210-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:15:13-17:85
+211                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+211-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:16:17-130
+212                android:value="com.google.firebase.components.ComponentRegistrar" />
+212-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:17:17-82
+213            <meta-data
+213-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:18:13-20:85
+214                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+214-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:19:17-127
+215                android:value="com.google.firebase.components.ComponentRegistrar" />
+215-->[com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:20:17-82
+216            <meta-data
+216-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:12:13-14:85
+217                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+217-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:13:17-116
+218                android:value="com.google.firebase.components.ComponentRegistrar" />
+218-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:14:17-82
+219            <meta-data
+219-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:35:13-37:85
+220                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+220-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:36:17-109
+221                android:value="com.google.firebase.components.ComponentRegistrar" />
+221-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:37:17-82
+222            <meta-data
+222-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+223                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+223-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+224                android:value="com.google.firebase.components.ComponentRegistrar" />
+224-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+225        </service>
+226        <service
+226-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:9:9-15:19
+227            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+227-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:10:13-91
+228            android:directBootAware="true"
+228-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:17:13-43
+229            android:exported="false" >
+229-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:11:13-37
+230            <meta-data
+230-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:12:13-14:85
+231                android:name="com.google.firebase.components:com.google.mlkit.vision.barcode.internal.BarcodeRegistrar"
+231-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:13:17-120
+232                android:value="com.google.firebase.components.ComponentRegistrar" />
+232-->[com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:14:17-82
+233            <meta-data
+233-->[com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:12:13-14:85
+234                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+234-->[com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:13:17-124
+235                android:value="com.google.firebase.components.ComponentRegistrar" />
+235-->[com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:14:17-82
+236            <meta-data
+236-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:20:13-22:85
+237                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+237-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:21:17-120
+238                android:value="com.google.firebase.components.ComponentRegistrar" />
+238-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:22:17-82
+239        </service>
+240
+241        <provider
+241-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:9:9-13:38
+242            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+242-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:10:13-78
+243            android:authorities="com.levant.srp.mlkitinitprovider"
+243-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:11:13-69
+244            android:exported="false"
+244-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:12:13-37
+245            android:initOrder="99" />
+245-->[com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:13:13-35
+246
+247        <activity
+247-->[com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:9-22:45
+248            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+248-->[com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:19-85
+249            android:exported="false"
+249-->[com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:22:19-43
+250            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+250-->[com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:21:19-78
+251
+252        <provider
+252-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:23:9-28:39
+253            android:name="com.google.firebase.provider.FirebaseInitProvider"
+253-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:24:13-77
+254            android:authorities="com.levant.srp.firebaseinitprovider"
+254-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:25:13-72
+255            android:directBootAware="true"
+255-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:26:13-43
+256            android:exported="false"
+256-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:27:13-37
+257            android:initOrder="100" />
+257-->[com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:28:13-36
+258
+259        <service
+259-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:26:9-35:19
+260            android:name="androidx.camera.core.impl.MetadataHolderService"
+260-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:27:13-75
+261            android:enabled="false"
+261-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:28:13-36
+262            android:exported="false" >
+262-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:29:13-37
+263            <meta-data
+263-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:32:13-34:89
+264                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+264-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:33:17-103
+265                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+265-->[androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:34:17-86
+266        </service>
+267
+268        <provider
+268-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+269            android:name="androidx.startup.InitializationProvider"
+269-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+270            android:authorities="com.levant.srp.androidx-startup"
+270-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+271            android:exported="false" >
+271-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+272            <meta-data
+272-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+273                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+273-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+274                android:value="androidx.startup" />
+274-->[androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+275            <meta-data
+275-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+276                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+276-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+277                android:value="androidx.startup" />
+277-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+278            <meta-data
+278-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+279                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+279-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+280                android:value="androidx.startup" />
+280-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+281        </provider>
+282
+283        <meta-data
+283-->[com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+284            android:name="com.google.android.gms.version"
+284-->[com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+285            android:value="@integer/google_play_services_version" />
+285-->[com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+286
+287        <receiver
+287-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+288            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+288-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+289            android:directBootAware="false"
+289-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+290            android:enabled="true"
+290-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+291            android:exported="true"
+291-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+292            android:permission="android.permission.DUMP" >
+292-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+293            <intent-filter>
+293-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+294                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+294-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+294-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+295            </intent-filter>
+296            <intent-filter>
+296-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+297                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+297-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+297-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+298            </intent-filter>
+299            <intent-filter>
+299-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+300                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+300-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+300-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+301            </intent-filter>
+302            <intent-filter>
+302-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+303                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+303-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+303-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+304            </intent-filter>
+305        </receiver>
+306
+307        <service
+307-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+308            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+308-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+309            android:exported="false" >
+309-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+310            <meta-data
+310-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+311                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+311-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+312                android:value="cct" />
+312-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+313        </service>
+314        <service
+314-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+315            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+315-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+316            android:exported="false"
+316-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+317            android:permission="android.permission.BIND_JOB_SERVICE" >
+317-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+318        </service>
+319
+320        <receiver
+320-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+321            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+321-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+322            android:exported="false" />
+322-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+323    </application>
+324
+325</manifest>

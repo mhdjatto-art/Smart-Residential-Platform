@@ -120,7 +120,9 @@
     "sign_in_title": "Sign in to your account",
     "sign_in_subtitle": "Use your work email to access the platform.",
     "remember_me": "Remember me",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "invite_prompt": "Have an invite code?",
+    "sign_up": "Sign up"
   },
   "common": {
     "loading": "Loading…",

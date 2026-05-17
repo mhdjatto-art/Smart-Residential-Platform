@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_C2CqsxHboEcW7vK5gnXk2M4lbEiV",
+      "name": "smart-residential-platform",
+      "directory": ".",
+      "orgId": "team_6ujbsLILzLEkSa8x7O7h5Gh3"
+    }
+  ]
+}

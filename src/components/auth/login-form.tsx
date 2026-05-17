@@ -13,6 +13,20 @@ import { useT } from "@/lib/i18n/client";
 import { getErrorMessage } from "@/lib/errors";
 
 /**
+ * Pre-translated labels passed from the server page so the first paint
+ * never shows untranslated keys (no hydration flash).
+ */
+export interface LoginFormLabels {
+  sign_in_title:    string;
+  sign_in_subtitle: string;
+  email:            string;
+  password:         string;
+  sign_in:          string;
+  invite_prompt:    string;
+  sign_up:          string;
+}
+
+/**
  * Email + password login.
  *
  * No magic links, no OTP rate limits. Users are created by an admin in
@@ -22,7 +36,7 @@ import { getErrorMessage } from "@/lib/errors";
  * On success we hard-refresh so Server Components pick up the new session
  * cookie immediately.
  */
-export function LoginForm() {
+export function LoginForm({ labels }: { labels: LoginFormLabels }) {
   const router = useRouter();
   const search = useSearchParams();
   const supabase = createClient();
@@ -80,12 +94,12 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6" noValidate>
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">{t("auth.sign_in_title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("auth.sign_in_subtitle")}</p>
+        <h1 className="text-2xl font-bold tracking-tight">{labels.sign_in_title}</h1>
+        <p className="text-sm text-muted-foreground">{labels.sign_in_subtitle}</p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">{t("auth.email")}</Label>
+        <Label htmlFor="email">{labels.email}</Label>
         <Input
           id="email"
           type="email"
@@ -102,7 +116,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">{t("auth.password")}</Label>
+        <Label htmlFor="password">{labels.password}</Label>
         <Input
           id="password"
           type="password"
@@ -124,11 +138,11 @@ export function LoginForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? `${t("actions.sign_in")}…` : t("actions.sign_in")}
+        {pending ? `${labels.sign_in}…` : labels.sign_in}
       </Button>
 
       <p className="text-center text-xs text-muted-foreground">
-        Have an invite code? <a href="/signup" className="underline">Sign up</a>
+        {labels.invite_prompt} <a href="/signup" className="underline">{labels.sign_up}</a>
       </p>
     </form>
   );

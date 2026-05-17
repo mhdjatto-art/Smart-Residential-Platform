@@ -1,0 +1,905 @@
+-- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:47:9-55:20
+	android:grantUriPermissions
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:51:13-47
+	android:authorities
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:49:13-64
+	android:exported
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:50:13-37
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:48:13-62
+manifest
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:2:1-115:12
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:2:1-115:12
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:2:1-115:12
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:2:1-115:12
+MERGED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-14:12
+MERGED from [:capacitor-mlkit-barcode-scanning] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor-mlkit/barcode-scanning/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-app] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-21:12
+MERGED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-13:12
+MERGED from [:capacitor-device] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/device/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-filesystem] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/filesystem/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-haptics] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:capacitor-keyboard] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/keyboard/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-network] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
+MERGED from [:capacitor-preferences] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/preferences/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-17:12
+MERGED from [:capacitor-share] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-splash-screen] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/splash-screen/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-status-bar] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/status-bar/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-android] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-7:12
+MERGED from [:capacitor-cordova-android-plugins] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.material:material:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.camera:camera-view:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5c701e7ce553630d28a4c7d8ccdb505e/transformed/camera-view-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/32cc896eb131a0882d5248c607e0f3fc/transformed/appcompat-resources-1.7.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.appcompat:appcompat:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/6179ccd960940e5ff4f714773b35837f/transformed/appcompat-1.7.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/marius/.gradle/caches/8.9/transforms/776f91b65f06607d69121e143ce8c359/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/marius/.gradle/caches/8.9/transforms/bbe10166623997ee8d7219e721c25a79/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/8529e96872af92a33b7bf5430d5a06e2/transformed/viewpager2-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.mlkit:barcode-scanning:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/55ca23f34a779d55a4a4149f51afb445/transformed/barcode-scanning-17.2.0/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:2:1-23:12
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:17:1-66:12
+MERGED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:barcode-scanning-common:17.0.0] /Users/marius/.gradle/caches/8.9/transforms/0e5911ba4b33cd4460d31e2518ab0f44/transformed/barcode-scanning-common-17.0.0/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:2:1-26:12
+MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:16:1-24:12
+MERGED from [com.google.firebase:firebase-iid-interop:17.1.0] /Users/marius/.gradle/caches/8.9/transforms/cd5806a0a147e9d0e64f0ff8dc30a9ae/transformed/firebase-iid-interop-17.1.0/AndroidManifest.xml:2:1-10:12
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:2:1-13:12
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:2:1-24:12
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:15:1-41:12
+MERGED from [com.google.mlkit:vision-interfaces:16.2.0] /Users/marius/.gradle/caches/8.9/transforms/6edb2c112e6b012a369c03c16b98ced3/transformed/vision-interfaces-16.2.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:17:1-38:12
+MERGED from [androidx.camera:camera-lifecycle:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/402de38e6ad5ed30beaa50815bcca554/transformed/camera-lifecycle-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:17:1-38:12
+MERGED from [androidx.databinding:databinding-adapters:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/09b2d866c01cf6131706fe0e219c6370/transformed/databinding-adapters-8.2.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.databinding:databinding-runtime:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/0f65d1da5419e333b28841856325f2bb/transformed/databinding-runtime-8.2.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/marius/.gradle/caches/8.9/transforms/d02d05f8411fe2f3a154d7cfd01fa6df/transformed/webkit-1.9.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.browser:browser:1.7.0] /Users/marius/.gradle/caches/8.9/transforms/7101ed1674afc1e02e4625688cd71121/transformed/browser-1.7.0/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.gms:play-services-stats:17.0.2] /Users/marius/.gradle/caches/8.9/transforms/267d1d4553c103088fe6fc16a1846d0d/transformed/play-services-stats-17.0.2/AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/344c5f6d9fe47e50cb3f800c8d4a9f77/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/f0221526fcea0517fb1f17111f888eae/transformed/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/47d3a510cd2f71a05c349d1e1ec387a6/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core-ktx:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/224d5bef9ca4a71494ae1a8fc8b3b5fc/transformed/core-ktx-1.13.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/bdb4650287978ce44e5da04101a80a53/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/9de9e9e2fc0be305c11ee9e0c0c95e07/transformed/drawerlayout-1.1.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.5.0] /Users/marius/.gradle/caches/8.9/transforms/5860a76c6c8ccd2f58636e7118931503/transformed/transition-1.5.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/9e1ae47a336a428fd940b40049d1f18b/transformed/dynamicanimation-1.1.0/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/8701ddee1096804f7e3fde03481a304a/transformed/recyclerview-1.2.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5f696a8179e7953add26bba955ccfca9/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/977ebd643c86f724abac936abceedd95/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/8b5ea60eca6a94977858dc1fa41e1109/transformed/customview-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/392a8b3e1e85b0c5cb50e8ad132b7998/transformed/lifecycle-viewmodel-2.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/9640aaae9c83b310f20bd76daea35caa/transformed/lifecycle-livedata-core-2.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/ffd91af0247d938062f61a17ffc64080/transformed/lifecycle-livedata-2.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/1557690b067fd6e319ee8d41be4566f1/transformed/lifecycle-runtime-2.6.2/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/aa472508c2889730fc86cd845635898f/transformed/lifecycle-viewmodel-savedstate-2.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/b6f2770203bb2abf5bcb4c95c3858318/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.firebase:firebase-installations-interop:17.1.1] /Users/marius/.gradle/caches/8.9/transforms/570ac7bca12b80c1573b9235b99a8775/transformed/firebase-installations-interop-17.1.1/AndroidManifest.xml:15:1-19:12
+MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/marius/.gradle/caches/8.9/transforms/52868518ce6b4341ffa4944557089ddc/transformed/play-services-tasks-18.0.2/AndroidManifest.xml:2:1-6:12
+MERGED from [com.google.firebase:firebase-measurement-connector:19.0.0] /Users/marius/.gradle/caches/8.9/transforms/0c347288d45e1886df9198c9f3cfba8b/transformed/firebase-measurement-connector-19.0.0/AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:16:1-26:12
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/marius/.gradle/caches/8.9/transforms/15ccf7d18f3b99ff0a370aad12224208/transformed/fragment-1.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.8.0] /Users/marius/.gradle/caches/8.9/transforms/910960877edea38849c312d3dd5ed874/transformed/activity-1.8.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/marius/.gradle/caches/8.9/transforms/4d426575f816e87c3879f577d6ee37fb/transformed/exifinterface-1.3.6/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44a131a4b94c0cbcdc2fa287d99490b7/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9cc1707e6ee2e7be97e53f947ffd045e/transformed/tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44b8d3f1fb3e77bf4a15f3a444bd27f6/transformed/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/b9e3a6f53dcba3c8c262036d5ad6d6df/transformed/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.databinding:viewbinding:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/fa657616cba1be10bc922685f235df0c/transformed/viewbinding-8.2.1/AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:15:1-33:12
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:15:1-37:12
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:15:1-41:12
+MERGED from [com.google.android.datatransport:transport-api:3.0.0] /Users/marius/.gradle/caches/8.9/transforms/ef075b5733a0e02dc753429635ba99a9/transformed/transport-api-3.0.0/AndroidManifest.xml:15:1-22:12
+MERGED from [com.google.firebase:firebase-encoders-json:18.0.0] /Users/marius/.gradle/caches/8.9/transforms/0049396ba5ec7dff6e234c763ac0a9b4/transformed/firebase-encoders-json-18.0.0/AndroidManifest.xml:15:1-23:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/62c0e8df97cd6427a508e91ae6109659/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [com.google.firebase:firebase-components:17.1.5] /Users/marius/.gradle/caches/8.9/transforms/ac656827337457f72751bbeaf839eb4a/transformed/firebase-components-17.1.5/AndroidManifest.xml:15:1-20:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/marius/.gradle/caches/8.9/transforms/943fc219c43a1e7f1addf2bd1bbe1f51/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/4bd90d2cbb03e3a616202e1c9869907a/transformed/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9a0a4dfaa4adb4a19ed9cd0799c4a24b/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/7840e5451930fe6bab9565a1590eb2b8/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/marius/.gradle/caches/8.9/transforms/7494f170086e700720e6b676fec36ccf/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:2:1-7:12
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/marius/.gradle/caches/8.9/transforms/bf4a00e1239763fcae574acec8f74ee4/transformed/framework-10.1.1/AndroidManifest.xml:20:1-27:12
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/marius/.gradle/caches/8.9/transforms/a047a6ddb5de9382794e804b264ea5c9/transformed/image-1.0.0-beta1/AndroidManifest.xml:2:1-9:12
+	package
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:4:5-57:19
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:4:5-57:19
+MERGED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-12:19
+MERGED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-12:19
+MERGED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-19:19
+MERGED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:13:5-19:19
+MERGED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-15:19
+MERGED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-15:19
+MERGED from [:capacitor-cordova-android-plugins] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-9:19
+MERGED from [:capacitor-cordova-android-plugins] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-9:19
+MERGED from [com.google.android.material:material:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/AndroidManifest.xml:22:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:8:5-21:19
+MERGED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:8:5-21:19
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:28:5-64:19
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:28:5-64:19
+MERGED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:8:5-24:19
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:8:5-24:19
+MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:19:5-23:19
+MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:19:5-23:19
+MERGED from [com.google.firebase:firebase-iid-interop:17.1.0] /Users/marius/.gradle/caches/8.9/transforms/cd5806a0a147e9d0e64f0ff8dc30a9ae/transformed/firebase-iid-interop-17.1.0/AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.firebase:firebase-iid-interop:17.1.0] /Users/marius/.gradle/caches/8.9/transforms/cd5806a0a147e9d0e64f0ff8dc30a9ae/transformed/firebase-iid-interop-17.1.0/AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:11:5-22:19
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:11:5-22:19
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:8:5-16:19
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:22:5-39:19
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:22:5-39:19
+MERGED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:25:5-36:19
+MERGED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:25:5-36:19
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:25:5-36:19
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:25:5-36:19
+MERGED from [com.google.android.gms:play-services-stats:17.0.2] /Users/marius/.gradle/caches/8.9/transforms/267d1d4553c103088fe6fc16a1846d0d/transformed/play-services-stats-17.0.2/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-stats:17.0.2] /Users/marius/.gradle/caches/8.9/transforms/267d1d4553c103088fe6fc16a1846d0d/transformed/play-services-stats-17.0.2/AndroidManifest.xml:7:5-20
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:28:5-89
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:23:5-33:19
+MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/marius/.gradle/caches/8.9/transforms/52868518ce6b4341ffa4944557089ddc/transformed/play-services-tasks-18.0.2/AndroidManifest.xml:5:5-20
+MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/marius/.gradle/caches/8.9/transforms/52868518ce6b4341ffa4944557089ddc/transformed/play-services-tasks-18.0.2/AndroidManifest.xml:5:5-20
+MERGED from [com.google.firebase:firebase-measurement-connector:19.0.0] /Users/marius/.gradle/caches/8.9/transforms/0c347288d45e1886df9198c9f3cfba8b/transformed/firebase-measurement-connector-19.0.0/AndroidManifest.xml:22:5-23:19
+MERGED from [com.google.firebase:firebase-measurement-connector:19.0.0] /Users/marius/.gradle/caches/8.9/transforms/0c347288d45e1886df9198c9f3cfba8b/transformed/firebase-measurement-connector-19.0.0/AndroidManifest.xml:22:5-23:19
+MERGED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:20:5-24:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:23:5-31:19
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:23:5-31:19
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:27:5-35:19
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:27:5-35:19
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:25:5-39:19
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:25:5-39:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/62c0e8df97cd6427a508e91ae6109659/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/62c0e8df97cd6427a508e91ae6109659/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/marius/.gradle/caches/8.9/transforms/a047a6ddb5de9382794e804b264ea5c9/transformed/image-1.0.0-beta1/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/marius/.gradle/caches/8.9/transforms/a047a6ddb5de9382794e804b264ea5c9/transformed/image-1.0.0-beta1/AndroidManifest.xml:7:5-20
+	android:extractNativeLibs
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:9:9-35
+	android:label
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:7:9-41
+	android:roundIcon
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:8:9-54
+	android:icon
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:6:9-43
+	android:allowBackup
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:5:9-35
+	android:theme
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:10:9-40
+activity#com.levant.srp.MainActivity
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:12:9-45:20
+	android:label
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:15:13-56
+	android:launchMode
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:17:13-44
+	android:exported
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:18:13-36
+	android:configChanges
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:13:13-129
+	android:theme
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:16:13-62
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:14:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:20:13-23:29
+action#android.intent.action.MAIN
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:21:17-69
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:21:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:22:17-77
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:22:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:smart-residential-platform.vercel.app+data:pathPrefix:/m+data:scheme:https
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:35:13-43:29
+	android:autoVerify
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:35:28-53
+action#android.intent.action.VIEW
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:36:17-69
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:36:25-66
+category#android.intent.category.DEFAULT
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:37:17-76
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:37:27-73
+category#android.intent.category.BROWSABLE
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:38:17-78
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:38:27-75
+data
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:39:17-42:47
+	android:host
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:41:21-73
+	android:scheme
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:40:21-43
+	android:pathPrefix
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:42:21-44
+uses-permission#android.permission.INTERNET
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:67:5-67
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:8:5-67
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:8:5-67
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:8:5-67
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:8:5-67
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:25:5-67
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:25:5-67
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:67:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:68:5-79
+MERGED from [:capacitor-network] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-79
+MERGED from [:capacitor-network] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-79
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:22:5-79
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:7:5-79
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:7:5-79
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:7:5-79
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:7:5-79
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:24:5-79
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:24:5-79
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:22:5-79
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:68:22-76
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:75:5-77
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:23:5-77
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:23:5-77
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:75:22-74
+uses-permission#android.permission.CAMERA
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:83:5-65
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:83:22-62
+uses-permission#android.permission.READ_MEDIA_IMAGES
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:90:5-76
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:90:22-73
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:91:5-93:38
+	android:maxSdkVersion
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:93:9-35
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:92:9-64
+uses-permission#android.permission.USE_BIOMETRIC
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:100:5-72
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:24:5-72
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:24:5-72
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:100:22-69
+uses-permission#android.permission.USE_FINGERPRINT
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:101:5-74
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:101:22-71
+uses-permission#android.permission.VIBRATE
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:104:5-66
+MERGED from [:capacitor-haptics] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-66
+MERGED from [:capacitor-haptics] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-66
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:104:22-63
+uses-feature#android.hardware.camera
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:5-85
+	android:required
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:58-82
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:111:19-57
+uses-feature#android.hardware.camera.autofocus
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:5-95
+	android:required
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:68-92
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:112:19-67
+uses-feature#android.hardware.fingerprint
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:5-90
+	android:required
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:63-87
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:113:19-62
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:52:13-54:64
+	android:resource
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:54:17-51
+	android:name
+		ADDED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml:53:17-67
+uses-sdk
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+MERGED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-mlkit-barcode-scanning] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor-mlkit/barcode-scanning/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-mlkit-barcode-scanning] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor-mlkit/barcode-scanning/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-app] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-app] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/app/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-device] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/device/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-device] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/device/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-filesystem] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/filesystem/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-filesystem] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/filesystem/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-haptics] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-haptics] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-keyboard] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/keyboard/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-keyboard] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/keyboard/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-network] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-network] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-preferences] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/preferences/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-preferences] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/preferences/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-share] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-share] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/share/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-splash-screen] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/splash-screen/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-splash-screen] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/splash-screen/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-status-bar] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/status-bar/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-status-bar] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/status-bar/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-android] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-android] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/android/capacitor/build/intermediates/merged_manifest/debug/AndroidManifest.xml:5:5-44
+MERGED from [:capacitor-cordova-android-plugins] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/AndroidManifest.xml:6:5-44
+MERGED from [:capacitor-cordova-android-plugins] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/merged_manifest/debug/AndroidManifest.xml:6:5-44
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.biometric:biometric:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.material:material:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.camera:camera-view:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5c701e7ce553630d28a4c7d8ccdb505e/transformed/camera-view-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.camera:camera-view:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5c701e7ce553630d28a4c7d8ccdb505e/transformed/camera-view-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/32cc896eb131a0882d5248c607e0f3fc/transformed/appcompat-resources-1.7.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/32cc896eb131a0882d5248c607e0f3fc/transformed/appcompat-resources-1.7.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.1.0] /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.appcompat:appcompat:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/6179ccd960940e5ff4f714773b35837f/transformed/appcompat-1.7.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.1] /Users/marius/.gradle/caches/8.9/transforms/6179ccd960940e5ff4f714773b35837f/transformed/appcompat-1.7.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/marius/.gradle/caches/8.9/transforms/776f91b65f06607d69121e143ce8c359/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] /Users/marius/.gradle/caches/8.9/transforms/776f91b65f06607d69121e143ce8c359/transformed/coordinatorlayout-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/marius/.gradle/caches/8.9/transforms/bbe10166623997ee8d7219e721c25a79/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core-splashscreen:1.0.1] /Users/marius/.gradle/caches/8.9/transforms/bbe10166623997ee8d7219e721c25a79/transformed/core-splashscreen-1.0.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/8529e96872af92a33b7bf5430d5a06e2/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/8529e96872af92a33b7bf5430d5a06e2/transformed/viewpager2-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.mlkit:barcode-scanning:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/55ca23f34a779d55a4a4149f51afb445/transformed/barcode-scanning-17.2.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.mlkit:barcode-scanning:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/55ca23f34a779d55a4a4149f51afb445/transformed/barcode-scanning-17.2.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:barcode-scanning-common:17.0.0] /Users/marius/.gradle/caches/8.9/transforms/0e5911ba4b33cd4460d31e2518ab0f44/transformed/barcode-scanning-common-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.mlkit:barcode-scanning-common:17.0.0] /Users/marius/.gradle/caches/8.9/transforms/0e5911ba4b33cd4460d31e2518ab0f44/transformed/barcode-scanning-common-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:18:5-43
+MERGED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:18:5-43
+MERGED from [com.google.firebase:firebase-iid-interop:17.1.0] /Users/marius/.gradle/caches/8.9/transforms/cd5806a0a147e9d0e64f0ff8dc30a9ae/transformed/firebase-iid-interop-17.1.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-iid-interop:17.1.0] /Users/marius/.gradle/caches/8.9/transforms/cd5806a0a147e9d0e64f0ff8dc30a9ae/transformed/firebase-iid-interop-17.1.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:19:5-44
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:19:5-44
+MERGED from [com.google.mlkit:vision-interfaces:16.2.0] /Users/marius/.gradle/caches/8.9/transforms/6edb2c112e6b012a369c03c16b98ced3/transformed/vision-interfaces-16.2.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.mlkit:vision-interfaces:16.2.0] /Users/marius/.gradle/caches/8.9/transforms/6edb2c112e6b012a369c03c16b98ced3/transformed/vision-interfaces-16.2.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.camera:camera-lifecycle:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/402de38e6ad5ed30beaa50815bcca554/transformed/camera-lifecycle-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.camera:camera-lifecycle:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/402de38e6ad5ed30beaa50815bcca554/transformed/camera-lifecycle-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.databinding:databinding-adapters:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/09b2d866c01cf6131706fe0e219c6370/transformed/databinding-adapters-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.databinding:databinding-adapters:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/09b2d866c01cf6131706fe0e219c6370/transformed/databinding-adapters-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.databinding:databinding-runtime:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/0f65d1da5419e333b28841856325f2bb/transformed/databinding-runtime-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.databinding:databinding-runtime:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/0f65d1da5419e333b28841856325f2bb/transformed/databinding-runtime-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/marius/.gradle/caches/8.9/transforms/d02d05f8411fe2f3a154d7cfd01fa6df/transformed/webkit-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.webkit:webkit:1.9.0] /Users/marius/.gradle/caches/8.9/transforms/d02d05f8411fe2f3a154d7cfd01fa6df/transformed/webkit-1.9.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.browser:browser:1.7.0] /Users/marius/.gradle/caches/8.9/transforms/7101ed1674afc1e02e4625688cd71121/transformed/browser-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.browser:browser:1.7.0] /Users/marius/.gradle/caches/8.9/transforms/7101ed1674afc1e02e4625688cd71121/transformed/browser-1.7.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-stats:17.0.2] /Users/marius/.gradle/caches/8.9/transforms/267d1d4553c103088fe6fc16a1846d0d/transformed/play-services-stats-17.0.2/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-stats:17.0.2] /Users/marius/.gradle/caches/8.9/transforms/267d1d4553c103088fe6fc16a1846d0d/transformed/play-services-stats-17.0.2/AndroidManifest.xml:5:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/344c5f6d9fe47e50cb3f800c8d4a9f77/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/344c5f6d9fe47e50cb3f800c8d4a9f77/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/f0221526fcea0517fb1f17111f888eae/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/f0221526fcea0517fb1f17111f888eae/transformed/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/47d3a510cd2f71a05c349d1e1ec387a6/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/47d3a510cd2f71a05c349d1e1ec387a6/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core-ktx:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/224d5bef9ca4a71494ae1a8fc8b3b5fc/transformed/core-ktx-1.13.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/224d5bef9ca4a71494ae1a8fc8b3b5fc/transformed/core-ktx-1.13.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/bdb4650287978ce44e5da04101a80a53/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/bdb4650287978ce44e5da04101a80a53/transformed/emoji2-views-helper-1.3.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/9de9e9e2fc0be305c11ee9e0c0c95e07/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/9de9e9e2fc0be305c11ee9e0c0c95e07/transformed/drawerlayout-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.5.0] /Users/marius/.gradle/caches/8.9/transforms/5860a76c6c8ccd2f58636e7118931503/transformed/transition-1.5.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.transition:transition:1.5.0] /Users/marius/.gradle/caches/8.9/transforms/5860a76c6c8ccd2f58636e7118931503/transformed/transition-1.5.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/9e1ae47a336a428fd940b40049d1f18b/transformed/dynamicanimation-1.1.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/9e1ae47a336a428fd940b40049d1f18b/transformed/dynamicanimation-1.1.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/8701ddee1096804f7e3fde03481a304a/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/8701ddee1096804f7e3fde03481a304a/transformed/recyclerview-1.2.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5f696a8179e7953add26bba955ccfca9/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/5f696a8179e7953add26bba955ccfca9/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/977ebd643c86f724abac936abceedd95/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/977ebd643c86f724abac936abceedd95/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/8b5ea60eca6a94977858dc1fa41e1109/transformed/customview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/8b5ea60eca6a94977858dc1fa41e1109/transformed/customview-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/392a8b3e1e85b0c5cb50e8ad132b7998/transformed/lifecycle-viewmodel-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/392a8b3e1e85b0c5cb50e8ad132b7998/transformed/lifecycle-viewmodel-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/9640aaae9c83b310f20bd76daea35caa/transformed/lifecycle-livedata-core-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/9640aaae9c83b310f20bd76daea35caa/transformed/lifecycle-livedata-core-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/ffd91af0247d938062f61a17ffc64080/transformed/lifecycle-livedata-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/ffd91af0247d938062f61a17ffc64080/transformed/lifecycle-livedata-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/1557690b067fd6e319ee8d41be4566f1/transformed/lifecycle-runtime-2.6.2/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/1557690b067fd6e319ee8d41be4566f1/transformed/lifecycle-runtime-2.6.2/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/aa472508c2889730fc86cd845635898f/transformed/lifecycle-viewmodel-savedstate-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/aa472508c2889730fc86cd845635898f/transformed/lifecycle-viewmodel-savedstate-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/b6f2770203bb2abf5bcb4c95c3858318/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/marius/.gradle/caches/8.9/transforms/b6f2770203bb2abf5bcb4c95c3858318/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-installations-interop:17.1.1] /Users/marius/.gradle/caches/8.9/transforms/570ac7bca12b80c1573b9235b99a8775/transformed/firebase-installations-interop-17.1.1/AndroidManifest.xml:17:5-44
+MERGED from [com.google.firebase:firebase-installations-interop:17.1.1] /Users/marius/.gradle/caches/8.9/transforms/570ac7bca12b80c1573b9235b99a8775/transformed/firebase-installations-interop-17.1.1/AndroidManifest.xml:17:5-44
+MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/marius/.gradle/caches/8.9/transforms/52868518ce6b4341ffa4944557089ddc/transformed/play-services-tasks-18.0.2/AndroidManifest.xml:4:5-43
+MERGED from [com.google.android.gms:play-services-tasks:18.0.2] /Users/marius/.gradle/caches/8.9/transforms/52868518ce6b4341ffa4944557089ddc/transformed/play-services-tasks-18.0.2/AndroidManifest.xml:4:5-43
+MERGED from [com.google.firebase:firebase-measurement-connector:19.0.0] /Users/marius/.gradle/caches/8.9/transforms/0c347288d45e1886df9198c9f3cfba8b/transformed/firebase-measurement-connector-19.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-measurement-connector:19.0.0] /Users/marius/.gradle/caches/8.9/transforms/0c347288d45e1886df9198c9f3cfba8b/transformed/firebase-measurement-connector-19.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:18:5-43
+MERGED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:18:5-43
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/marius/.gradle/caches/8.9/transforms/15ccf7d18f3b99ff0a370aad12224208/transformed/fragment-1.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.6.2] /Users/marius/.gradle/caches/8.9/transforms/15ccf7d18f3b99ff0a370aad12224208/transformed/fragment-1.6.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.8.0] /Users/marius/.gradle/caches/8.9/transforms/910960877edea38849c312d3dd5ed874/transformed/activity-1.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.8.0] /Users/marius/.gradle/caches/8.9/transforms/910960877edea38849c312d3dd5ed874/transformed/activity-1.8.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/marius/.gradle/caches/8.9/transforms/4d426575f816e87c3879f577d6ee37fb/transformed/exifinterface-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/marius/.gradle/caches/8.9/transforms/4d426575f816e87c3879f577d6ee37fb/transformed/exifinterface-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44a131a4b94c0cbcdc2fa287d99490b7/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44a131a4b94c0cbcdc2fa287d99490b7/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9cc1707e6ee2e7be97e53f947ffd045e/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9cc1707e6ee2e7be97e53f947ffd045e/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44b8d3f1fb3e77bf4a15f3a444bd27f6/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/44b8d3f1fb3e77bf4a15f3a444bd27f6/transformed/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/b9e3a6f53dcba3c8c262036d5ad6d6df/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/b9e3a6f53dcba3c8c262036d5ad6d6df/transformed/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.databinding:viewbinding:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/fa657616cba1be10bc922685f235df0c/transformed/viewbinding-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.databinding:viewbinding:8.2.1] /Users/marius/.gradle/caches/8.9/transforms/fa657616cba1be10bc922685f235df0c/transformed/viewbinding-8.2.1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-api:3.0.0] /Users/marius/.gradle/caches/8.9/transforms/ef075b5733a0e02dc753429635ba99a9/transformed/transport-api-3.0.0/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.android.datatransport:transport-api:3.0.0] /Users/marius/.gradle/caches/8.9/transforms/ef075b5733a0e02dc753429635ba99a9/transformed/transport-api-3.0.0/AndroidManifest.xml:18:5-20:41
+MERGED from [com.google.firebase:firebase-encoders-json:18.0.0] /Users/marius/.gradle/caches/8.9/transforms/0049396ba5ec7dff6e234c763ac0a9b4/transformed/firebase-encoders-json-18.0.0/AndroidManifest.xml:19:5-21:41
+MERGED from [com.google.firebase:firebase-encoders-json:18.0.0] /Users/marius/.gradle/caches/8.9/transforms/0049396ba5ec7dff6e234c763ac0a9b4/transformed/firebase-encoders-json-18.0.0/AndroidManifest.xml:19:5-21:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/62c0e8df97cd6427a508e91ae6109659/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/62c0e8df97cd6427a508e91ae6109659/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.firebase:firebase-components:17.1.5] /Users/marius/.gradle/caches/8.9/transforms/ac656827337457f72751bbeaf839eb4a/transformed/firebase-components-17.1.5/AndroidManifest.xml:18:5-44
+MERGED from [com.google.firebase:firebase-components:17.1.5] /Users/marius/.gradle/caches/8.9/transforms/ac656827337457f72751bbeaf839eb4a/transformed/firebase-components-17.1.5/AndroidManifest.xml:18:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/marius/.gradle/caches/8.9/transforms/943fc219c43a1e7f1addf2bd1bbe1f51/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/marius/.gradle/caches/8.9/transforms/943fc219c43a1e7f1addf2bd1bbe1f51/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/4bd90d2cbb03e3a616202e1c9869907a/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/4bd90d2cbb03e3a616202e1c9869907a/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9a0a4dfaa4adb4a19ed9cd0799c4a24b/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/9a0a4dfaa4adb4a19ed9cd0799c4a24b/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/7840e5451930fe6bab9565a1590eb2b8/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /Users/marius/.gradle/caches/8.9/transforms/7840e5451930fe6bab9565a1590eb2b8/transformed/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/marius/.gradle/caches/8.9/transforms/7494f170086e700720e6b676fec36ccf/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.0] /Users/marius/.gradle/caches/8.9/transforms/7494f170086e700720e6b676fec36ccf/transformed/annotation-experimental-1.4.0/AndroidManifest.xml:5:5-44
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/marius/.gradle/caches/8.9/transforms/bf4a00e1239763fcae574acec8f74ee4/transformed/framework-10.1.1/AndroidManifest.xml:25:5-44
+MERGED from [org.apache.cordova:framework:10.1.1] /Users/marius/.gradle/caches/8.9/transforms/bf4a00e1239763fcae574acec8f74ee4/transformed/framework-10.1.1/AndroidManifest.xml:25:5-44
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/marius/.gradle/caches/8.9/transforms/a047a6ddb5de9382794e804b264ea5c9/transformed/image-1.0.0-beta1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/marius/.gradle/caches/8.9/transforms/a047a6ddb5de9382794e804b264ea5c9/transformed/image-1.0.0-beta1/AndroidManifest.xml:5:5-44
+	android:targetSdkVersion
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/AndroidManifest.xml
+activity#com.aparajita.capacitor.biometricauth.AuthActivity
+ADDED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-11:59
+	android:label
+		ADDED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-65
+	android:theme
+		ADDED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-56
+	android:name
+		ADDED from [:aparajita-capacitor-biometric-auth] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-78
+queries
+ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:15
+MERGED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:15
+MERGED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:7:5-11:15
+intent#action:name:android.support.customtabs.action.CustomTabsService
+ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:18
+action#android.support.customtabs.action.CustomTabsService
+ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-90
+	android:name
+		ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:21-87
+activity#com.capacitorjs.plugins.browser.BrowserControllerActivity
+ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:9-18:75
+	android:launchMode
+		ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:13-44
+	android:exported
+		ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:13-37
+	android:theme
+		ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:13-72
+	android:name
+		ADDED from [:capacitor-browser] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-85
+intent#action:name:android.media.action.IMAGE_CAPTURE
+ADDED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-10:18
+action#android.media.action.IMAGE_CAPTURE
+ADDED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-73
+	android:name
+		ADDED from [:capacitor-camera] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:21-70
+service#com.capacitorjs.plugins.pushnotifications.MessagingService
+ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:9-14:19
+	android:exported
+		ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:10:13-37
+	android:name
+		ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:9:13-86
+intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
+ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-13:29
+action#com.google.firebase.MESSAGING_EVENT
+ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:17-78
+	android:name
+		ADDED from [:capacitor-push-notifications] /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:25-75
+activity#com.google.mlkit.vision.codescanner.internal.GmsBarcodeScanningDelegateActivity
+ADDED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:15:9-20:20
+	android:screenOrientation
+		ADDED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:18:13-49
+	android:exported
+		ADDED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:17:13-37
+	tools:ignore
+		ADDED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:19:13-42
+	android:name
+		ADDED from [com.google.android.gms:play-services-code-scanner:16.1.0] /Users/marius/.gradle/caches/8.9/transforms/8e061c1dccddb7d68eea0c00de1476a0/transformed/play-services-code-scanner-16.1.0/AndroidManifest.xml:16:13-107
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:24:5-68
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:9:5-68
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:9:5-68
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:24:22-65
+uses-permission#com.google.android.c2dm.permission.RECEIVE
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:26:5-82
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:11:5-82
+MERGED from [com.google.android.gms:play-services-cloud-messaging:17.0.1] /Users/marius/.gradle/caches/8.9/transforms/b1e6a9454a7afd474cb31567a657c3a2/transformed/play-services-cloud-messaging-17.0.1/AndroidManifest.xml:11:5-82
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:26:22-79
+receiver#com.google.firebase.iid.FirebaseInstanceIdReceiver
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:29:9-40:20
+	android:exported
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:31:13-36
+	android:permission
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:32:13-73
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:30:13-78
+intent-filter#action:name:com.google.android.c2dm.intent.RECEIVE
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:33:13-35:29
+action#com.google.android.c2dm.intent.RECEIVE
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:34:17-81
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:34:25-78
+meta-data#com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:37:13-39:40
+	android:value
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:39:17-37
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:38:17-92
+service#com.google.firebase.messaging.FirebaseMessagingService
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:46:9-53:19
+	android:exported
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:49:13-37
+	android:directBootAware
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:48:13-43
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:47:13-82
+service#com.google.firebase.components.ComponentDiscoveryService
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:54:9-63:19
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:12:9-21:19
+MERGED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:12:9-21:19
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:30:9-38:19
+MERGED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:30:9-38:19
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:24:9-30:19
+MERGED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:24:9-30:19
+	android:exported
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:56:13-37
+	tools:targetApi
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:34:13-32
+	android:directBootAware
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:32:13-43
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:55:13-84
+meta-data#com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:57:13-59:85
+	android:value
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:59:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:58:17-122
+meta-data#com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar
+ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:60:13-62:85
+	android:value
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:62:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:23.3.1] /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/AndroidManifest.xml:61:17-119
+service#com.google.mlkit.common.internal.MlKitComponentDiscoveryService
+ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:15:9-23:19
+MERGED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:15:9-23:19
+	android:exported
+		ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:11:13-37
+	tools:targetApi
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:19:13-32
+	android:directBootAware
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:17:13-43
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:10:13-91
+meta-data#com.google.firebase.components:com.google.mlkit.vision.barcode.internal.BarcodeRegistrar
+ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0] /Users/marius/.gradle/caches/8.9/transforms/c8c9304f8b2617a163a39e1a5beeda7a/transformed/play-services-mlkit-barcode-scanning-18.3.0/AndroidManifest.xml:13:17-120
+meta-data#com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar
+ADDED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.mlkit:vision-common:17.3.0] /Users/marius/.gradle/caches/8.9/transforms/ff694f8586397088fb00427ce9db2c9f/transformed/vision-common-17.3.0/AndroidManifest.xml:13:17-124
+provider#com.google.mlkit.common.internal.MlKitInitProvider
+ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:9:9-13:38
+	android:authorities
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:11:13-69
+	android:exported
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:12:13-37
+	android:initOrder
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:13:13-35
+	android:name
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:10:13-78
+meta-data#com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar
+ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:20:13-22:85
+	android:value
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:22:17-82
+	android:name
+		ADDED from [com.google.mlkit:common:18.9.0] /Users/marius/.gradle/caches/8.9/transforms/0d0a95f2ca844dcd244ff2e85f505f04/transformed/common-18.9.0/AndroidManifest.xml:21:17-120
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:9-22:45
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:22:19-43
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:21:19-78
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/AndroidManifest.xml:20:19-85
+meta-data#com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar
+ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:15:13-17:85
+	android:value
+		ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:17:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:16:17-130
+meta-data#com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar
+ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:18:13-20:85
+	android:value
+		ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:20:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-installations:17.2.0] /Users/marius/.gradle/caches/8.9/transforms/97e4492785ed513fc4ce74e57fff1d1a/transformed/firebase-installations-17.2.0/AndroidManifest.xml:19:17-127
+meta-data#com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar
+ADDED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-common-ktx:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/7a2d21f5ab0bc5ee9e1bb61f7c63c0ec/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:13:17-116
+provider#com.google.firebase.provider.FirebaseInitProvider
+ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:23:9-28:39
+	android:authorities
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:25:13-72
+	android:exported
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:27:13-37
+	android:directBootAware
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:26:13-43
+	android:initOrder
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:28:13-36
+	android:name
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:24:13-77
+meta-data#com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar
+ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:35:13-37:85
+	android:value
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:37:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-common:20.4.2] /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/AndroidManifest.xml:36:17-109
+service#androidx.camera.core.impl.MetadataHolderService
+ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:26:9-35:19
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:31:9-35:78
+MERGED from [androidx.camera:camera-core:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/AndroidManifest.xml:31:9-35:78
+	tools:node
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:31:13-31
+	android:enabled
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:28:13-36
+	android:exported
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:29:13-37
+	tools:ignore
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:30:13-75
+	android:name
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:27:13-75
+meta-data#androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER
+ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:32:13-34:89
+	android:value
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:34:17-86
+	android:name
+		ADDED from [androidx.camera:camera-camera2:1.1.0] /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/AndroidManifest.xml:33:17-103
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+permission#com.levant.srp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+uses-permission#com.levant.srp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.0] /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:18.1.0] /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+meta-data#com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar
+ADDED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+	android:value
+		ADDED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-datatransport:18.1.7] /Users/marius/.gradle/caches/8.9/transforms/f128bb4857eb52794a9639bba70f4e44/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+service#com.google.android.datatransport.runtime.backends.TransportBackendDiscovery
+ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:36:9-38:40
+MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:36:9-38:40
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+	android:name
+		ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+meta-data#backend:com.google.android.datatransport.cct.CctBackendFactory
+ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+	android:value
+		ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+	android:name
+		ADDED from [com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/7f964606193e228a7da636cbae0de706/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+service#com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService
+ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+	android:permission
+		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+	android:name
+		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+receiver#com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver
+ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+	android:exported
+		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+	android:name
+		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/marius/.gradle/caches/8.9/transforms/c49dcf0b0e317b66a28578033990a84b/transformed/transport-runtime-3.1.8/AndroidManifest.xml:33:13-132

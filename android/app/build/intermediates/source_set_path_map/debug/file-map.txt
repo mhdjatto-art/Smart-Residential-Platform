@@ -1,0 +1,66 @@
+com.levant.srp.app-databinding-adapters-8.2.1-0 /Users/marius/.gradle/caches/8.9/transforms/09b2d866c01cf6131706fe0e219c6370/transformed/databinding-adapters-8.2.1/res
+com.levant.srp.app-databinding-runtime-8.2.1-1 /Users/marius/.gradle/caches/8.9/transforms/0f65d1da5419e333b28841856325f2bb/transformed/databinding-runtime-8.2.1/res
+com.levant.srp.app-lifecycle-runtime-2.6.2-2 /Users/marius/.gradle/caches/8.9/transforms/1557690b067fd6e319ee8d41be4566f1/transformed/lifecycle-runtime-2.6.2/res
+com.levant.srp.app-fragment-1.6.2-3 /Users/marius/.gradle/caches/8.9/transforms/15ccf7d18f3b99ff0a370aad12224208/transformed/fragment-1.6.2/res
+com.levant.srp.app-core-ktx-1.13.0-4 /Users/marius/.gradle/caches/8.9/transforms/224d5bef9ca4a71494ae1a8fc8b3b5fc/transformed/core-ktx-1.13.0/res
+com.levant.srp.app-appcompat-resources-1.7.1-5 /Users/marius/.gradle/caches/8.9/transforms/32cc896eb131a0882d5248c607e0f3fc/transformed/appcompat-resources-1.7.1/res
+com.levant.srp.app-camera-core-1.1.0-6 /Users/marius/.gradle/caches/8.9/transforms/336f147d078416050f06efb6eb92902b/transformed/camera-core-1.1.0/res
+com.levant.srp.app-lifecycle-process-2.6.2-7 /Users/marius/.gradle/caches/8.9/transforms/347ab05f5a870fd6706a7d98d02bfaf8/transformed/lifecycle-process-2.6.2/res
+com.levant.srp.app-lifecycle-viewmodel-2.6.2-8 /Users/marius/.gradle/caches/8.9/transforms/392a8b3e1e85b0c5cb50e8ad132b7998/transformed/lifecycle-viewmodel-2.6.2/res
+com.levant.srp.app-camera-lifecycle-1.1.0-9 /Users/marius/.gradle/caches/8.9/transforms/402de38e6ad5ed30beaa50815bcca554/transformed/camera-lifecycle-1.1.0/res
+com.levant.srp.app-startup-runtime-1.1.1-10 /Users/marius/.gradle/caches/8.9/transforms/53de2126824d2ab13a54afc6e6606798/transformed/startup-runtime-1.1.1/res
+com.levant.srp.app-transition-1.5.0-11 /Users/marius/.gradle/caches/8.9/transforms/5860a76c6c8ccd2f58636e7118931503/transformed/transition-1.5.0/res
+com.levant.srp.app-camera-view-1.1.0-12 /Users/marius/.gradle/caches/8.9/transforms/5c701e7ce553630d28a4c7d8ccdb505e/transformed/camera-view-1.1.0/res
+com.levant.srp.app-appcompat-1.7.1-13 /Users/marius/.gradle/caches/8.9/transforms/6179ccd960940e5ff4f714773b35837f/transformed/appcompat-1.7.1/res
+com.levant.srp.app-core-1.13.0-14 /Users/marius/.gradle/caches/8.9/transforms/61fb19f31a05dc3a009da6d14f132105/transformed/core-1.13.0/res
+com.levant.srp.app-emoji2-1.3.0-15 /Users/marius/.gradle/caches/8.9/transforms/695329a13cfac83cc1fbdd0721aafe23/transformed/emoji2-1.3.0/res
+com.levant.srp.app-browser-1.7.0-16 /Users/marius/.gradle/caches/8.9/transforms/7101ed1674afc1e02e4625688cd71121/transformed/browser-1.7.0/res
+com.levant.srp.app-annotation-experimental-1.4.0-17 /Users/marius/.gradle/caches/8.9/transforms/7494f170086e700720e6b676fec36ccf/transformed/annotation-experimental-1.4.0/res
+com.levant.srp.app-coordinatorlayout-1.2.0-18 /Users/marius/.gradle/caches/8.9/transforms/776f91b65f06607d69121e143ce8c359/transformed/coordinatorlayout-1.2.0/res
+com.levant.srp.app-firebase-messaging-23.3.1-19 /Users/marius/.gradle/caches/8.9/transforms/81134079af79bc28696f2193b9277f9d/transformed/firebase-messaging-23.3.1/res
+com.levant.srp.app-viewpager2-1.0.0-20 /Users/marius/.gradle/caches/8.9/transforms/8529e96872af92a33b7bf5430d5a06e2/transformed/viewpager2-1.0.0/res
+com.levant.srp.app-recyclerview-1.2.1-21 /Users/marius/.gradle/caches/8.9/transforms/8701ddee1096804f7e3fde03481a304a/transformed/recyclerview-1.2.1/res
+com.levant.srp.app-profileinstaller-1.3.1-22 /Users/marius/.gradle/caches/8.9/transforms/88619ecb3489b52172d49666383861d1/transformed/profileinstaller-1.3.1/res
+com.levant.srp.app-activity-1.8.0-23 /Users/marius/.gradle/caches/8.9/transforms/910960877edea38849c312d3dd5ed874/transformed/activity-1.8.0/res
+com.levant.srp.app-core-runtime-2.2.0-24 /Users/marius/.gradle/caches/8.9/transforms/943fc219c43a1e7f1addf2bd1bbe1f51/transformed/core-runtime-2.2.0/res
+com.levant.srp.app-lifecycle-livedata-core-2.6.2-25 /Users/marius/.gradle/caches/8.9/transforms/9640aaae9c83b310f20bd76daea35caa/transformed/lifecycle-livedata-core-2.6.2/res
+com.levant.srp.app-drawerlayout-1.1.1-26 /Users/marius/.gradle/caches/8.9/transforms/9de9e9e2fc0be305c11ee9e0c0c95e07/transformed/drawerlayout-1.1.1/res
+com.levant.srp.app-dynamicanimation-1.1.0-27 /Users/marius/.gradle/caches/8.9/transforms/9e1ae47a336a428fd940b40049d1f18b/transformed/dynamicanimation-1.1.0/res
+com.levant.srp.app-camera-camera2-1.1.0-28 /Users/marius/.gradle/caches/8.9/transforms/a1b6a3e400df157eae3376a3c8840295/transformed/camera-camera2-1.1.0/res
+com.levant.srp.app-lifecycle-viewmodel-savedstate-2.6.2-29 /Users/marius/.gradle/caches/8.9/transforms/aa472508c2889730fc86cd845635898f/transformed/lifecycle-viewmodel-savedstate-2.6.2/res
+com.levant.srp.app-constraintlayout-2.1.0-30 /Users/marius/.gradle/caches/8.9/transforms/ab6a6bfce778bceed3f6b8447f4a10aa/transformed/constraintlayout-2.1.0/res
+com.levant.srp.app-play-services-basement-18.1.0-31 /Users/marius/.gradle/caches/8.9/transforms/af4a78ad833fcea5d7436ccc8073defb/transformed/play-services-basement-18.1.0/res
+com.levant.srp.app-savedstate-1.2.1-32 /Users/marius/.gradle/caches/8.9/transforms/b6f2770203bb2abf5bcb4c95c3858318/transformed/savedstate-1.2.1/res
+com.levant.srp.app-cardview-1.0.0-33 /Users/marius/.gradle/caches/8.9/transforms/b9e3a6f53dcba3c8c262036d5ad6d6df/transformed/cardview-1.0.0/res
+com.levant.srp.app-core-splashscreen-1.0.1-34 /Users/marius/.gradle/caches/8.9/transforms/bbe10166623997ee8d7219e721c25a79/transformed/core-splashscreen-1.0.1/res
+com.levant.srp.app-emoji2-views-helper-1.3.0-35 /Users/marius/.gradle/caches/8.9/transforms/bdb4650287978ce44e5da04101a80a53/transformed/emoji2-views-helper-1.3.0/res
+com.levant.srp.app-material-1.13.0-36 /Users/marius/.gradle/caches/8.9/transforms/c25890091e9fa358fe73f4c73d5f584f/transformed/material-1.13.0/res
+com.levant.srp.app-webkit-1.9.0-37 /Users/marius/.gradle/caches/8.9/transforms/d02d05f8411fe2f3a154d7cfd01fa6df/transformed/webkit-1.9.0/res
+com.levant.srp.app-biometric-1.1.0-38 /Users/marius/.gradle/caches/8.9/transforms/f6f01f9492cfa80df6ef0fd18db0f197/transformed/biometric-1.1.0/res
+com.levant.srp.app-firebase-common-20.4.2-39 /Users/marius/.gradle/caches/8.9/transforms/f76a69f7e8bb055114fae701e8caeeca/transformed/firebase-common-20.4.2/res
+com.levant.srp.app-play-services-base-18.1.0-40 /Users/marius/.gradle/caches/8.9/transforms/ff62e7a9c5caf180c248d62701c1afef/transformed/play-services-base-18.1.0/res
+com.levant.srp.app-lifecycle-livedata-2.6.2-41 /Users/marius/.gradle/caches/8.9/transforms/ffd91af0247d938062f61a17ffc64080/transformed/lifecycle-livedata-2.6.2/res
+com.levant.srp.app-pngs-42 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/build/generated/res/pngs/debug
+com.levant.srp.app-resValues-43 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/build/generated/res/resValues/debug
+com.levant.srp.app-packageDebugResources-44 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.levant.srp.app-packageDebugResources-45 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.levant.srp.app-merged_res-46 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/build/intermediates/merged_res/debug
+com.levant.srp.app-debug-47 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/debug/res
+com.levant.srp.app-main-48 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/app/src/main/res
+com.levant.srp.app-packaged_res-49 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/android/capacitor-cordova-android-plugins/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-50 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@aparajita/capacitor-biometric-auth/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-51 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor-mlkit/barcode-scanning/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-52 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/android/capacitor/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-53 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/app/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-54 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/browser/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-55 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/camera/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-56 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/device/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-57 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/filesystem/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-58 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/haptics/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-59 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/keyboard/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-60 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/network/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-61 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/preferences/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-62 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/push-notifications/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-63 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/share/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-64 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/splash-screen/android/build/intermediates/packaged_res/debug
+com.levant.srp.app-packaged_res-65 /Users/marius/Documents/Claude/Projects/SRP — Smart Residential Platform/node_modules/@capacitor/status-bar/android/build/intermediates/packaged_res/debug
