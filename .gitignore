@@ -64,3 +64,10 @@ node_modules/
 out/
 build/
 
+
+# Build outputs
+.next/
+node_modules/
+out/
+build/
+
