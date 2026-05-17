@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AlertOctagon, CalendarClock } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -58,18 +59,18 @@ export default async function CashierQuickPage({
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
         <div className="flex-1"><SearchBar placeholder={t("cashier.search_placeholder")} /></div>
         <div className="flex gap-2">
-          <a
+          <Link
             href="/payments/quick"
             className={`rounded-full border px-3 py-1.5 text-xs ${!onlyOverdue ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"}`}
           >
             {t("cashier.filter_all")}
-          </a>
-          <a
+          </Link>
+          <Link
             href="/payments/quick?overdue=1"
             className={`rounded-full border px-3 py-1.5 text-xs ${onlyOverdue ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"}`}
           >
             {t("cashier.filter_overdue")}
-          </a>
+          </Link>
         </div>
       </div>
 

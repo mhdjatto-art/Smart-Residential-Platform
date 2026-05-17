@@ -24,6 +24,34 @@ allprojects {
     }
 }
 
+/**
+ * Force every Capacitor plugin module (including third-party ones like
+ * @aparajita/capacitor-biometric-auth) to compile against Java 17.
+ *
+ * Some plugins ship build.gradle files that hard-code
+ *   sourceCompatibility JavaVersion.VERSION_21
+ * which only works if JDK 21 is installed locally. We pin to 17 because:
+ *   - Capacitor 6 itself targets Java 17.
+ *   - The Android Gradle Plugin 8.2.x is built against JDK 17.
+ *   - JDK 21 isn't required by any plugin's actual code — it's just a stale
+ *     default in their generated build.gradle.
+ *
+ * Using `afterEvaluate` so we override the plugin's own configuration AFTER
+ * it has set its own values.
+ */
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            project.android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+            }
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

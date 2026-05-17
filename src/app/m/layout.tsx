@@ -1,6 +1,7 @@
 import { BottomNav } from "@/components/mobile/bottom-nav";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { BrandingProvider, getActiveBranding } from "@/components/layout/branding-provider";
+import { NativePushRegister } from "@/components/native/native-push-register";
 import { requireSession } from "@/lib/auth/guards";
 import { getResidentContext } from "@/lib/api/resident-mobile";
 import { getEnabledFeatures } from "@/lib/auth/feature-flags";
@@ -53,6 +54,8 @@ export default async function MobileLayout({ children }: { children: React.React
         </div>
         <InstallPrompt />
         <BottomNav enabledFeatures={enabledFeatures} />
+        {/* Phase 6 — registers FCM/APNS push token. No-op on the web build. */}
+        <NativePushRegister />
       </div>
     </BrandingProvider>
   );

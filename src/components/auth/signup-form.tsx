@@ -121,7 +121,7 @@ export function SignupForm() {
             <div className="flex items-start gap-2 text-emerald-700 dark:text-emerald-300">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <p className="font-medium">You're joining</p>
+                <p className="font-medium">You&apos;re joining</p>
                 <p className="text-xs">
                   {preview.organization_name}
                   {preview.compound_name && ` · ${preview.compound_name}`}

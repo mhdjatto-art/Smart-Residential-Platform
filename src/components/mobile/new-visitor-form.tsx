@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ScanLine } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { visitorSchema } from "@/lib/validations/operations";
 import { createVisitor } from "@/lib/api/visitors";
 import { useT } from "@/lib/i18n/client";
+import { isNative, scanQrCode } from "@/lib/native/capacitor-bridge";
 
 interface NewVisitorFormProps {
   residentId: string;
@@ -23,6 +25,78 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
   const [pending, startTransition] = useTransition();
   const { t } = useT();
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Phase 9 — show the QR scan button ONLY inside the Capacitor native shell.
+  // We deliberately defer the isNative() check to useEffect so SSR and the
+  // first client render stay identical (no hydration mismatch).
+  const [showScan, setShowScan] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    setShowScan(isNative());
+  }, []);
+
+  /**
+   * Tap-to-scan handler. Opens the native ML Kit barcode scanner and writes
+   * the result into the form. Tries to recognise common payload shapes:
+   *   - JSON `{ name, id, plate }` → fills three fields at once
+   *   - Plain string → drops into the ID Number field
+   *
+   * On the web build this path isn't reachable (the button is hidden), but
+   * `scanQrCode()` has a web-side BarcodeDetector fallback regardless.
+   */
+  async function handleScan() {
+    if (scanning) return;
+    setScanning(true);
+    try {
+      const raw = await scanQrCode();
+      if (!raw) {
+        toast.info("No QR code detected");
+        return;
+      }
+
+      let filled = 0;
+      const form = formRef.current;
+      if (!form) return;
+
+      // Try JSON first.
+      try {
+        const parsed = JSON.parse(raw) as { name?: string; id?: string; plate?: string };
+        if (parsed && typeof parsed === "object") {
+          const setField = (name: string, value: string | undefined): void => {
+            if (!value) return;
+            const el = form.elements.namedItem(name) as HTMLInputElement | null;
+            if (el) {
+              el.value = value;
+              filled++;
+            }
+          };
+          setField("full_name",     parsed.name);
+          setField("id_number",     parsed.id);
+          setField("vehicle_plate", parsed.plate);
+        }
+      } catch {
+        // Not JSON — treat the whole string as an ID number.
+        const idField = form.elements.namedItem("id_number") as HTMLInputElement | null;
+        if (idField) {
+          idField.value = raw;
+          filled = 1;
+        }
+      }
+
+      if (filled > 0) {
+        toast.success("QR scanned");
+      } else {
+        toast.info("Unrecognised QR — please enter manually");
+      }
+    } catch (err) {
+      console.warn("[visitor-form] scan failed", err);
+      toast.error("Scan failed", { description: err instanceof Error ? err.message : "" });
+    } finally {
+      setScanning(false);
+    }
+  }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,7 +136,20 @@ export function NewVisitorForm({ residentId, unitId }: NewVisitorFormProps) {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate>
+    <form ref={formRef} onSubmit={onSubmit} noValidate>
+      {/* Phase 9 — native-only QR scan shortcut. Hidden on web/desktop. */}
+      {showScan && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleScan}
+          disabled={scanning}
+          className="mb-3 w-full"
+        >
+          <ScanLine className="mr-2 h-4 w-4" />
+          {scanning ? "Scanning…" : "Scan visitor QR"}
+        </Button>
+      )}
       <Card>
         <CardContent className="grid gap-4 p-4">
           <div className="space-y-1.5">

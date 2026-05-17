@@ -52,3 +52,4 @@ src/test-supabase.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+android/app/google-services.json

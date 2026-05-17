@@ -5,7 +5,7 @@
 #   ORG_SLUG=levant \
 #   ORG_NAME="LSRP" \
 #   ORG_BUNDLE_ID="com.levant.srp" \
-#   ORG_SERVER_URL="https://www.lsrp.app/m" \
+#   ORG_SERVER_URL="https://smart-residential-platform.vercel.app/m" \
 #   ORG_THEME_COLOR="#0B1F3A" \
 #   ORG_LOGO_PNG="./mobile/resources/icon.png" \
 #   ./scripts/build-org-app.sh
@@ -35,7 +35,7 @@ for var in "${REQUIRED[@]}"; do
     echo "  ORG_SLUG=levant \\"
     echo "  ORG_NAME=\"LSRP\" \\"
     echo "  ORG_BUNDLE_ID=\"com.levant.srp\" \\"
-    echo "  ORG_SERVER_URL=\"https://www.lsrp.app/m\" \\"
+    echo "  ORG_SERVER_URL=\"https://smart-residential-platform.vercel.app/m\" \\"
     echo "  ./scripts/build-org-app.sh"
     exit 1
   fi
@@ -62,7 +62,7 @@ SHELL_BOOT="$ROOT_DIR/mobile/src/boot.js"
 TMP_BOOT="$(mktemp)"
 # We use a literal sed replace of the const default — keeps boot.js safe to
 # commit unchanged (the default is the same as a "fresh checkout" value).
-sed "s|https://www.lsrp.app/m|$ORG_SERVER_URL|g" "$SHELL_BOOT" > "$TMP_BOOT"
+sed "s|https://smart-residential-platform.vercel.app/m|$ORG_SERVER_URL|g" "$SHELL_BOOT" > "$TMP_BOOT"
 mv "$TMP_BOOT" "$SHELL_BOOT"
 
 # Inject ORG_SERVER_URL as a global on the window object too (for any

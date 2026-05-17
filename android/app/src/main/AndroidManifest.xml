@@ -22,6 +22,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!--
+              Phase 8 — Deep link to /m/* shell.
+              Tapping a link like https://smart-residential-platform.vercel.app/m/payments
+              opens the installed LSRP app instead of the browser.
+              `autoVerify=true` activates Android App Links once the
+              assetlinks.json is published at
+              https://smart-residential-platform.vercel.app/.well-known/assetlinks.json.
+              When the production domain is provisioned later (e.g. lsrp.app),
+              add another <intent-filter> for that host alongside this one.
+            -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="smart-residential-platform.vercel.app"
+                    android:pathPrefix="/m" />
+            </intent-filter>
+
         </activity>
 
         <provider
@@ -33,8 +53,63 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
     </application>
 
-    <!-- Permissions — minimal set for test build -->
+    <!--
+      Permissions — Phase 8.
+      Each one mapped to a concrete capability the app uses. We intentionally
+      do NOT request: location, contacts, calendar, SMS, microphone, or any
+      other sensitive permission — none of them are part of the resident app.
+    -->
+
+    <!-- Core networking. Required by Next.js WebView + Capacitor Network plugin. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--
+      Push notifications.
+      Android 13 (API 33) added a runtime permission for posting notifications.
+      Older Android versions ignore this declaration safely.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+      Camera + barcode scanning.
+      Used by /m/visitors flow (QR scan via @capacitor-mlkit/barcode-scanning)
+      and /m receipt uploads (@capacitor/camera). Marked as optional below
+      via <uses-feature> so devices without a camera can still install the app.
+    -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!--
+      Reading saved images for receipt / profile picker.
+      Android 13+ uses scoped READ_MEDIA_IMAGES; pre-13 falls back to
+      READ_EXTERNAL_STORAGE (capped at API 32 — see maxSdkVersion).
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!--
+      Biometric login (@aparajita/capacitor-biometric-auth).
+      USE_BIOMETRIC is the modern declaration; USE_FINGERPRINT is the
+      pre-Android-9 equivalent that the plugin falls back to.
+    -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- Haptics on button taps (@capacitor/haptics). -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!--
+      Hardware features the app prefers but doesn't require. Listing them as
+      `required="false"` keeps the Play Store install filter loose so a
+      tablet without a camera or fingerprint reader can still get the app.
+    -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+
 </manifest>

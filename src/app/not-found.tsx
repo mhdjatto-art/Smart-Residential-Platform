@@ -8,7 +8,7 @@ export default function NotFound() {
         <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">404</p>
         <h1 className="mt-2 text-3xl font-bold">Page not found</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or you don't have access to it.
+          The page you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
         </p>
         <Button asChild className="mt-6">
           <Link href="/dashboard">Back to dashboard</Link>
